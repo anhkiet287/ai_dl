@@ -3,92 +3,131 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Deep Learning and Its Applications | Group Landing Page</title>
-  <meta name="description" content="GitHub Pages landing page for the Deep Learning and Its Applications course assignments." />
+  <title>Deep Learning Course Hub | Group Homepage</title>
+  <meta name="description" content="Modern GitHub Pages homepage for the Deep Learning and Its Applications course." />
   <link rel="stylesheet" href="assets/styles.css" />
 </head>
 <body>
-  <header class="site-header">
-    <div class="container nav">
-      <a class="brand" href="./index.html">DL Course Hub</a>
-      <nav>
-        <a href="#about">About</a>
-        <a href="#members">Members</a>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="#home" class="brand">DL<span>CourseHub</span></a>
+      <nav class="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="#team">Team</a>
         <a href="#assignments">Assignments</a>
-        <a href="#contact">Links</a>
+        <a href="#links" class="btn btn-secondary">Resources</a>
       </nav>
     </div>
   </header>
 
-  <main>
+  <main id="home">
     <section class="hero">
       <div class="container hero-grid">
         <div>
-          <span class="eyebrow">HCMUT · CO3133 · 2025-2026 Semester 2</span>
-          <h1>Deep Learning and Its Applications</h1>
+          <div class="badge">⚡ GitHub Pages-ready course homepage</div>
+          <h1>Deep Learning and Its Applications course website for your group</h1>
           <p class="lead">
-            This website is the group landing page for all course assignments. It collects the assignment pages,
-            report links, demo links, videos, source code, and supporting materials in one place.
+            This homepage is designed to make your submission look polished and organized. It gives one clear landing page for your group,
+            then links to separate assignment pages with videos, code, reports, and results.
           </p>
           <div class="hero-actions">
-            <a class="button primary" href="#assignments">View assignments</a>
-            <a class="button" href="./assignments/assignment1.html">Open Assignment 1</a>
+            <a class="btn btn-primary" href="#assignments">Explore assignments</a>
+            <a class="btn btn-secondary" href="./assignments/assignment1.html">Open Assignment 1</a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat">
+              <strong>3</strong>
+              <span>Assignment pages ready</span>
+            </div>
+            <div class="stat">
+              <strong>1</strong>
+              <span>Common homepage</span>
+            </div>
+            <div class="stat">
+              <strong>100%</strong>
+              <span>Static GitHub Pages compatible</span>
+            </div>
           </div>
         </div>
-        <div class="card hero-card">
-          <h3>Quick info</h3>
-          <ul class="info-list">
-            <li><strong>Group name:</strong> <span>Group Name Here</span></li>
-            <li><strong>Instructor:</strong> <span>Le Thanh Sach</span></li>
-            <li><strong>Course code:</strong> <span>CO3133</span></li>
-            <li><strong>School:</strong> <span>HCMUT - VNUHCM</span></li>
-          </ul>
-          <p class="muted">Replace the placeholders with your actual group information before publishing.</p>
-        </div>
+
+        <aside class="hero-panel">
+          <div class="panel-top">
+            <strong>Group quick info</strong>
+            <span class="panel-chip">Edit me</span>
+          </div>
+          <div class="panel-list">
+            <div class="panel-item">
+              <strong>Group name</strong>
+              <span>Replace this with your real group name.</span>
+            </div>
+            <div class="panel-item">
+              <strong>Instructor</strong>
+              <span>Le Thanh Sach</span>
+            </div>
+            <div class="panel-item">
+              <strong>Course</strong>
+              <span>Deep Learning and Its Applications</span>
+            </div>
+            <div class="panel-item">
+              <strong>Semester</strong>
+              <span>2025-2026 Semester 2</span>
+            </div>
+          </div>
+        </aside>
       </div>
     </section>
 
-    <section id="about" class="section">
+    <section id="overview">
       <div class="container">
         <div class="section-heading">
-          <span class="eyebrow">About the site</span>
-          <h2>One homepage for the whole course</h2>
-          <p>
-            The assignment requires one common GitHub Pages landing page for the group and separate pages for each
-            assignment. This template is structured exactly that way so you can upload it directly and just replace the placeholders.
-          </p>
+          <div>
+            <div class="eyebrow">Course homepage structure</div>
+            <h2>A cleaner presentation for all deliverables</h2>
+            <p>
+              Instead of a plain list of links, this layout presents your assignments like a real project showcase.
+              It keeps the required information visible while making the site feel more professional.
+            </p>
+          </div>
         </div>
+
         <div class="grid three">
           <article class="card">
-            <h3>Reusable structure</h3>
-            <p>Each assignment page follows the same layout, making it easy to keep the site consistent across the semester.</p>
+            <div class="icon">🧭</div>
+            <h3>Clear navigation</h3>
+            <p>Visitors can move from the homepage to each assignment page without confusion.</p>
           </article>
           <article class="card">
-            <h3>Fast editing</h3>
-            <p>You only need to edit names, links, dataset notes, model notes, and result summaries. No framework is required.</p>
+            <div class="icon">🎥</div>
+            <h3>Video-first layout</h3>
+            <p>Demo and presentation links have dedicated sections so evaluators can find them immediately.</p>
           </article>
           <article class="card">
-            <h3>GitHub Pages ready</h3>
-            <p>The site is static HTML + CSS, so you can publish it directly from the repository root.</p>
+            <div class="icon">📘</div>
+            <h3>Report-ready structure</h3>
+            <p>Assignment pages already include slots for methodology, experiments, findings, and resource links.</p>
           </article>
         </div>
       </div>
     </section>
 
-    <section id="members" class="section alt">
+    <section id="team" class="alt">
       <div class="container">
         <div class="section-heading">
-          <span class="eyebrow">Group information</span>
-          <h2>Members</h2>
-          <p>Fill in your group name and member details below.</p>
+          <div>
+            <div class="eyebrow">Team information</div>
+            <h2>Fill in your group details once</h2>
+            <p>This section lets you place the exact information the instructor expects on the common page.</p>
+          </div>
         </div>
+
         <div class="grid two">
           <article class="card">
             <h3>Group profile</h3>
             <ul class="info-list">
-              <li><strong>Group name:</strong> <span>Group Name Here</span></li>
-              <li><strong>Instructor:</strong> <span>Le Thanh Sach</span></li>
-              <li><strong>Course:</strong> <span>Deep Learning and Its Applications</span></li>
+              <li><strong>Group name:</strong> Group Name Here</li>
+              <li><strong>Instructor:</strong> Le Thanh Sach</li>
+              <li><strong>Course code:</strong> CO3133</li>
+              <li><strong>University:</strong> HCMUT - VNUHCM</li>
             </ul>
           </article>
           <article class="card">
@@ -97,45 +136,79 @@
               <li>Member 1 - Student ID - Email</li>
               <li>Member 2 - Student ID - Email</li>
               <li>Member 3 - Student ID - Email</li>
-              <li>Member 4 - Student ID - Email (optional)</li>
+              <li>Member 4 - Student ID - Email</li>
             </ol>
           </article>
         </div>
       </div>
     </section>
 
-    <section id="assignments" class="section">
+    <section id="assignments">
       <div class="container">
         <div class="section-heading">
-          <span class="eyebrow">Assignment pages</span>
-          <h2>Assignments in this course</h2>
-          <p>Assignment 1 is prepared in more detail because the uploaded brief specifies its deliverables. The other pages are ready as placeholders.</p>
+          <div>
+            <div class="eyebrow">Assignment pages</div>
+            <h2>All project pages in one place</h2>
+            <p>Each card leads to a full assignment page where you can place demo links, report links, code, and result summaries.</p>
+          </div>
         </div>
+
         <div class="grid three">
           <article class="card assignment-card">
-            <span class="tag">Ready</span>
+            <span class="tag">Detailed</span>
             <h3>Assignment 1</h3>
-            <p>Classification on image, text, and multimodal data. Includes required links and structured report sections.</p>
+            <p>Prepared in detail for image, text, and multimodal classification with sections for methods, results, and deliverables.</p>
             <a class="text-link" href="./assignments/assignment1.html">Open page →</a>
           </article>
           <article class="card assignment-card">
-            <span class="tag muted-tag">Placeholder</span>
+            <span class="tag muted-tag">Ready</span>
             <h3>Assignment 2</h3>
-            <p>Prepared page for future deliverables. Replace title, description, and all links when Assignment 2 is announced.</p>
+            <p>A polished placeholder page that matches the same modern design and is ready for your next deliverables.</p>
             <a class="text-link" href="./assignments/assignment2.html">Open page →</a>
           </article>
           <article class="card assignment-card">
-            <span class="tag muted-tag">Placeholder</span>
+            <span class="tag muted-tag">Ready</span>
             <h3>Assignment 3</h3>
-            <p>Prepared page for future deliverables. Use it later to keep the same style and navigation.</p>
+            <p>Another prepared page for future work so your whole course website stays visually consistent.</p>
             <a class="text-link" href="./assignments/assignment3.html">Open page →</a>
           </article>
         </div>
       </div>
     </section>
+
+    <section>
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Why this looks better</div>
+            <h2>More polished than a basic class submission page</h2>
+            <p>The layout takes the same visual language as the homepage style you liked: strong hero, better spacing, premium cards, and clearer hierarchy.</p>
+          </div>
+        </div>
+
+        <div class="feature-grid">
+          <div class="feature">
+            <h3>Modern hero</h3>
+            <p>Large opening section creates a much stronger first impression.</p>
+          </div>
+          <div class="feature">
+            <h3>Consistent cards</h3>
+            <p>Every section uses the same visual system, so the whole site feels intentional.</p>
+          </div>
+          <div class="feature">
+            <h3>Better readability</h3>
+            <p>Content is separated into clear blocks instead of long flat text.</p>
+          </div>
+          <div class="feature">
+            <h3>Easy to edit</h3>
+            <p>You still only need to replace placeholder text and links.</p>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <footer id="contact" class="site-footer">
+  <footer id="links" class="site-footer">
     <div class="container footer-grid">
       <div>
         <h3>Useful links</h3>
@@ -147,8 +220,9 @@
       </div>
       <div>
         <h3>Publishing note</h3>
-        <p class="muted">
-          Put all files in the repository root, enable GitHub Pages from the main branch, and keep this file as <code>index.html</code>.
+        <p>
+          Keep <code>index.html</code> in the repository root, upload the <code>assets</code> and <code>assignments</code> folders,
+          then enable GitHub Pages from the <code>main</code> branch.
         </p>
       </div>
     </div>
