@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[Method name] | Few-shot Multimodal</title>
+  <meta name="description" content="[Method name]: approach, implementation, and results for few-shot multimodal classification." />
+  <link rel="stylesheet" href="../../../assets/styles.css" />
+  <style>
+    .breadcrumb {
+      display: flex;
+      gap: 8px;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      color: var(--muted);
+    }
+    .breadcrumb a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover { color: var(--primary-2); }
+    .breadcrumb span { opacity: 0.5; }
+
+    .method-overview {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 22px;
+      margin: 20px 0;
+    }
+
+    .method-overview h3 {
+      margin: 0 0 16px 0;
+      color: var(--text);
+    }
+
+    .method-overview ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .method-overview li {
+      margin-bottom: 8px;
+      color: var(--muted);
+    }
+
+    .diagram-placeholder {
+      background: linear-gradient(135deg, rgba(110,168,254,.1), rgba(156,137,255,.1));
+      border: 1px solid rgba(110,168,254,0.2);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      margin: 20px 0;
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+    }
+
+    .code-block {
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 16px;
+      overflow-x: auto;
+      margin: 16px 0;
+    }
+
+    .code-block code {
+      color: var(--primary-2);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .placeholder-section {
+      background: linear-gradient(135deg, rgba(255,211,110,.08), rgba(156,137,255,.08));
+      border: 1px dashed rgba(255,211,110,.3);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .placeholder-section h4 {
+      margin: 0 0 8px 0;
+      color: var(--warning);
+    }
+
+    .placeholder-section p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .results-preview {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .results-preview table {
+      width: 100%;
+    }
+
+    .results-preview th,
+    .results-preview td {
+      padding: 10px;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <nav class="nav-links">
+        <a href="../index.html">← Few-shot overview</a>
+        <a href="#overview">Method</a>
+        <a href="#implementation">Implementation</a>
+        <a href="#results">Results</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="../../../index.html">Home</a>
+          <span>/</span>
+          <a href="../../index.html">Multimodal</a>
+          <span>/</span>
+          <a href="../index.html">Few-shot</a>
+          <span>/</span>
+          <span>[Method name]</span>
+        </div>
+        <div class="badge">🔧 Few-shot approach</div>
+        <h1>[Method name] for Few-shot Multimodal Classification</h1>
+        <p class="lead">
+          [Brief 1-2 sentence summary of the method. What makes it distinctive?
+          What problem does it solve?]
+        </p>
+      </div>
+    </section>
+
+    <!-- Method Overview -->
+    <section id="overview" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Concept</div>
+            <h2>Method overview</h2>
+            <p>High-level description of the approach.</p>
+          </div>
+        </div>
+
+        <div class="method-overview">
+          <h3>Core idea</h3>
+          <ul>
+            <li>Explain the fundamental concept in 3-4 bullet points</li>
+            <li>What is frozen? What is trainable?</li>
+            <li>What is the adaptation mechanism?</li>
+            <li>How does it differ from other methods?</li>
+          </ul>
+        </div>
+
+        <div class="method-overview">
+          <h3>Advantages</h3>
+          <ul>
+            <li>Main strength #1</li>
+            <li>Main strength #2</li>
+            <li>When this method shines</li>
+            <li>Practical benefits</li>
+          </ul>
+        </div>
+
+        <div class="method-overview">
+          <h3>Limitations</h3>
+          <ul>
+            <li>Main limitation #1</li>
+            <li>Main limitation #2</li>
+            <li>When this method struggles</li>
+            <li>Trade-offs vs other approaches</li>
+          </ul>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>✏️ Update method description</h4>
+          <p>Replace all placeholder bullet points with your actual method characteristics.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pipeline & Architecture -->
+    <section>
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Pipeline</div>
+            <h2>Method pipeline & architecture</h2>
+            <p>Detailed view of how the method works.</p>
+          </div>
+        </div>
+
+        <div class="diagram-placeholder">
+          [Architecture diagram or pipeline visualization]
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Training process</h3>
+            <ul class="checklist">
+              <li>Input: [N] labeled examples per class</li>
+              <li>Backbone: [which encoder(s) are frozen]</li>
+              <li>Trainable components: [what is learned]</li>
+              <li>Loss function: [what is optimized]</li>
+              <li>Training duration: [typical time]</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Inference process</h3>
+            <ul class="checklist">
+              <li>Input: New test image + associated text</li>
+              <li>Feature extraction: [steps]</li>
+              <li>Classification: [how prediction is made]</li>
+              <li>Output: Class prediction + confidence</li>
+              <li>Latency: [ms per image]</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>✏️ Add architecture diagram</h4>
+          <p>Include a clear diagram showing the pipeline, including frozen and trainable components.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Implementation Details -->
+    <section id="implementation" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Technical details</div>
+            <h2>Implementation & configuration</h2>
+            <p>Specific hyperparameters and code considerations.</p>
+          </div>
+        </div>
+
+        <div class="method-overview">
+          <h3>Hyperparameters</h3>
+          <ul>
+            <li><strong>Learning rate:</strong> [value and schedule]</li>
+            <li><strong>Batch size:</strong> [size]</li>
+            <li><strong>Number of epochs:</strong> [range / with early stopping]</li>
+            <li><strong>Optimizer:</strong> [Adam / SGD / other]</li>
+            <li><strong>Weight decay / regularization:</strong> [settings]</li>
+            <li><strong>Warmup steps:</strong> [if applicable]</li>
+            <li><strong>Early stopping patience:</strong> [epochs]</li>
+          </ul>
+        </div>
+
+        <div class="code-block">
+          <code>
+# Pseudocode for [method name] training<br/>
+model = load_pretrained_backbone()<br/>
+adapter/head = initialize_trainable_components()<br/>
+<br/>
+for epoch in range(num_epochs):<br/>
+&nbsp;&nbsp;for batch in train_loader:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;images, texts, labels = batch<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;embeddings = model.encode(images, texts)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;logits = adapter/head(embeddings)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;loss = criterion(logits, labels)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;optimizer.zero_grad()<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;loss.backward()<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;optimizer.step()
+          </code>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>✏️ Add implementation code</h4>
+          <p>Replace pseudocode with actual implementation snippets from your codebase.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results -->
+    <section id="results">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Performance</div>
+            <h2>[Method name] results</h2>
+            <p>Quantitative evaluation at different shot levels.</p>
+          </div>
+        </div>
+
+        <div class="results-preview">
+          <table>
+            <thead>
+              <tr>
+                <th>Number of shots</th>
+                <th>Accuracy (%)</th>
+                <th>Macro F1 (%)</th>
+                <th>Training time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>8-shot</strong></td>
+                <td>[XX.XX]%</td>
+                <td>[XX.XX]%</td>
+                <td>[X.X]h</td>
+              </tr>
+              <tr>
+                <td><strong>16-shot</strong></td>
+                <td>[XX.XX]%</td>
+                <td>[XX.XX]%</td>
+                <td>[X.X]h</td>
+              </tr>
+              <tr>
+                <td><strong>32-shot</strong></td>
+                <td>[XX.XX]%</td>
+                <td>[XX.XX]%</td>
+                <td>[X.X]h</td>
+              </tr>
+              <tr>
+                <td><strong>64-shot</strong></td>
+                <td>[XX.XX]%</td>
+                <td>[XX.XX]%</td>
+                <td>[X.X]h</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Key metrics</h3>
+            <ul class="checklist">
+              <li>Best accuracy: [XX]% at [N]-shot</li>
+              <li>Saturation point: After [N] shots</li>
+              <li>Improvement rate: +[X]% per shot doubling</li>
+              <li>Inference speed: [X] ms/image</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Comparison vs. other methods</h3>
+            <ul class="checklist">
+              <li>vs Zero-shot: +[X]% improvement</li>
+              <li>vs [Method 2]: [+/-X]%</li>
+              <li>vs [Method 3]: [+/-X]%</li>
+              <li>See <a class="text-link" href="../../results/index.html">Results page</a> for full comparison</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>✏️ Fill in results table</h4>
+          <p>Replace all [XX.XX]% and [X.X]h values with your actual experimental results.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Qualitative Analysis -->
+    <section class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Analysis</div>
+            <h2>Qualitative observations</h2>
+            <p>Behavior patterns and notable characteristics specific to this method.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Strengths observed</h3>
+            <ul class="checklist">
+              <li>Specific strength in practice</li>
+              <li>Classes where this excels</li>
+              <li>Robustness to [specific challenge]</li>
+              <li>Easy to tune or deploy</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Weaknesses observed</h3>
+            <ul class="checklist">
+              <li>Specific failure mode</li>
+              <li>Classes where this struggles</li>
+              <li>Sensitivity to [hyperparameter]</li>
+              <li>Practical deployment challenges</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>✏️ Add qualitative analysis</h4>
+          <p>Describe how this method behaves in practice based on your experiments.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparison & Recommendations -->
+    <section>
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Guidance</div>
+            <h2>When to use this method</h2>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Good fit for</h3>
+            <ul class="checklist">
+              <li>Scenario where this works well</li>
+              <li>Resource constraints it matches</li>
+              <li>Desired accuracy-speed trade-off</li>
+              <li>Practical deployment contexts</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Consider alternatives if</h3>
+            <ul class="checklist">
+              <li>You need [constraint this violates]</li>
+              <li>Your budget is [tighter/higher]</li>
+              <li>Accuracy must be [higher/lower]</li>
+              <li>You have [different resource profile]</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Navigation</h3>
+        <ul class="footer-links">
+          <li><a href="../index.html">← Back to few-shot overview</a></li>
+          <li><a href="../../index.html">← Back to multimodal home</a></li>
+          <li><a href="../../results/index.html">See all results</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Related pages</h3>
+        <ul class="footer-links">
+          <li><a href="../../zero-shot/index.html">Zero-shot baseline</a></li>
+          <li><a href="../../error-analysis/index.html">Error analysis</a></li>
+          <li><a href="../../ablation-interpretability/index.html">Ablation studies</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

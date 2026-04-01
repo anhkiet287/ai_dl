@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ablation & Interpretability | Multimodal</title>
+  <meta name="description" content="Ablation studies, component analysis, and model interpretability." />
+  <link rel="stylesheet" href="../../assets/styles.css" />
+  <style>
+    .breadcrumb {
+      display: flex;
+      gap: 8px;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      color: var(--muted);
+    }
+    .breadcrumb a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover { color: var(--primary-2); }
+    .breadcrumb span { opacity: 0.5; }
+
+    .ablation-table {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+
+    .ablation-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .ablation-table th {
+      background: rgba(255,255,255,0.05);
+      padding: 14px 16px;
+      text-align: left;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #dce6ff;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .ablation-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .ablation-table tr:hover {
+      background: rgba(110,168,254,0.05);
+    }
+
+    .delta-positive {
+      color: var(--primary-2);
+      font-weight: 600;
+    }
+
+    .delta-negative {
+      color: #ff6b6b;
+      font-weight: 600;
+    }
+
+    .ablation-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin: 16px 0;
+    }
+
+    .ablation-card h4 {
+      margin: 0 0 12px 0;
+      color: var(--text);
+    }
+
+    .ablation-card ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 0.9rem;
+    }
+
+    .chart-placeholder {
+      background: linear-gradient(135deg, rgba(110,168,254,.08), rgba(156,137,255,.08));
+      border: 1px solid rgba(110,168,254,0.2);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      margin: 20px 0;
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .insight-box {
+      background: linear-gradient(135deg, rgba(126,240,194,.08), rgba(110,168,254,.08));
+      border: 1px solid rgba(126,240,194,.2);
+      border-left: 3px solid rgba(126,240,194,.4);
+      padding: 16px;
+      border-radius: 12px;
+      margin: 16px 0;
+    }
+
+    .insight-box strong {
+      color: var(--primary-2);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .insight-box p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .placeholder-section {
+      background: linear-gradient(135deg, rgba(255,211,110,.08), rgba(156,137,255,.08));
+      border: 1px dashed rgba(255,211,110,.3);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .placeholder-section h4 {
+      margin: 0 0 8px 0;
+      color: var(--warning);
+    }
+
+    .placeholder-section p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .importance-vis {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .importance-item {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .importance-bar {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      height: 40px;
+      border-radius: 6px;
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .importance-item label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    @media (max-width: 1024px) {
+      .chart-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ablation-table {
+        overflow-x: auto;
+      }
+
+      .importance-vis {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 720px) {
+      .importance-vis {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <nav class="nav-links">
+        <a href="./index.html">← Multimodal home</a>
+        <a href="#ablations">Ablations</a>
+        <a href="#interpretability">Interpretability</a>
+        <a href="#importance">Importance</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="../../index.html">Home</a>
+          <span>/</span>
+          <a href="./index.html">Multimodal</a>
+          <span>/</span>
+          <span>Ablation & Interpretability</span>
+        </div>
+        <div class="badge">🔍 Component analysis & interpretability</div>
+        <h1>Ablation Studies & Interpretability</h1>
+        <p class="lead">
+          Ablation studies systematically remove components to understand their contribution.
+          Interpretability analyses reveal what the models learn and how they make decisions.
+          Together, they build intuition about model behavior and identify optimization opportunities.
+        </p>
+      </div>
+    </section>
+
+    <!-- Ablation Overview -->
+    <section id="ablations" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Component analysis</div>
+            <h2>Ablation studies</h2>
+            <p>Systematically removing or modifying components to measure their contribution.</p>
+          </div>
+        </div>
+
+        <div class="ablation-card">
+          <h4>🎯 What we ablated</h4>
+          <ul>
+            <li>Vision encoder: [frozen vs. fine-tuned]</li>
+            <li>Text encoder: [frozen vs. fine-tuned]</li>
+            <li>Fusion strategy: [early / mid / late fusion]</li>
+            <li>Loss function: [cross-entropy / contrastive / other]</li>
+            <li>Data augmentation: [on / off, by type]</li>
+            <li>Prompt engineering: [different template strategies]</li>
+            <li>Training components: [layer norm, dropout, regularization]</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Vision Encoder Ablation -->
+    <section>
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Visual component</div>
+            <h2>Vision encoder ablation</h2>
+            <p>Impact of freezing vs. fine-tuning the vision encoder.</p>
+          </div>
+        </div>
+
+        <div class="ablation-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Configuration</th>
+                <th>Vision encoder</th>
+                <th>Accuracy (%)</th>
+                <th>Change vs. baseline</th>
+                <th>Training time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Baseline</strong></td>
+                <td>Frozen (pretrained)</td>
+                <td>[XX.XX]%</td>
+                <td>—</td>
+                <td>[X.X]h</td>
+              </tr>
+              <tr>
+                <td><strong>Variant 1</strong></td>
+                <td>Fine-tune last layer only</td>
+                <td>[XX.XX]%</td>
+                <td><span class="delta-positive">[+X.XX]%</span></td>
+                <td>[X.X]h</td>
+              </tr>
+              <tr>
+                <td><strong>Variant 2</strong></td>
+                <td>Full fine-tune</td>
+                <td>[XX.XX]%</td>
+                <td><span class="delta-positive">[+X.XX]%</span></td>
+                <td>[X.X]h</td>
+              </tr>
+              <tr>
+                <td><strong>Variant 3</strong></td>
+                <td>Adapter modules only</td>
+                <td>[XX.XX]%</td>
+                <td><span class="delta-positive">[+X.XX]%</span></td>
+                <td>[X.X]h</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="insight-box">
+          <strong>Finding:</strong>
+          <p>
+            Freezing the vision encoder achieves [XX]% accuracy. Fine-tuning improves it to [XX]% (+[X]%).
+            However, the gains plateau after [X] layers; full fine-tuning only adds [+X]% more.
+            Adapter modules provide similar gains to fine-tuning the last layer with lower training cost.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Text Encoder Ablation -->
+    <section class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Textual component</div>
+            <h2>Text encoder ablation</h2>
+            <p>Impact of freezing vs. fine-tuning the text encoder.</p>
+          </div>
+        </section>
+
+        <div class="ablation-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Configuration</th>
+                <th>Text encoder</th>
+                <th>Accuracy (%)</th>
+                <th>Change vs. baseline</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Baseline</strong></td>
+                <td>Frozen (pretrained)</td>
+                <td>[XX.XX]%</td>
+                <td>—</td>
+                <td>Standard zero-shot setup</td>
+              </tr>
+              <tr>
+                <td><strong>Variant 1</strong></td>
+                <td>Fine-tune classification head only</td>
+                <td>[XX.XX]%</td>
+                <td><span class="delta-positive">[+X.XX]%</span></td>
+                <td>Limited by frozen encoder</td>
+              </tr>
+              <tr>
+                <td><strong>Variant 2</strong></td>
+                <td>Full fine-tune (with vision frozen)</td>
+                <td>[XX.XX]%</td>
+                <td><span class="delta-positive">[+X.XX]%</span></td>
+                <td>Moderate gain</td>
+              </tr>
+              <tr>
+                <td><strong>Variant 3</strong></td>
+                <td>Both encoders fine-tuned</td>
+                <td>[XX.XX]%</td>
+                <td><span class="delta-positive">[+X.XX]%</span></td>
+                <td>Best performance but slower</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="insight-box">
+          <strong>Finding:</strong>
+          <p>
+            Text encoder is surprisingly less important than vision. Fine-tuning it alone gives only [+X]%.
+            However, when combined with vision fine-tuning, the gains become larger ([+X]%).
+            This suggests complementary information in both modalities.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fusion Strategy Ablation -->
+    <section>
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Multimodal fusion</div>
+            <h2>Fusion strategy ablation</h2>
+            <p>Comparing different ways to combine visual and textual embeddings.</p>
+          </div>
+        </div>
+
+        <div class="ablation-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Fusion method</th>
+                <th>Description</th>
+                <th>Accuracy (%)</th>
+                <th>Param count</th>
+                <th>Inference time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Concat</strong></td>
+                <td>Concatenate image and text embeddings</td>
+                <td>[XX.XX]%</td>
+                <td>+[K] params</td>
+                <td>[X] ms</td>
+              </tr>
+              <tr>
+                <td><strong>Addition</strong></td>
+                <td>Element-wise sum (after projection to same dim)</td>
+                <td>[XX.XX]%</td>
+                <td>+[K] params</td>
+                <td>[X] ms</td>
+              </tr>
+              <tr>
+                <td><strong>Cross-attention</strong></td>
+                <td>Image attends to text, weighted combination</td>
+                <td>[XX.XX]%</td>
+                <td>+[K] params</td>
+                <td>[X] ms</td>
+              </tr>
+              <tr>
+                <td><strong>Gating</strong></td>
+                <td>Learned weighted blend with learnable gate</td>
+                <td>[XX.XX]%</td>
+                <td>+[K] params</td>
+                <td>[X] ms</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="insight-box">
+          <strong>Finding:</strong>
+          <p>
+            Simple concatenation performs well ([XX]% accuracy) but adds parameters.
+            Cross-attention achieves [XX]% (+[X]% improvement) at modest cost.
+            Gating provides marginal additional gains ([+X]%) with higher complexity.
+            We recommend cross-attention for best accuracy/complexity trade-off.
+          </p>
+        </div>
+
+        <div class="insight-box">
+          <strong>Secondary finding:</strong>
+          <p>
+            Addition-based fusion is surprisingly effective for this task, achieving [XX]%.
+            This suggests that vision and text operate in relatively aligned spaces in the pretrained model.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Prompt Ablation -->
+    <section class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Text strategy</div>
+            <h2>Prompt engineering ablation</h2>
+            <p>Impact of different text prompt templates on zero-shot and few-shot performance.</p>
+          </div>
+        </div>
+
+        <div class="ablation-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Prompt template</th>
+                <th>Example</th>
+                <th>Zero-shot Acc. (%)</th>
+                <th>Few-shot (16) Acc. (%)</th>
+                <th>Change vs. baseline</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Class name only</strong></td>
+                <td>"cat"</td>
+                <td>[XX.XX]%</td>
+                <td>[XX.XX]%</td>
+                <td>baseline</td>
+              </tr>
+              <tr>
+                <td><strong>Simple context</strong></td>
+                <td>"a photo of a cat"</td>
+                <td>[XX.XX]%</td>
+                <td>[XX.XX]%</td>
+                <td><span class="delta-positive">[+X.XX]%</span></td>
+              </tr>
+              <tr>
+                <td><strong>Extended context</strong></td>
+                <td>"a photo of a cat, a type of animal"</td>
+                <td>[XX.XX]%</td>
+                <td>[XX.XX]%</td>
+                <td><span class="delta-positive">[+X.XX]%</span></td>
+              </tr>
+              <tr>
+                <td><strong>Domain-specific</strong></td>
+                <td>"a [class] in a [domain] setting"</td>
+                <td>[XX.XX]%</td>
+                <td>[XX.XX]%</td>
+                <td><span class="delta-positive">[+X.XX]%</span></td>
+              </tr>
+              <tr>
+                <td><strong>Ensemble (all above)</strong></td>
+                <td>Average predictions</td>
+                <td>[XX.XX]%</td>
+                <td>[XX.XX]%</td>
+                <td><span class="delta-positive">[+X.XX]%</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="insight-box">
+          <strong>Key finding:</strong>
+          <p>
+            Prompt template has substantial impact on zero-shot ([+X]% improvement from "photo of X").
+            Few-shot methods are less sensitive to prompts ([+X]% improvement), likely because fine-tuning
+            adapts to any reasonable embedding space.
+            Ensemble prompts provide consistent gains with minimal additional cost.
+          </p>
+        </div>
+
+        <div class="chart-placeholder">
+          [Bar chart: Accuracy by prompt template for zero-shot and few-shot methods]
+        </div>
+      </div>
+    </section>
+
+    <!-- Data Augmentation Ablation -->
+    <section>
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Training strategy</div>
+            <h2>Data augmentation ablation</h2>
+            <p>Impact of different augmentation strategies on few-shot learning.</p>
+          </div>
+        </div>
+
+        <div class="ablation-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Augmentation</th>
+                <th>Applied to</th>
+                <th>Accuracy (%)</th>
+                <th>Robustness</th>
+                <th>Training time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>None</strong></td>
+                <td>—</td>
+                <td>[XX.XX]%</td>
+                <td>baseline</td>
+                <td>[X]h</td>
+              </tr>
+              <tr>
+                <td><strong>Image augmentation</strong></td>
+                <td>Rotations, flips, color jitter</td>
+                <td>[XX.XX]%</td>
+                <td>better</td>
+                <td>[X]h</td>
+              </tr>
+              <tr>
+                <td><strong>Text augmentation</strong></td>
+                <td>Paraphrase, synonyms, templates</td>
+                <td>[XX.XX]%</td>
+                <td>better</td>
+                <td>[X]h</td>
+              </tr>
+              <tr>
+                <td><strong>Combined</strong></td>
+                <td>Both image and text</td>
+                <td>[XX.XX]%</td>
+                <td>best</td>
+                <td>[X]h</td>
+              </tr>
+              <tr>
+                <td><strong>Mixup</strong></td>
+                <td>Image + text mixing</td>
+                <td>[XX.XX]%</td>
+                <td>very good</td>
+                <td>[X]h</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="insight-box">
+          <strong>Finding:</strong>
+          <p>
+            Image augmentation alone gives [+X]% improvement. Text augmentation provides similar gains.
+            Combining both yields [+X]% (additive effect). Multimodal mixup surprisingly helps ([+X]%),
+            suggesting that mixing modalities aids generalization.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interpretability Section -->
+    <section id="interpretability" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Model behavior</div>
+            <h2>Interpretability analysis</h2>
+            <p>Understanding what the models learn and why they make specific predictions.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>What we analyzed</h3>
+            <ul class="checklist">
+              <li>Attention maps (if applicable)</li>
+              <li>Embedding space visualizations (t-SNE, UMAP)</li>
+              <li>Feature importance rankings</li>
+              <li>Confidence calibration</li>
+              <li>Modality contribution breakdown</li>
+              <li>Decision boundary analysis</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Methods used</h3>
+            <ul class="checklist">
+              <li>Gradient-based saliency maps</li>
+              <li>LIME or SHAP explanations</li>
+              <li>Manifold visualization</li>
+              <li>Probing classifiers</li>
+              <li>Controlled inputs (ablated text/images)</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Embedding Space Analysis -->
+    <section>
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Representation learning</div>
+            <h2>Embedding space analysis</h2>
+          </div>
+        </div>
+
+        <div class="chart-grid">
+          <div class="chart-placeholder">
+            [t-SNE or UMAP plot of embeddings colored by class]<br/>
+            <span style="font-size: 0.85rem;">Showing cluster structure in learned representation</span>
+          </div>
+
+          <div class="chart-placeholder">
+            [Heatmap: inter-class similarity matrix]<br/>
+            <span style="font-size: 0.85rem;">Which classes have similar embeddings?</span>
+          </div>
+        </div>
+
+        <div class="insight-box">
+          <strong>Observation:</strong>
+          <p>
+            Classes form [well-separated / somewhat overlapping / highly overlapping] clusters.
+            The embedding space shows that [specific class pairs] are close together, matching
+            the confusion patterns from error analysis. Fine-tuned models have [more/less] separated clusters.
+          </p>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>✏️ Add embedding visualizations</h4>
+          <p>Include dimensionality reduction plots (t-SNE, UMAP) showing class cluster structure.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature Importance -->
+    <section id="importance" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Component contribution</div>
+            <h2>Feature & component importance</h2>
+          </div>
+        </div>
+
+        <div class="importance-vis">
+          <div class="importance-item">
+            <label>Vision embedding</label>
+            <div class="importance-bar" style="width: 85%;">
+              85%
+            </div>
+          </div>
+          <div class="importance-item">
+            <label>Text embedding</label>
+            <div class="importance-bar" style="width: 60%;">
+              60%
+            </div>
+          </div>
+          <div class="importance-item">
+            <label>Interaction term</label>
+            <div class="importance-bar" style="width: 40%;">
+              40%
+            </div>
+          </div>
+        </div>
+
+        <div class="insight-box">
+          <strong>Finding:</strong>
+          <p>
+            Vision embeddings dominate predictions ([~85]% importance), while text adds [~60]%.
+            The interaction term contributes surprisingly little ([~40]%), suggesting nearly-additive
+            combination of modalities. This aligns with our fusion ablation results.
+          </p>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>✏️ Compute your importance scores</h4>
+          <p>
+            Use permutation importance, gradient-based methods, or ablation to measure component contributions.
+            Replace the example percentages with your actual results.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Confidence Analysis -->
+    <section>
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Prediction reliability</div>
+            <h2>Confidence calibration</h2>
+          </div>
+        </div>
+
+        <div class="chart-grid">
+          <div class="chart-placeholder">
+            [Reliability diagram: Expected vs observed accuracy by confidence bin]
+          </div>
+
+          <div class="chart-placeholder">
+            [Histogram: prediction confidence distribution]
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Calibration findings</h3>
+            <ul class="checklist">
+              <li>Zero-shot is [well/under/over] calibrated</li>
+              <li>Few-shot is [well/under/over] calibrated</li>
+              <li>Miscalibration primarily at [high/low] confidences</li>
+              <li>Temperature scaling helps by [% points]</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Practical implications</h3>
+            <ul class="checklist">
+              <li>Can we trust high-confidence predictions?</li>
+              <li>Are low-confidence cases truly uncertain?</li>
+              <li>Should confidence be used for rejection?</li>
+              <li>Recommendation: [apply temperature tuning / use raw softmax / other]</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>✏️ Update with your calibration analysis</h4>
+          <p>Compute calibration plots and reliability diagrams for your models.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Summary & Recommendations -->
+    <section class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Takeaways</div>
+            <h2>Ablation & interpretability summary</h2>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Most impactful components</h3>
+            <ul class="checklist">
+              <li>1. [Component] ([+X]% improvement)</li>
+              <li>2. [Component] ([+X]% improvement)</li>
+              <li>3. [Component] ([+X]% improvement)</li>
+              <li style="margin-top: 8px;">View trade-offs before implementing all components.</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Recommendations for improvement</h3>
+            <ul class="checklist">
+              <li>Prioritize [component 1] for maximum gain</li>
+              <li>Add [component 2] if resources allow</li>
+              <li>Use [fusion strategy] for efficiency</li>
+              <li>Apply [prompt method] for robustness</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="insight-box">
+          <strong>Design insights:</strong>
+          <p>
+            The results suggest a [modular / tightly-coupled / hierarchical] model structure.
+            [Specific architectural recommendation] would likely improve both performance and interpretability.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Navigation</h3>
+        <ul class="footer-links">
+          <li><a href="./index.html">← Back to multimodal home</a></li>
+          <li><a href="../results/index.html">Results & comparison</a></li>
+          <li><a href="../error-analysis/index.html">Error analysis</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Further exploration</h3>
+        <ul class="footer-links">
+          <li><a href="../dataset-eda/index.html">Dataset properties</a></li>
+          <li><a href="../zero-shot/index.html">Zero-shot method</a></li>
+          <li><a href="../few-shot/index.html">Few-shot methods</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

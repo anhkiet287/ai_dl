@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dataset & EDA | Multimodal Classification</title>
+  <meta name="description" content="Exploratory data analysis, dataset statistics, and image-text pair distributions." />
+  <link rel="stylesheet" href="../../assets/styles.css" />
+  <style>
+    .breadcrumb {
+      display: flex;
+      gap: 8px;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      color: var(--muted);
+    }
+    .breadcrumb a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover { color: var(--primary-2); }
+    .breadcrumb span { opacity: 0.5; }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .stat-box {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .stat-box .number {
+      display: block;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .stat-box .label {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .placeholder-section {
+      background: linear-gradient(135deg, rgba(255,211,110,.08), rgba(156,137,255,.08));
+      border: 1px dashed rgba(255,211,110,.3);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .placeholder-section h4 {
+      margin: 0 0 8px 0;
+      color: var(--warning);
+    }
+
+    .placeholder-section p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .figure-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin: 24px 0;
+    }
+
+    .figure-box {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .figure-box .figure-placeholder {
+      background: linear-gradient(135deg, rgba(110,168,254,.1), rgba(156,137,255,.1));
+      aspect-ratio: 16 / 9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .figure-box .figure-caption {
+      padding: 16px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .figure-box .figure-caption h4 {
+      margin: 0 0 6px 0;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .figure-box .figure-caption p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .sample-pairs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin: 24px 0;
+    }
+
+    .pair-box {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .pair-image {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: linear-gradient(135deg, rgba(110,168,254,.1), rgba(156,137,255,.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .pair-content {
+      padding: 16px;
+    }
+
+    .pair-content .pair-label {
+      display: inline-block;
+      background: rgba(110,168,254,0.15);
+      color: var(--primary);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .pair-content .pair-text {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .split-info {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .split-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .split-box h4 {
+      margin: 0 0 10px 0;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .split-box ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 0.9rem;
+    }
+
+    .observations-list {
+      background: rgba(126,240,194,.08);
+      border-left: 3px solid rgba(126,240,194,.3);
+      padding: 18px;
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+
+    .observations-list h4 {
+      margin: 0 0 12px 0;
+      color: var(--primary-2);
+    }
+
+    .observations-list ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .observations-list li {
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 1024px) {
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+      .figure-grid,
+      .sample-pairs,
+      .split-info {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .stat-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <nav class="nav-links">
+        <a href="./index.html">← Multimodal home</a>
+        <a href="#split">Data split</a>
+        <a href="#samples">Samples</a>
+        <a href="#statistics">Statistics</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="../../index.html">Home</a>
+          <span>/</span>
+          <a href="../index.html">Multimodal</a>
+          <span>/</span>
+          <span>Dataset & EDA</span>
+        </div>
+        <div class="badge">📊 Exploratory Data Analysis</div>
+        <h1>Dataset Overview & Properties</h1>
+        <p class="lead">
+          Understanding the dataset is crucial for establishing baselines and interpreting results.
+          This page presents the dataset composition, class distribution, image-text statistics,
+          and key observations from exploratory data analysis.
+        </p>
+      </div>
+    </section>
+
+    <!-- Dataset Introduction -->
+    <section class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Foundation</div>
+            <h2>Dataset selection & motivation</h2>
+            <p>Why this dataset is suitable for multimodal classification.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Dataset name</h3>
+            <p>
+              Choose a well-known multimodal dataset or create a custom one. Examples:
+              <strong>Flickr30k</strong> (images + captions), 
+              <strong>COCO</strong> (object detection + captions),
+              <strong>Hateful Memes</strong> (image + text classification),
+              or a custom product/news dataset.
+            </p>
+            <ul class="checklist">
+              <li>Real-world task relevance</li>
+              <li>Sufficient scale (100s to 1000s samples)</li>
+              <li>Clear class distribution</li>
+              <li>Balanced or documented imbalance</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Why this dataset?</h3>
+            <p>
+              Explain the practical relevance and challenges:
+            </p>
+            <ul class="checklist">
+              <li>Applications in industry</li>
+              <li>Difficulty level for current models</li>
+              <li>Multimodal fusion opportunities</li>
+              <li>Availability and licensing</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>✏️ Action required</h4>
+          <p>Replace the placeholder text above with your dataset name, description, and motivation.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dataset Statistics -->
+    <section>
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Scale & composition</div>
+            <h2>Dataset statistics</h2>
+            <p>Overall dataset size and class breakdown.</p>
+          </div>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-box">
+            <span class="number">[N]</span>
+            <span class="label">Total samples</span>
+          </div>
+          <div class="stat-box">
+            <span class="number">[C]</span>
+            <span class="label">Classes</span>
+          </div>
+          <div class="stat-box">
+            <span class="number">[H]×[W]</span>
+            <span class="label">Image size</span>
+          </div>
+          <div class="stat-box">
+            <span class="number">[M] tokens</span>
+            <span class="label">Avg text length</span>
+          </div>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>✏️ Fill in these values</h4>
+          <p>Replace [N], [C], [H]×[W], [M] with your actual dataset numbers.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Data Split -->
+    <section id="split" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Partitioning</div>
+            <h2>Train / Validation / Test split</h2>
+            <p>How the dataset is divided for training and evaluation.</p>
+          </div>
+        </div>
+
+        <div class="split-info">
+          <div class="split-box">
+            <h4>Training set</h4>
+            <ul>
+              <li><strong>Samples:</strong> [train_count]</li>
+              <li><strong>Percentage:</strong> [train_pct]%</li>
+              <li><strong>Used for:</strong> Model training</li>
+              <li><strong>Notes:</strong> Description</li>
+            </ul>
+          </div>
+          <div class="split-box">
+            <h4>Validation set</h4>
+            <ul>
+              <li><strong>Samples:</strong> [val_count]</li>
+              <li><strong>Percentage:</strong> [val_pct]%</li>
+              <li><strong>Used for:</strong> Hyperparameter tuning</li>
+              <li><strong>Notes:</strong> Description</li>
+            </ul>
+          </div>
+          <div class="split-box">
+            <h4>Test set</h4>
+            <ul>
+              <li><strong>Samples:</strong> [test_count]</li>
+              <li><strong>Percentage:</strong> [test_pct]%</li>
+              <li><strong>Used for:</strong> Final evaluation</li>
+              <li><strong>Notes:</strong> Held-out, no training</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>✏️ Update split details</h4>
+          <p>Replace [train_count], [train_pct], [val_count], [val_pct], [test_count], [test_pct] with your actual splits.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Class Distribution -->
+    <section>
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Distribution</div>
+            <h2>Class balance & composition</h2>
+            <p>Understanding class frequencies is essential for evaluation metric selection.</p>
+          </div>
+        </div>
+
+        <div class="figure-grid">
+          <div class="figure-box">
+            <div class="figure-placeholder">
+              [Bar chart: class distribution across train/val/test]
+            </div>
+            <div class="figure-caption">
+              <h4>Class distribution</h4>
+              <p>Number of samples per class in each split. Insert bar chart showing class frequencies.</p>
+            </div>
+          </div>
+
+          <div class="figure-box">
+            <div class="figure-placeholder">
+              [Pie chart: class proportions]
+            </div>
+            <div class="figure-caption">
+              <h4>Overall class proportions</h4>
+              <p>Relative class frequencies. Highlight if dataset is highly imbalanced.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="observations-list">
+          <h4>📌 Class balance observations</h4>
+          <ul>
+            <li>Report balance ratio (e.g., 1:1, 2:1, 10:1)</li>
+            <li>Identify dominant and minority classes</li>
+            <li>Note stratification strategy (if any)</li>
+            <li>Implications for metric selection (e.g., macro-F1 vs micro-accuracy)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Image Statistics -->
+    <section id="statistics" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Image modality</div>
+            <h2>Image properties & distributions</h2>
+            <p>Visual characteristics of the image component.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Typical observations</h3>
+            <ul class="checklist">
+              <li>Image resolution (mean, range)</li>
+              <li>Aspect ratio distribution</li>
+              <li>Color space (RGB, grayscale, etc.)</li>
+              <li>Image quality (centered, cluttered, etc.)</li>
+              <li>Domain diversity (photos, graphics, etc.)</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Visual analysis</h3>
+            <p class="notice" style="background: transparent; padding: 0; margin: 0;">
+              You should include:
+            </p>
+            <ul class="checklist">
+              <li>Resolution histogram</li>
+              <li>Sample image grid (diverse examples)</li>
+              <li>Brightness/contrast statistics</li>
+              <li>Object presence or scene type</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="figure-grid">
+          <div class="figure-box">
+            <div class="figure-placeholder">
+              [Histogram: image size distribution]
+            </div>
+            <div class="figure-caption">
+              <h4>Image resolution distribution</h4>
+              <p>Histogram showing distribution of image dimensions (width × height).</p>
+            </div>
+          </div>
+
+          <div class="figure-box">
+            <div class="figure-placeholder">
+              [Grid: sample images from dataset]
+            </div>
+            <div class="figure-caption">
+              <h4>Representative image samples</h4>
+              <p>Visual examples showing diversity of images across classes.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Text Statistics -->
+    <section>
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Text modality</div>
+            <h2>Text properties & distributions</h2>
+            <p>Linguistic characteristics of the text component.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Typical observations</h3>
+            <ul class="checklist">
+              <li>Text length (words, characters, tokens)</li>
+              <li>Vocabulary size</li>
+              <li>Language (English, multilingual, etc.)</li>
+              <li>Text style (formal, casual, technical)</li>
+              <li>Named entity presence</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Textual analysis</h3>
+            <ul class="checklist">
+              <li>Text length distribution</li>
+              <li>Token count histogram</li>
+              <li>Vocabulary coverage</li>
+              <li>Common words / phrases (word clouds)</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="figure-grid">
+          <div class="figure-box">
+            <div class="figure-placeholder">
+              [Histogram: text length distribution]
+            </div>
+            <div class="figure-caption">
+              <h4>Text length distribution</h4>
+              <p>Histogram of text length (words, characters, or tokens) per sample.</p>
+            </div>
+          </div>
+
+          <div class="figure-box">
+            <div class="figure-placeholder">
+              [Word cloud or frequency plot]
+            </div>
+            <div class="figure-caption">
+              <h4>Text content analysis</h4>
+              <p>Word cloud or term frequency chart showing most common words in dataset.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sample Pairs -->
+    <section id="samples" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Examples</div>
+            <h2>Sample image-text pairs</h2>
+            <p>Representative examples showing the type of data and multimodal fusion challenge.</p>
+          </div>
+        </div>
+
+        <div class="sample-pairs">
+          <div class="pair-box">
+            <div class="pair-image">[Image placeholder]</div>
+            <div class="pair-content">
+              <span class="pair-label">Class: [label]</span>
+              <p class="pair-text">
+                "Text description goes here. This is the accompanying text for this image. Can be a caption, title, description, or label text depending on your dataset."
+              </p>
+            </div>
+          </div>
+
+          <div class="pair-box">
+            <div class="pair-image">[Image placeholder]</div>
+            <div class="pair-content">
+              <span class="pair-label">Class: [label]</span>
+              <p class="pair-text">
+                "Another representative sample. Shows different domain or visual characteristics. Demonstrates the multimodal nature of the task."
+              </p>
+            </div>
+          </div>
+
+          <div class="pair-box">
+            <div class="pair-image">[Image placeholder]</div>
+            <div class="pair-content">
+              <span class="pair-label">Class: [label]</span>
+              <p class="pair-text">
+                "Edge case or challenging example. Perhaps low image quality, ambiguous text, or misleading visual-text mismatch. Shows real-world challenges."
+              </p>
+            </div>
+          </div>
+
+          <div class="pair-box">
+            <div class="pair-image">[Image placeholder]</div>
+            <div class="pair-content">
+              <span class="pair-label">Class: [label]</span>
+              <p class="pair-text">
+                "Diverse domain example. Demonstrates coverage across different visual domains or text styles represented in dataset."
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>✏️ Add real samples</h4>
+          <p>Replace image placeholders and text snippets with actual dataset examples. Show 4-8 representative pairs per class.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Observations -->
+    <section>
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Insights</div>
+            <h2>Important EDA findings</h2>
+            <p>Key observations and implications for model design.</p>
+          </div>
+        </div>
+
+        <div class="observations-list">
+          <h4>🔍 Dataset characteristics</h4>
+          <ul>
+            <li>
+              <strong>Class balance:</strong> 
+              Describe whether dataset is balanced or imbalanced. Implications for loss functions and metrics.
+            </li>
+            <li>
+              <strong>Modality importance:</strong> 
+              Which modality (image vs text) appears more informative? Any visual-text conflicts?
+            </li>
+            <li>
+              <strong>Data quality:</strong> 
+              Are there noisy labels, low-quality images, or malformed text? What preprocessing is needed?
+            </li>
+            <li>
+              <strong>Domain variation:</strong> 
+              How much visual and textual diversity is there within classes?
+            </li>
+            <li>
+              <strong>Temporal or sequential patterns:</strong> 
+              Any temporal ordering or dependencies between samples?
+            </li>
+          </ul>
+        </div>
+
+        <div class="grid two" style="margin-top: 20px;">
+          <article class="card">
+            <h3>Data preprocessing steps</h3>
+            <ul class="checklist">
+              <li>Image resizing strategy</li>
+              <li>Normalization & augmentation</li>
+              <li>Text tokenization & encoding</li>
+              <li>Missing value handling</li>
+              <li>Outlier treatment</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Implications for modeling</h3>
+            <ul class="checklist">
+              <li>Loss function choice (class weights?)</li>
+              <li>Evaluation metrics (macro vs micro?)</li>
+              <li>Data augmentation needs</li>
+              <li>Modality-specific architectures</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Navigation</h3>
+        <ul class="footer-links">
+          <li><a href="./index.html">← Back to multimodal home</a></li>
+          <li><a href="./zero-shot/index.html">Zero-shot classification</a></li>
+          <li><a href="./few-shot/index.html">Few-shot learning</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Next steps</h3>
+        <ul class="footer-links">
+          <li><a href="./results/index.html">View results</a></li>
+          <li><a href="./error-analysis/index.html">Error analysis</a></li>
+          <li><a href="./ablation-interpretability/index.html">Ablation studies</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

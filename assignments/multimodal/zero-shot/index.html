@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zero-shot Classification | Multimodal</title>
+  <meta name="description" content="Zero-shot multimodal classification using pretrained vision-language models." />
+  <link rel="stylesheet" href="../../assets/styles.css" />
+  <style>
+    .breadcrumb {
+      display: flex;
+      gap: 8px;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      color: var(--muted);
+    }
+    .breadcrumb a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover { color: var(--primary-2); }
+    .breadcrumb span { opacity: 0.5; }
+
+    .method-flow {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      margin: 20px 0;
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .flow-step:last-child { margin-bottom: 0; }
+
+    .flow-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 50%;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .flow-content h4 {
+      margin: 0 0 4px 0;
+      color: var(--text);
+    }
+
+    .flow-content p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .code-block {
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 16px;
+      overflow-x: auto;
+      margin: 16px 0;
+    }
+
+    .code-block code {
+      color: var(--primary-2);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .prompt-template {
+      background: linear-gradient(135deg, rgba(126,240,194,.08), rgba(110,168,254,.08));
+      border-left: 3px solid rgba(126,240,194,.3);
+      padding: 16px;
+      border-radius: 12px;
+      margin: 16px 0;
+    }
+
+    .prompt-template h4 {
+      margin: 0 0 10px 0;
+      color: var(--primary-2);
+    }
+
+    .prompt-template p,
+    .prompt-template code {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .placeholder-section {
+      background: linear-gradient(135deg, rgba(255,211,110,.08), rgba(156,137,255,.08));
+      border: 1px dashed rgba(255,211,110,.3);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .placeholder-section h4 {
+      margin: 0 0 8px 0;
+      color: var(--warning);
+    }
+
+    .placeholder-section p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .diagram-box {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      margin: 20px 0;
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+    }
+
+    .pros-cons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .pros-box, .cons-box {
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .pros-box {
+      background: rgba(126,240,194,.08);
+      border: 1px solid rgba(126,240,194,.2);
+      border-left: 3px solid rgba(126,240,194,.5);
+    }
+
+    .cons-box {
+      background: rgba(255,107,107,.08);
+      border: 1px solid rgba(255,107,107,.2);
+      border-left: 3px solid rgba(255,107,107,.5);
+    }
+
+    .pros-box h4, .cons-box h4 {
+      margin: 0 0 10px 0;
+    }
+
+    .pros-box h4 { color: var(--primary-2); }
+    .cons-box h4 { color: #ff6b6b; }
+
+    .pros-box ul, .cons-box ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 0.9rem;
+    }
+
+    .pros-box li { margin-bottom: 6px; }
+    .cons-box li { margin-bottom: 6px; }
+
+    .results-preview {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .results-preview table {
+      width: 100%;
+    }
+
+    .results-preview th,
+    .results-preview td {
+      padding: 10px;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 1024px) {
+      .pros-cons {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <nav class="nav-links">
+        <a href="./index.html">← Multimodal home</a>
+        <a href="#pipeline">Pipeline</a>
+        <a href="#prompts">Prompts</a>
+        <a href="#results">Results</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="../../index.html">Home</a>
+          <span>/</span>
+          <a href="./index.html">Multimodal</a>
+          <span>/</span>
+          <span>Zero-shot Classification</span>
+        </div>
+        <div class="badge">🎓 Zero-shot Learning · No fine-tuning</div>
+        <h1>Zero-shot Classification</h1>
+        <p class="lead">
+          Zero-shot learning classifies images without any task-specific fine-tuning.
+          We use pretrained vision-language models (e.g., CLIP) to compute semantic similarity
+          between image embeddings and textual label descriptions, then select the highest-scoring label.
+        </p>
+      </div>
+    </section>
+
+    <!-- Motivation -->
+    <section class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Motivation</div>
+            <h2>Why zero-shot learning?</h2>
+            <p>Understanding the practical appeal and limitations of zero-shot approaches.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Key advantages</h3>
+            <ul class="checklist">
+              <li>No labeled data required</li>
+              <li>No training time overhead</li>
+              <li>Leverages general pretrained models</li>
+              <li>Fast deployment and inference</li>
+              <li>Works on novel classes</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Practical use cases</h3>
+            <ul class="checklist">
+              <li>Rapid prototyping</li>
+              <li>New dataset / domain exploration</li>
+              <li>Baseline establishment</li>
+              <li>Resource-constrained settings</li>
+              <li>One-shot or few-label scenarios</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Method Overview -->
+    <section id="pipeline">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Methodology</div>
+            <h2>Zero-shot pipeline</h2>
+            <p>Step-by-step breakdown of the zero-shot classification approach.</p>
+          </div>
+        </div>
+
+        <div class="method-flow">
+          <div class="flow-step">
+            <div class="flow-number">1</div>
+            <div class="flow-content">
+              <h4>Select pretrained model</h4>
+              <p>
+                Choose a vision-language model (e.g., CLIP, ALIGN, BEiT+BERT).
+                Model should be pretrained on large-scale image-text data.
+              </p>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-number">2</div>
+            <div class="flow-content">
+              <h4>Create label descriptions</h4>
+              <p>
+                For each class label, write one or more textual descriptions
+                (e.g., "A photo of a cat", "A dangerous object", "High-quality product").
+              </p>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-number">3</div>
+            <div class="flow-content">
+              <h4>Encode labels</h4>
+              <p>
+                Use the model's text encoder to generate embeddings for all label descriptions.
+                Store these embeddings for efficient comparison.
+              </p>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-number">4</div>
+            <div class="flow-content">
+              <h4>Encode test images</h4>
+              <p>
+                Use the model's vision encoder to generate embeddings for test images.
+                No labels needed—only the images are processed.
+              </p>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-number">5</div>
+            <div class="flow-content">
+              <h4>Compute similarity</h4>
+              <p>
+                Compute similarity scores between each image embedding and all label embeddings
+                (typically cosine similarity or dot product after normalization).
+              </p>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-number">6</div>
+            <div class="flow-content">
+              <h4>Predict & output</h4>
+              <p>
+                Select the label with the highest similarity score as the prediction.
+                Optionally, apply softmax to get confidence scores.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="diagram-box">
+          [Pipeline diagram placeholder: Image → Encoder → Embedding space ← Label text encodings]
+        </div>
+
+        <div class="placeholder-section">
+          <h4>✏️ Add visual diagram</h4>
+          <p>Consider adding a flow diagram or architecture visualization showing the pipeline above.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Prompt Engineering -->
+    <section id="prompts" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Text design</div>
+            <h2>Label description strategy</h2>
+            <p>How we construct the text prompts for effective zero-shot classification.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Prompt design principles</h3>
+            <ul class="checklist">
+              <li>Be descriptive but concise</li>
+              <li>Use context (e.g., "A photo of...")</li>
+              <li>Include domain keywords</li>
+              <li>Test multiple prompt variations</li>
+              <li>Ensure consistency across labels</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Template approaches</h3>
+            <ul class="checklist">
+              <li>Simple: "<strong>class_name</strong>"</li>
+              <li>Context: "A photo of a <strong>class_name</strong>"</li>
+              <li>Detailed: "An image of a <strong>class_name</strong> in a ..."</li>
+              <li>Multiple variants per class</li>
+              <li>Ensemble predictions across variants</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="prompt-template">
+          <h4>Example prompt template for your dataset</h4>
+          <code>
+            # For each class, construct a description:<br/>
+            descriptions = {<br/>
+            &nbsp;&nbsp;"class_A": "A photo of class_A",<br/>
+            &nbsp;&nbsp;"class_B": "A photo of class_B",<br/>
+            &nbsp;&nbsp;...<br/>
+            }<br/>
+            <br/>
+            # Or use multiple prompts per class:<br/>
+            descriptions = {<br/>
+            &nbsp;&nbsp;"class_A": ["A photo of class_A", "An image of a class_A", "class_A object"],<br/>
+            &nbsp;&nbsp;...<br/>
+            }
+          </code>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Prompt variations tested</h3>
+            <p>Document which prompt strategies you tried:</p>
+            <ul class="checklist">
+              <li>Variation 1: [description]</li>
+              <li>Variation 2: [description]</li>
+              <li>Variation 3: [description]</li>
+              <li>Best performing variant</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Performance impact</h3>
+            <p>How much do prompts affect accuracy?</p>
+            <ul class="checklist">
+              <li>Baseline template: [accuracy]%</li>
+              <li>With context: +[delta]%</li>
+              <li>With domain terms: +[delta]%</li>
+              <li>Ensemble prompts: +[delta]%</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>✏️ Add your prompt outcomes</h4>
+          <p>Replace the placeholder variations and performance numbers with your actual experiments.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Implementation Details -->
+    <section>
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Technical details</div>
+            <h2>Implementation & inference</h2>
+            <p>Code snippets, model choices, and computational considerations.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Model selection</h3>
+            <ul class="checklist">
+              <li><strong>Model:</strong> [e.g., CLIP ViT-B/32]</li>
+              <li><strong>Pretrained on:</strong> [e.g., 400M image-text pairs]</li>
+              <li><strong>Framework:</strong> [PyTorch, TensorFlow, HuggingFace]</li>
+              <li><strong>Image resolution:</strong> [e.g., 224×224 or 336×336]</li>
+              <li><strong>Hardware:</strong> [GPU/CPU, memory, time]</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Inference configuration</h3>
+            <ul class="checklist">
+              <li>Batch size: [e.g., 32]</li>
+              <li>Similarity metric: [cosine, dot product]</li>
+              <li>Normalization: [L2, softmax]</li>
+              <li>Temperature scaling: [if applicable]</li>
+              <li>Multi-prompt ensembling: [yes/no, method]</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="code-block">
+          <code>
+# Pseudocode for zero-shot inference<br/>
+model = load_pretrained_model("CLIP")<br/>
+label_descriptions = create_label_descriptions(classes)<br/>
+label_embeddings = model.encode_text(label_descriptions)<br/>
+<br/>
+predictions = []<br/>
+for image in test_images:<br/>
+&nbsp;&nbsp;image_emb = model.encode_image(image)<br/>
+&nbsp;&nbsp;similarities = cosine_similarity(image_emb, label_embeddings)<br/>
+&nbsp;&nbsp;predicted_class = argmax(similarities)<br/>
+&nbsp;&nbsp;predictions.append(predicted_class)
+          </code>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>✏️ Add implementation details</h4>
+          <p>Replace placeholders with your actual model details, hyperparameters, and code snippets.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Strengths and Limitations -->
+    <section id="results" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Analysis</div>
+            <h2>Strengths & limitations</h2>
+            <p>When zero-shot works well and where it struggles.</p>
+          </div>
+        </div>
+
+        <div class="pros-cons">
+          <div class="pros-box">
+            <h4>✓ Strengths</h4>
+            <ul>
+              <li>No labeled data needed</li>
+              <li>Fast inference</li>
+              <li>Works on novel classes</li>
+              <li>Easy to implement</li>
+              <li>Interpretable decisions</li>
+            </ul>
+          </div>
+
+          <div class="cons-box">
+            <h4>✗ Limitations</h4>
+            <ul>
+              <li>Prompt engineering required</li>
+              <li>Lower accuracy than fine-tuned</li>
+              <li>Fails on out-of-distribution data</li>
+              <li>Language bias from pretraining</li>
+              <li>Domain mismatch issues</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="grid two" style="margin-top: 20px;">
+          <article class="card">
+            <h3>When zero-shot succeeds</h3>
+            <p>Zero-shot performs well when:</p>
+            <ul class="checklist">
+              <li>Dataset domain is well-covered by pretraining</li>
+              <li>Class descriptions are clear and unambiguous</li>
+              <li>Image-text pairs are aligned and informative</li>
+              <li>Classes are visually or semantically distinct</li>
+              <li>Inference speed is prioritized over accuracy</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>When zero-shot struggles</h3>
+            <p>Zero-shot struggles when:</p>
+            <ul class="checklist">
+              <li>Fine-grained or domain-specific classification needed</li>
+              <li>Visual domain is far from pretraining data</li>
+              <li>Classes are semantically similar</li>
+              <li>Text is uninformative or misleading</li>
+              <li>High accuracy is required</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results Section -->
+    <section>
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Performance</div>
+            <h2>Zero-shot results</h2>
+            <p>Baseline metrics and comparison with few-shot methods.</p>
+          </div>
+        </div>
+
+        <div class="results-preview">
+          <table>
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Value</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Accuracy</strong></td>
+                <td>[XX.XX%]</td>
+                <td>Main metric on test set</td>
+              </tr>
+              <tr>
+                <td><strong>Macro F1</strong></td>
+                <td>[XX.XX%]</td>
+                <td>Average F1 across classes</td>
+              </tr>
+              <tr>
+                <td><strong>Micro F1</strong></td>
+                <td>[XX.XX%]</td>
+                <td>Weighted F1 by support</td>
+              </tr>
+              <tr>
+                <td><strong>Inference time</strong></td>
+                <td>[X ms/image]</td>
+                <td>Per-image latency</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>✏️ Fill in results</h4>
+          <p>Replace [XX.XX%] and [X ms/image] with your actual zero-shot performance metrics.</p>
+        </div>
+
+        <div class="grid two" style="margin-top: 20px;">
+          <article class="card">
+            <h3>Class-wise performance</h3>
+            <p>Do some classes perform better than others?</p>
+            <ul class="checklist">
+              <li>Best-performing class: [class_name] ([accuracy]%)</li>
+              <li>Worst-performing class: [class_name] ([accuracy]%)</li>
+              <li>Average per-class accuracy: [XX.XX]%</li>
+              <li>Correlation with class frequency</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Comparison preview</h3>
+            <p>How does zero-shot compare to other methods?</p>
+            <ul class="checklist">
+              <li>vs Few-shot linear: [+/- delta]%</li>
+              <li>vs Few-shot (full): [+/- delta]%</li>
+              <li>vs Supervised (100% data): [+/- delta]%</li>
+              <li>See <a class="text-link" href="../results/index.html">Results page</a> for full comparison</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Navigation</h3>
+        <ul class="footer-links">
+          <li><a href="./index.html">← Back to multimodal home</a></li>
+          <li><a href="../dataset-eda/index.html">Dataset & EDA</a></li>
+          <li><a href="../few-shot/index.html">Few-shot methods</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Results</h3>
+        <ul class="footer-links">
+          <li><a href="../results/index.html">Full results & comparison</a></li>
+          <li><a href="../error-analysis/index.html">Error analysis</a></li>
+          <li><a href="../ablation-interpretability/index.html">Ablation studies</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multimodal Classification | Assignment 1</title>
+  <meta name="description" content="Multimodal classification task: zero-shot and few-shot approaches on image-text data." />
+  <link rel="stylesheet" href="../../assets/styles.css" />
+  <style>
+    /* Multimodal-specific styles */
+    .breadcrumb {
+      display: flex;
+      gap: 8px;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      color: var(--muted);
+    }
+    .breadcrumb a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover { color: var(--primary-2); }
+    .breadcrumb span { opacity: 0.5; }
+
+    .section-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .nav-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .nav-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(110,168,254,.36);
+      background: rgba(110,168,254,0.08);
+    }
+
+    .nav-card-icon {
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .nav-card h3 {
+      margin: 0;
+      color: var(--text);
+      font-size: 1.1rem;
+    }
+
+    .nav-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .findings-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .finding-box {
+      background: linear-gradient(135deg, rgba(126,240,194,.12), rgba(110,168,254,.08));
+      border: 1px solid rgba(126,240,194,.2);
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .finding-box strong {
+      display: block;
+      color: var(--primary-2);
+      margin-bottom: 8px;
+    }
+
+    .finding-box p {
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .quick-link-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: rgba(110,168,254,0.1);
+      border: 1px solid rgba(110,168,254,0.2);
+      color: var(--primary);
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .quick-link-btn:hover {
+      background: rgba(110,168,254,0.2);
+      border-color: rgba(110,168,254,0.4);
+    }
+
+    .comparison-summary {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .summary-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .summary-box h4 {
+      margin: 0 0 8px 0;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .summary-box ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 1024px) {
+      .section-cards,
+      .quick-links,
+      .findings-grid,
+      .comparison-summary {
+        grid-template-columns: 1fr;
+      }
+      .quick-links { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 720px) {
+      .findings-grid { grid-template-columns: 1fr; }
+      .quick-links { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <nav class="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="#approaches">Approaches</a>
+        <a href="#findings">Findings</a>
+        <a href="../../assignments/assignment1.html" class="btn btn-secondary">← Back to Assignment 1</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="../../index.html">Home</a>
+          <span>/</span>
+          <a href="../../assignments/assignment1.html">Assignment 1</a>
+          <span>/</span>
+          <span>Multimodal Classification</span>
+        </div>
+        <div class="badge">🎯 Multimodal Branch · Zero-shot & Few-shot Classification</div>
+        <h1>Multimodal Image-Text Classification</h1>
+        <p class="lead">
+          This section explores zero-shot and few-shot learning approaches for classifying image-text pairs.
+          We evaluate how pretrained vision and language models can be leveraged to solve multimodal classification
+          without extensive fine-tuning, and compare this with adapter-based few-shot methods.
+        </p>
+        <div class="quick-links">
+          <a class="quick-link-btn" href="./dataset-eda/index.html">📊 Dataset</a>
+          <a class="quick-link-btn" href="./zero-shot/index.html">🎓 Zero-shot</a>
+          <a class="quick-link-btn" href="./few-shot/index.html">🔧 Few-shot</a>
+          <a class="quick-link-btn" href="./results/index.html">📈 Results</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Project Links Section -->
+    <section id="overview" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Core deliverables</div>
+            <h2>Essential resources</h2>
+            <p>Quick access to dataset, code, and documentation.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Links & Code</h3>
+            <ul class="info-list">
+              <li><strong>Notebook:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add Jupyter notebook link]</a></li>
+              <li><strong>Dataset:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add dataset repository link]</a></li>
+              <li><strong>Code repository:</strong> <a class="text-link" href="https://github.com/" target="_blank" rel="noreferrer">[Add GitHub repo link]</a></li>
+              <li><strong>Full report:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add PDF or Drive link]</a></li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Presentation media</h3>
+            <ul class="info-list">
+              <li><strong>Presentation video:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add video link]</a></li>
+              <li><strong>Demo video:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add demo link]</a></li>
+              <li><strong>Slides:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add slides link]</a></li>
+              <li><strong>Supplementary materials:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add link]</a></li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Overview Section -->
+    <section>
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Task definition</div>
+            <h2>Problem statement</h2>
+            <p>Understanding the multimodal classification task and why it matters.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>What we're solving</h3>
+            <p>
+              Given an image and associated text (e.g., product description, caption, label), predict a class label.
+              The models must learn to fuse visual and textual information to make accurate predictions.
+            </p>
+            <ul class="checklist">
+              <li>Leverage pre-trained vision & language models</li>
+              <li>Fuse multimodal representations effectively</li>
+              <li>Compare zero-shot vs. few-shot paradigms</li>
+              <li>Evaluate on realistic image-text datasets</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Key questions</h3>
+            <ul class="checklist">
+              <li>How much do we need to fine-tune?</li>
+              <li>Can zero-shot work without adaptation?</li>
+              <li>Which fusion strategy is most effective?</li>
+              <li>What is the cost-accuracy trade-off?</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Approaches Overview -->
+    <section id="approaches" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Methodology</div>
+            <h2>Compared approaches</h2>
+            <p>
+              We evaluate two main paradigms: zero-shot learning (no fine-tuning) and few-shot learning (minimal labeled data).
+            </p>
+          </div>
+        </div>
+
+        <div class="section-cards">
+          <a href="./zero-shot/index.html" class="nav-card">
+            <div class="nav-card-icon">🎓</div>
+            <h3>Zero-shot classification</h3>
+            <p>
+              Use pretrained models and text prompts without any fine-tuning. Classify by semantic similarity between image embeddings and label descriptions.
+            </p>
+          </a>
+
+          <a href="./few-shot/index.html" class="nav-card">
+            <div class="nav-card-icon">🔧</div>
+            <h3>Few-shot learning</h3>
+            <p>
+              Fine-tune on a small number of labeled examples. Compare multiple strategies: linear probes, adapters, task-specific heads, etc.
+            </p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Findings -->
+    <section id="findings">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Summary</div>
+            <h2>Key findings</h2>
+            <p>Main takeaways and insights from our experiments.</p>
+          </div>
+        </div>
+
+        <div class="findings-grid">
+          <div class="finding-box">
+            <strong>Zero-shot performance</strong>
+            <p>
+              Zero-shot models achieve reasonable performance on balanced datasets but struggle with imbalanced classes.
+              Text prompt engineering is critical.
+            </p>
+          </div>
+
+          <div class="finding-box">
+            <strong>Few-shot scaling</strong>
+            <p>
+              Significant performance gains with just 16 examples per class. Diminishing returns after 64 examples.
+              Fine-tuning head outperforms linear probe.
+            </p>
+          </div>
+
+          <div class="finding-box">
+            <strong>Modality importance</strong>
+            <p>
+              Vision component provides 70% of signal; text adds 15-20% improvement. Joint optimization needed for best results.
+            </p>
+          </div>
+        </div>
+
+        <div class="notice" style="margin-top: 32px;">
+          <strong>📌 Note:</strong> Replace placeholder findings above with your actual experimental results.
+          See <a class="text-link" href="./results/index.html">Results</a> page for detailed metrics and comparisons.
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation to detailed pages -->
+    <section class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Explore</div>
+            <h2>Detailed analysis</h2>
+            <p>Dive deeper into each aspect of our work.</p>
+          </div>
+        </div>
+
+        <div class="section-cards">
+          <a href="./dataset-eda/index.html" class="nav-card">
+            <div class="nav-card-icon">📊</div>
+            <h3>Dataset & EDA</h3>
+            <p>
+              Dataset description, class distribution, image-text statistics, and exploratory analysis.
+            </p>
+          </a>
+
+          <a href="./results/index.html" class="nav-card">
+            <div class="nav-card-icon">📈</div>
+            <h3>Results & Comparison</h3>
+            <p>
+              Main comparison table, accuracy metrics, confusion matrices, and scaling curves.
+            </p>
+          </a>
+
+          <a href="./error-analysis/index.html" class="nav-card">
+            <div class="nav-card-icon">⚠️</div>
+            <h3>Error Analysis</h3>
+            <p>
+              Failure cases, confusion patterns, class-specific weaknesses, and lessons learned.
+            </p>
+          </a>
+
+          <a href="./ablation-interpretability/index.html" class="nav-card">
+            <div class="nav-card-icon">🔍</div>
+            <h3>Ablation & Interpretability</h3>
+            <p>
+              Component ablations, prompt design impact, and visual explanations of model decisions.
+            </p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparison Preview -->
+    <section>
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Quick reference</div>
+            <h2>Method comparison summary</h2>
+            <p>High-level comparison of zero-shot and few-shot approaches.</p>
+          </div>
+        </div>
+
+        <div class="card table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Approach</th>
+                <th>Training data</th>
+                <th>Fine-tuning</th>
+                <th>Inference speed</th>
+                <th>Main strength</th>
+                <th>Main limitation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Zero-shot</strong></td>
+                <td>None (pretrained only)</td>
+                <td>No</td>
+                <td>Fast</td>
+                <td>No labeled data needed</td>
+                <td>Lower accuracy on new domains</td>
+              </tr>
+              <tr>
+                <td><strong>Few-shot (linear probe)</strong></td>
+                <td>16-64 labeled examples</td>
+                <td>Only head layer</td>
+                <td>Fast</td>
+                <td>Quick adaptation</td>
+                <td>Limited capacity</td>
+              </tr>
+              <tr>
+                <td><strong>Few-shot (adapter)</strong></td>
+                <td>16-64 labeled examples</td>
+                <td>Adapter modules only</td>
+                <td>Medium</td>
+                <td>Flexible, parameter efficient</td>
+                <td>Slower than linear probe</td>
+              </tr>
+              <tr>
+                <td><strong>Few-shot (full tuning)</strong></td>
+                <td>32-128 labeled examples</td>
+                <td>Full model</td>
+                <td>Slow</td>
+                <td>Best accuracy</td>
+                <td>Risk of overfitting</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="notice" style="margin-top: 24px;">
+          <strong>📌 Update this table:</strong> Replace placeholder rows with your actual methods and results.
+          Add or remove rows based on the approaches you implemented.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Explore</h3>
+        <ul class="footer-links">
+          <li><a href="../../assignments/assignment1.html">← Back to Assignment 1</a></li>
+          <li><a href="./dataset-eda/index.html">Dataset & EDA</a></li>
+          <li><a href="./zero-shot/index.html">Zero-shot method</a></li>
+          <li><a href="./few-shot/index.html">Few-shot methods</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Results</h3>
+        <ul class="footer-links">
+          <li><a href="./results/index.html">Results & comparison</a></li>
+          <li><a href="./error-analysis/index.html">Error analysis</a></li>
+          <li><a href="./ablation-interpretability/index.html">Ablation & interpretability</a></li>
+          <li><a href="#">Full report (add link)</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
