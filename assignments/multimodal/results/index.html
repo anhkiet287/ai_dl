@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Results & Comparison | Multimodal</title>
+  <meta name="description" content="Comprehensive results, performance comparison, and analysis of all methods." />
+  <link rel="stylesheet" href="../../../assets/styles.css" />
+  <link rel="stylesheet" href="../multimodal.css" />
+  <style>
+    .breadcrumb {
+      display: flex;
+      gap: 8px;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      color: var(--muted);
+    }
+    .breadcrumb a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover { color: var(--primary-2); }
+    .breadcrumb span { opacity: 0.5; }
+
+    .results-table {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+
+    .results-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .results-table th {
+      background: rgba(255,255,255,0.05);
+      padding: 14px 16px;
+      text-align: left;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #dce6ff;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .results-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .results-table tr:hover {
+      background: rgba(110,168,254,0.05);
+    }
+
+    .metric-highlight {
+      background: rgba(126,240,194,.12);
+      border: 1px solid rgba(126,240,194,.2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      color: var(--primary-2);
+    }
+
+    .method-rank {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+      text-align: center;
+      font-weight: 700;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
+
+    .rank-1 {
+      background: rgba(255,193,7,.15);
+      color: #ffc107;
+    }
+
+    .rank-2 {
+      background: rgba(192,192,192,.15);
+      color: #c0c0c0;
+    }
+
+    .rank-3 {
+      background: rgba(205,127,50,.15);
+      color: #cd7f32;
+    }
+
+    .chart-placeholder {
+      background: linear-gradient(135deg, rgba(110,168,254,.08), rgba(156,137,255,.08));
+      border: 1px solid rgba(110,168,254,0.2);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      margin: 20px 0;
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .confusion-matrix {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .confusion-matrix-placeholder {
+      background: linear-gradient(135deg, rgba(110,168,254,.08), rgba(156,137,255,.08));
+      border: 1px solid rgba(110,168,254,0.2);
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      color: var(--muted);
+      min-height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .placeholder-section {
+      background: linear-gradient(135deg, rgba(255,211,110,.08), rgba(156,137,255,.08));
+      border: 1px dashed rgba(255,211,110,.3);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .placeholder-section h4 {
+      margin: 0 0 8px 0;
+      color: var(--warning);
+    }
+
+    .placeholder-section p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .findings-box {
+      background: rgba(126,240,194,.08);
+      border-left: 3px solid rgba(126,240,194,.3);
+      padding: 18px;
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+
+    .findings-box h4 {
+      margin: 0 0 12px 0;
+      color: var(--primary-2);
+    }
+
+    .findings-box ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .findings-box li {
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .key-insight {
+      background: linear-gradient(135deg, rgba(110,168,254,0.1), rgba(126,240,194,0.1));
+      border: 1px solid rgba(110,168,254,0.2);
+      border-radius: 14px;
+      padding: 16px;
+      margin: 12px 0;
+    }
+
+    .key-insight strong {
+      color: var(--text);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .key-insight p {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 1024px) {
+      .chart-grid,
+      .grid.two {
+        grid-template-columns: 1fr;
+      }
+      
+      .results-table {
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <nav class="nav-links">
+        <a href="../index.html">Overview</a>
+        <a href="../dataset-eda/index.html">Dataset</a>
+        <a href="../zero-shot/index.html">Zero-shot</a>
+        <a href="../few-shot/index.html">Few-shot</a>
+        <a href="./index.html">Results</a>
+        <a href="../error-analysis/index.html">Errors</a>
+        <a href="../ablation-interpretability/index.html">Ablations</a>
+        <a href="../../assignment1.html" class="btn btn-secondary">Assignment 1</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="../../../index.html">Home</a>
+          <span>/</span>
+          <a href="../index.html">Multimodal</a>
+          <span>/</span>
+          <span>Results & Comparison</span>
+        </div>
+        <div class="badge">Performance comparison and analysis</div>
+        <h1>Results & Performance Analysis</h1>
+        <p class="lead">
+          Comprehensive comparison of all methods across accuracy, efficiency, and robustness metrics.
+          Includes learning curves, confusion matrices, and key insights from our experiments.
+        </p>
+        <div class="callout">
+          <strong>Figures directory:</strong> place tables, curves, and matrices for this page in <code>../figures/results/</code>.
+        </div>
+        <nav class="section-nav" aria-label="On-page navigation">
+          <a href="#comparison">Comparison</a>
+          <a href="#scaling">Scaling</a>
+          <a href="#matrices">Confusion</a>
+          <a href="#efficiency">Efficiency</a>
+          <a href="#analysis">Interpretation</a>
+          <a href="#significance">Significance</a>
+        </nav>
+      </div>
+    </section>
+
+    <!-- Main Comparison Table -->
+    <section id="comparison" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Performance</div>
+            <h2>Overall results summary</h2>
+            <p>Main metrics comparing all approaches on the test set.</p>
+          </div>
+        </div>
+
+        <div class="results-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Data</th>
+                <th>Accuracy (%)</th>
+                <th>Macro F1 (%)</th>
+                <th>Training time (h)</th>
+                <th>Inference (ms/img)</th>
+                <th>Parameters</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Zero-shot</strong></td>
+                <td>None (pretrained)</td>
+                <td>[XX.XX] <span class="metric-highlight">±X.XX</span></td>
+                <td>[XX.XX]</td>
+                <td><span class="metric-highlight">0 (no training)</span></td>
+                <td>[X.X]</td>
+                <td>0 (frozen)</td>
+              </tr>
+              <tr>
+                <td><strong>Linear probe (16-shot)</strong></td>
+                <td>16 examples/class</td>
+                <td>[XX.XX] <span class="metric-highlight">±X.XX</span></td>
+                <td>[XX.XX]</td>
+                <td>[X.X]</td>
+                <td>[X.X]</td>
+                <td>Classifier only</td>
+              </tr>
+              <tr>
+                <td><strong>Method 2 (16-shot)</strong></td>
+                <td>16 examples/class</td>
+                <td>[XX.XX] <span class="metric-highlight">±X.XX</span></td>
+                <td>[XX.XX]</td>
+                <td>[X.X]</td>
+                <td>[X.X]</td>
+                <td>[adapter total]</td>
+              </tr>
+              <tr>
+                <td><strong>Method 3 (64-shot)</strong></td>
+                <td>64 examples/class</td>
+                <td>[XX.XX] <span class="metric-highlight">±X.XX</span></td>
+                <td>[XX.XX]</td>
+                <td>[X.X]</td>
+                <td>[X.X]</td>
+                <td>[total params]</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>Fill in results table</h4>
+          <p>Replace all [XX.XX] placeholders with your actual experimental results and confidence intervals.</p>
+        </div>
+
+        <div class="grid two" style="margin-top: 24px;">
+          <article class="card">
+            <h3>🥇 Best performers</h3>
+            <ul class="checklist">
+              <li><span class="method-rank rank-1">1</span> Best accuracy: [Method X] ([XX.XX]%)</li>
+              <li><span class="method-rank rank-2">2</span> 2nd place: [Method Y] ([XX.XX]%)</li>
+              <li><span class="method-rank rank-3">3</span> 3rd place: [Method Z] ([XX.XX]%)</li>
+              <li>Performance gap: [delta]%</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>⚡ Efficiency analysis</h3>
+            <ul class="checklist">
+              <li>Fastest training: [method] ([X] hours)</li>
+              <li>Lowest parameters: [method] ([X]M params)</li>
+              <li>Fastest inference: [method] ([X] ms/img)</li>
+              <li>Best accuracy-efficiency trade-off: [method]</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Learning Curves -->
+    <section id="scaling">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Scaling behavior</div>
+            <h2>Few-shot learning curves</h2>
+            <p>How performance scales with the number of labeled examples.</p>
+          </div>
+        </div>
+
+        <div class="chart-grid">
+          <div class="chart-placeholder">
+            [Line plot: Accuracy vs. number of shots]<br/>
+            <span style="font-size: 0.85rem;">One line per method</span>
+          </div>
+
+          <div class="chart-placeholder">
+            [Line plot: F1 vs. number of shots]<br/>
+            <span style="font-size: 0.85rem;">With error bars or confidence intervals</span>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Scaling observations</h3>
+            <ul class="checklist">
+              <li>Saturation point for each method</li>
+              <li>Steepness of improvement curve</li>
+              <li>Comparative slopes (which improves fastest?)</li>
+              <li>Diminishing returns analysis</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Practical implications</h3>
+            <ul class="checklist">
+              <li>Minimum shots for acceptable accuracy</li>
+              <li>Cost-benefit of additional labels</li>
+              <li>Recommended shot count (16, 32, 64?)</li>
+              <li>Expected accuracy at your target shot count</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>Add learning curves</h4>
+          <p>Replace chart placeholders with line plots showing accuracy vs. number of shots for each method.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Per-class Performance -->
+    <section id="analysis" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Detailed analysis</div>
+            <h2>Per-class breakdown</h2>
+            <p>How different methods perform on each class.</p>
+          </div>
+        </div>
+
+        <div class="results-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Class</th>
+                <th>Samples</th>
+                <th>Zero-shot Acc.</th>
+                <th>Method 1 Acc.</th>
+                <th>Method 2 Acc.</th>
+                <th>Best method</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Class A</strong></td>
+                <td>[count]</td>
+                <td>[XX.XX]%</td>
+                <td>[XX.XX]%</td>
+                <td>[XX.XX]%</td>
+                <td>[method]</td>
+              </tr>
+              <tr>
+                <td><strong>Class B</strong></td>
+                <td>[count]</td>
+                <td>[XX.XX]%</td>
+                <td>[XX.XX]%</td>
+                <td>[XX.XX]%</td>
+                <td>[method]</td>
+              </tr>
+              <tr>
+                <td><strong>Class C</strong></td>
+                <td>[count]</td>
+                <td>[XX.XX]%</td>
+                <td>[XX.XX]%</td>
+                <td>[XX.XX]%</td>
+                <td>[method]</td>
+              </tr>
+              <tr>
+                <td><strong>Average</strong></td>
+                <td>—</td>
+                <td>[XX.XX]%</td>
+                <td>[XX.XX]%</td>
+                <td>[XX.XX]%</td>
+                <td>—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="chart-placeholder" style="margin-top: 24px;">
+          [Grouped bar chart: Accuracy by class for each method]
+        </div>
+
+        <div class="placeholder-section">
+          <h4>Add per-class results</h4>
+          <p>Replace placeholders with actual per-class accuracy values and visualizations.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Confusion Matrices -->
+    <section id="matrices">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Error patterns</div>
+            <h2>Confusion matrices</h2>
+            <p>Understanding which classes are confused with each other.</p>
+          </div>
+        </div>
+
+        <div class="chart-grid">
+          <div class="confusion-matrix">
+            <h4 style="margin-top: 0;">Best method: [Method name]</h4>
+            <div class="confusion-matrix-placeholder">
+              [Confusion matrix heatmap]
+            </div>
+          </div>
+
+          <div class="confusion-matrix">
+            <h4 style="margin-top: 0;">Zero-shot baseline</h4>
+            <div class="confusion-matrix-placeholder">
+              [Confusion matrix heatmap]
+            </div>
+          </div>
+        </div>
+
+        <div class="findings-box">
+          <h4>Key confusion patterns</h4>
+          <ul>
+            <li>Most common confusion: [Class X] ↔ [Class Y] ([N] misclassifications)</li>
+            <li>Best-distinguished pair: [Class A] vs [Class B] (0 confusions)</li>
+            <li>Diagonal dominance: Overall diagonal strength</li>
+            <li>Off-diagonal hotspots: Systematic error sources</li>
+          </ul>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>Add confusion matrices</h4>
+          <p>Replace placeholders with actual confusion matrix heatmaps for best and baseline methods.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Efficiency Comparison -->
+    <section id="efficiency" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Computational cost</div>
+            <h2>Efficiency analysis</h2>
+            <p>Training time, memory, and inference speed trade-offs.</p>
+          </div>
+        </div>
+
+        <div class="chart-grid">
+          <div class="chart-placeholder">
+            [Bar chart: Training time per method]
+          </div>
+
+          <div class="chart-placeholder">
+            [Scatter plot: Accuracy vs. Training time]
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Training efficiency</h3>
+            <ul class="checklist">
+              <li>Fastest method: [method] ([X] hours)</li>
+              <li>Slowest method: [method] ([Y] hours)</li>
+              <li>Time ratio (slowest/fastest): [ratio]x</li>
+              <li>Peak GPU memory: [GB] per method</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Inference deployment</h3>
+            <ul class="checklist">
+              <li>Fastest inference: [method] ([X] ms/img)</li>
+              <li>Slowest inference: [method] ([Y] ms/img)</li>
+              <li>Model size (disk): [MB] per method</li>
+              <li>Throughput: [images/sec] at batch size 32</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>Add efficiency charts</h4>
+          <p>Include bar charts and scatter plots showing computational trade-offs.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Findings & Interpretation -->
+    <section id="insights">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Insights</div>
+            <h2>Main findings & interpretation</h2>
+            <p>Key takeaways and practical implications.</p>
+          </div>
+        </div>
+
+        <div class="findings-box">
+          <h4>Overall performance ranking</h4>
+          <ul>
+            <li><strong>Best accuracy:</strong> [Method] achieves [XX.XX]% accuracy with [X] shots</li>
+            <li><strong>Best trade-off:</strong> [Method] provides [XX.XX]% accuracy with minimal training overhead</li>
+            <li><strong>Surprising finding:</strong> [Observation about relative performance]</li>
+            <li><strong>Baseline gap:</strong> Zero-shot to best method improvement: [+XX.XX]% absolute, [+X%] relative</li>
+          </ul>
+        </div>
+
+        <div class="key-insight">
+          <strong>Finding 1: [Title]</strong>
+          <p>
+            Provide detailed observation and evidence. What did we learn about this aspect of the problem?
+            What are the practical implications?
+          </p>
+        </div>
+
+        <div class="key-insight">
+          <strong>Finding 2: [Title]</strong>
+          <p>
+            Another important finding. Reference specific numbers from your results.
+            Explain why this matters.
+          </p>
+        </div>
+
+        <div class="key-insight">
+          <strong>Finding 3: [Title]</strong>
+          <p>
+            Third key insight. Could be about method interactions, unexpected behaviors, or practical recommendations.
+          </p>
+        </div>
+
+        <div class="grid two" style="margin-top: 24px;">
+          <article class="card">
+            <h3>Recommendations for practitioners</h3>
+            <ul class="checklist">
+              <li>For maximum accuracy: use [Method] with [X] shots</li>
+              <li>For quick prototyping: use [Method] (no training required)</li>
+              <li>For resource-constrained: use [Method] (low memory, fast training)</li>
+              <li>For production: consider [Method X] + [Method Y] ensemble</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Limitations & caveats</h3>
+            <ul class="checklist">
+              <li>Results specific to [dataset name] and classes</li>
+              <li>Performance may vary on different domains</li>
+              <li>Statistical significance: [some results within confidence intervals]</li>
+              <li>See <a class="text-link" href="../error-analysis/index.html">Error Analysis</a> for failure modes</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>Write your findings</h4>
+          <p>Replace all placeholder findings with your actual observations and interpretations from the results.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Statistical Significance -->
+    <section id="significance" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Validation</div>
+            <h2>Statistical analysis</h2>
+            <p>Confidence intervals and significance testing.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Confidence intervals</h3>
+            <ul class="checklist">
+              <li>All results reported as: mean ± std dev</li>
+              <li>Computed from [N] random seeds ([N] ≥ 3)</li>
+              <li>95% confidence intervals provided</li>
+              <li>Sample notation: [XX.XX ± X.XX]% means</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Significance testing</h3>
+            <ul class="checklist">
+              <li>Statistical test: [t-test / bootstrap / other]</li>
+              <li>P-value threshold: alpha = 0.05</li>
+              <li>Results: [Method X] > [Method Y]? [Yes/No, p < [p-val]]</li>
+              <li>Overlapping intervals indicate non-significance</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>Add statistical details</h4>
+          <p>Document your confidence intervals, number of runs, and significance test methodology.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Navigation</h3>
+        <ul class="footer-links">
+          <li><a href="../index.html">Back to multimodal home</a></li>
+          <li><a href="../zero-shot/index.html">Zero-shot method</a></li>
+          <li><a href="../few-shot/index.html">Few-shot methods</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Further analysis</h3>
+        <ul class="footer-links">
+          <li><a href="../error-analysis/index.html">Error analysis</a></li>
+          <li><a href="../ablation-interpretability/index.html">Ablations & interpretability</a></li>
+          <li><a href="../dataset-eda/index.html">Dataset properties</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

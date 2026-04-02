@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preprocessing & Dataloader | Text Branch</title>
+  <meta name="description" content="Preprocessing, augmentation, and dataloader pipeline for the text branch." />
+  <link rel="stylesheet" href="../../multimodal/multimodal.css" />
+  <link rel="stylesheet" href="../../../assets/styles.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <nav class="nav-links">
+        <a href="../index.html">Overview</a>
+        <a href="../problem-eda/index.html">Dataset & EDA</a>
+        <a href="./index.html">Preprocessing & Dataloader</a>
+        <a href="../model-design/index.html">Backbone & Head</a>
+        <a href="../results/index.html">Results & Analysis</a>
+        <a href="../error-analysis/index.html">Error Analysis</a>
+        <a href="../extensions/index.html">Extension</a>
+        <a href="../../assignment1.html" class="btn btn-secondary">Assignment 1</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="../../../index.html">Home</a>
+          <span>/</span>
+          <a href="../../assignment1.html">Assignment 1</a>
+          <span>/</span>
+          <a href="../index.html">Text</a>
+          <span>/</span>
+          <span>Dataset & Pipeline</span>
+        </div>
+        <div class="badge">Text branch</div>
+        <h1>Dataset, DataLoader, and augmentation pipeline</h1>
+        <p class="lead">
+          Document text preprocessing, tokenization, augmentation, and dataloader configuration for training and evaluation.
+        </p>
+        <div class="callout">
+          <strong>Figures directory:</strong> use <code>../figures/dataset-pipeline/</code> for pipeline diagrams and token/length plots.
+        </div>
+        <nav class="section-nav" aria-label="On-page navigation">
+          <a href="#splits">Splits</a>
+          <a href="#preprocess">Preprocess</a>
+          <a href="#augment">Augmentation</a>
+          <a href="#loader">DataLoader</a>
+        </nav>
+      </div>
+    </section>
+
+    <section id="splits" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Splits</div>
+            <h2>Train/val/test</h2>
+            <p>How text data is partitioned.</p>
+          </div>
+        </div>
+        <ul class="info-list">
+          <li>Split ratios: [train/val/test]</li>
+          <li>Shuffling/stratification: [details]</li>
+          <li>Seed and reproducibility notes</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="preprocess">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Preprocessing</div>
+            <h2>Text transforms</h2>
+            <p>Cleaning and tokenization steps.</p>
+          </div>
+        </div>
+        <div class="grid two">
+          <article class="card">
+            <h3>Cleaning</h3>
+            <ul class="checklist">
+              <li>Lowercasing / normalization</li>
+              <li>Stopword handling</li>
+              <li>Emoji / punctuation treatment</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Tokenization</h3>
+            <ul class="checklist">
+              <li>Tokenizer: [BPE/WordPiece/Spacy]</li>
+              <li>Max length: [tokens]</li>
+              <li>Truncation/padding strategy</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="augment" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Augmentation</div>
+            <h2>Augmentation strategy</h2>
+            <p>Text-specific augmentation (if any).</p>
+          </div>
+        </div>
+        <ul class="info-list">
+          <li>Back-translation or synonym replacement</li>
+          <li>Random deletion or swap</li>
+          <li>Mixup on embeddings (optional)</li>
+        </ul>
+        <div class="figure-grid">
+          <div class="figure-card">
+            <div class="figure-placeholder">[Augmentation examples]</div>
+            <div class="caption">Before/after augmentation samples.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="loader">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Loader</div>
+            <h2>Dataloader settings</h2>
+            <p>Batching, workers, and performance notes.</p>
+          </div>
+        </div>
+        <ul class="info-list">
+          <li>Batch size: [value]</li>
+          <li>Workers: [value]</li>
+          <li>Bucketed batching: [yes/no]</li>
+          <li>Padding strategy: [pad to max / dynamic]</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Navigation</h3>
+        <ul class="footer-links">
+          <li><a href="../index.html">Back to text overview</a></li>
+          <li><a href="../../assignment1.html">Assignment 1</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Next</h3>
+        <ul class="footer-links">
+          <li><a href="../model-design/index.html">Model & Training</a></li>
+          <li><a href="../results/index.html">Results</a></li>
+          <li><a href="../extensions/index.html">Extensions</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

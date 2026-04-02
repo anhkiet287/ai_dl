@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Error Analysis | Multimodal</title>
+  <meta name="description" content="Failure cases, error patterns, and challenges in multimodal classification." />
+  <link rel="stylesheet" href="../../../assets/styles.css" />
+  <link rel="stylesheet" href="../multimodal.css" />
+  <style>
+    .breadcrumb {
+      display: flex;
+      gap: 8px;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      color: var(--muted);
+    }
+    .breadcrumb a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover { color: var(--primary-2); }
+    .breadcrumb span { opacity: 0.5; }
+
+    .failure-case {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin: 20px 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .failure-image {
+      background: linear-gradient(135deg, rgba(110,168,254,.1), rgba(156,137,255,.1));
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .failure-details {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .failure-details h4 {
+      margin: 0 0 8px 0;
+      color: var(--text);
+    }
+
+    .failure-annotation {
+      background: rgba(255,107,107,.1);
+      border-left: 3px solid rgba(255,107,107,.3);
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin: 8px 0;
+      font-size: 0.85rem;
+    }
+
+    .failure-annotation strong {
+      color: #ff6b6b;
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .confusion-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .confusion-pattern {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .confusion-pattern h4 {
+      margin: 0 0 10px 0;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .confusion-pattern ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 0.9rem;
+    }
+
+    .confusion-pattern li {
+      margin-bottom: 6px;
+    }
+
+    .class-analysis {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .class-weakness {
+      background: rgba(255,107,107,.08);
+      border: 1px solid rgba(255,107,107,.15);
+      border-left: 3px solid rgba(255,107,107,.3);
+      padding: 14px;
+      border-radius: 12px;
+    }
+
+    .class-weakness h4 {
+      margin: 0 0 8px 0;
+      color: #ff6b6b;
+      font-size: 0.9rem;
+    }
+
+    .class-weakness ul {
+      margin: 0;
+      padding-left: 16px;
+      font-size: 0.85rem;
+    }
+
+    .lesson-box {
+      background: linear-gradient(135deg, rgba(126,240,194,.08), rgba(110,168,254,.08));
+      border: 1px solid rgba(126,240,194,.2);
+      border-left: 3px solid rgba(126,240,194,.4);
+      padding: 16px;
+      border-radius: 12px;
+      margin: 16px 0;
+    }
+
+    .lesson-box strong {
+      color: var(--primary-2);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .lesson-box p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .placeholder-section {
+      background: linear-gradient(135deg, rgba(255,211,110,.08), rgba(156,137,255,.08));
+      border: 1px dashed rgba(255,211,110,.3);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .placeholder-section h4 {
+      margin: 0 0 8px 0;
+      color: var(--warning);
+    }
+
+    .placeholder-section p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .error-categories {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .error-categories h3 {
+      margin: 0 0 16px 0;
+    }
+
+    .error-categories ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .error-categories li {
+      margin-bottom: 8px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 1024px) {
+      .failure-case {
+        grid-template-columns: 1fr;
+      }
+
+      .failure-image {
+        min-height: 200px;
+      }
+
+      .confusion-grid,
+      .class-analysis {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <nav class="nav-links">
+        <a href="../index.html">Overview</a>
+        <a href="../dataset-eda/index.html">Dataset</a>
+        <a href="../zero-shot/index.html">Zero-shot</a>
+        <a href="../few-shot/index.html">Few-shot</a>
+        <a href="../results/index.html">Results</a>
+        <a href="./index.html">Errors</a>
+        <a href="../ablation-interpretability/index.html">Ablations</a>
+        <a href="../../assignment1.html" class="btn btn-secondary">Assignment 1</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="../../../index.html">Home</a>
+          <span>/</span>
+          <a href="../index.html">Multimodal</a>
+          <span>/</span>
+          <span>Error Analysis</span>
+        </div>
+        <div class="badge">Failure case analysis</div>
+        <h1>Error Analysis & Failure Cases</h1>
+        <p class="lead">
+          Understanding not just what works, but why models fail is essential.
+          This page presents representative failure cases, systematic confusion patterns,
+          class-specific weaknesses, and practical lessons learned from our experiments.
+        </p>
+        <div class="callout">
+          <strong>Figures directory:</strong> place failure case visuals and charts for this page in <code>../figures/error-analysis/</code>.
+        </div>
+        <nav class="section-nav" aria-label="On-page navigation">
+          <a href="#failures">Failures</a>
+          <a href="#patterns">Patterns</a>
+          <a href="#weaknesses">Weaknesses</a>
+          <a href="#mitigation">Mitigation</a>
+        </nav>
+      </div>
+    </section>
+
+    <!-- Error Overview -->
+    <section id="overview" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Context</div>
+            <h2>Error types & patterns</h2>
+            <p>Categorizing and understanding the different sources of errors.</p>
+          </div>
+        </div>
+
+        <div class="error-categories">
+          <h3>Common error categories</h3>
+          <ul>
+            <li>
+              <strong>Semantic confusion:</strong>
+              Model confuses visually or semantically similar classes that could be legitimate failures
+            </li>
+            <li>
+              <strong>Modality mismatch:</strong>
+              Image and text point to different classes (e.g., misleading caption)
+            </li>
+            <li>
+              <strong>Out-of-distribution:</strong>
+              Sample looks different from training data (unusual lighting, angle, style)
+            </li>
+            <li>
+              <strong>Ambiguity:</strong>
+              Sample could reasonably belong to multiple classes (genuinely ambiguous examples)
+            </li>
+            <li>
+              <strong>Label noise:</strong>
+              Sample is mislabeled in the ground truth
+            </li>
+            <li>
+              <strong>Feature ambiguity:</strong>
+              Both modalities are informative but point in conflicting directions
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Representative Failure Cases -->
+    <section id="failures">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Examples</div>
+            <h2>Representative failure cases</h2>
+            <p>
+              Concrete examples showing different types of misclassifications.
+              Each case illustrates a particular challenge or systematic behavior.
+            </p>
+          </div>
+        </div>
+
+        <!-- Failure Case 1 -->
+        <div class="failure-case">
+          <div class="failure-image">[Image placeholder]</div>
+          <div class="failure-details">
+            <h4>Failure case 1: [Brief title]</h4>
+            <p style="margin: 0 0 8px 0; color: var(--muted); font-size: 0.9rem;">
+              Ground truth: <strong>[Class A]</strong> | Predicted: <strong>[Class B]</strong>
+            </p>
+            <div class="failure-annotation">
+              <strong>Error type:</strong><br/>
+              [Semantic confusion / Modality mismatch / OOD / Ambiguity]
+            </div>
+            <div class="failure-annotation">
+              <strong>Why it failed:</strong><br/>
+              Explanation of what the model saw and why it made this mistake.
+              What's the challenge here?
+            </div>
+            <div class="failure-annotation">
+              <strong>Insight:</strong><br/>
+              What does this teach us about the model or dataset?
+            </div>
+          </div>
+        </div>
+
+        <!-- Failure Case 2 -->
+        <div class="failure-case">
+          <div class="failure-image">[Image placeholder]</div>
+          <div class="failure-details">
+            <h4>Failure case 2: [Brief title]</h4>
+            <p style="margin: 0 0 8px 0; color: var(--muted); font-size: 0.9rem;">
+              Ground truth: <strong>[Class C]</strong> | Predicted: <strong>[Class D]</strong>
+            </p>
+            <div class="failure-annotation">
+              <strong>Error type:</strong><br/>
+              [Different error type from case 1]
+            </div>
+            <div class="failure-annotation">
+              <strong>Why it failed:</strong><br/>
+              Different failure mode—perhaps image is unusual, text is misleading, or classes are too similar.
+            </div>
+            <div class="failure-annotation">
+              <strong>Insight:</strong><br/>
+              Lessons from this particular failure pattern.
+            </div>
+          </div>
+        </div>
+
+        <!-- Failure Case 3 -->
+        <div class="failure-case">
+          <div class="failure-image">[Image placeholder]</div>
+          <div class="failure-details">
+            <h4>Failure case 3: [Brief title]</h4>
+            <p style="margin: 0 0 8px 0; color: var(--muted); font-size: 0.9rem;">
+              Ground truth: <strong>[Class E]</strong> | Predicted: <strong>[Class F]</strong>
+            </p>
+            <div class="failure-annotation">
+              <strong>Error type:</strong><br/>
+              [Third distinct error category]
+            </div>
+            <div class="failure-annotation">
+              <strong>Why it failed:</strong><br/>
+              Another failure mode. Show diversity in error types.
+            </div>
+            <div class="failure-annotation">
+              <strong>Insight:</strong><br/>
+              What this tells us about model limitations or dataset properties.
+            </div>
+          </div>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>Add failure cases</h4>
+          <p>Replace each placeholder with actual failure examples from your test set. Include images and annotations.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Confusion Patterns -->
+    <section id="patterns" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Systematic errors</div>
+            <h2>Confusion patterns</h2>
+            <p>Classes that are frequently confused with each other.</p>
+          </div>
+        </div>
+
+        <div class="confusion-grid">
+          <div class="confusion-pattern">
+            <h4>Most confused pair #1</h4>
+            <ul>
+              <li><strong>[Class A]</strong> ↔ <strong>[Class B]</strong></li>
+              <li>Forward confusion: [N] errors</li>
+              <li>Reverse confusion: [N] errors</li>
+              <li>Root cause: [Visual/semantic similarity / Dataset issue]</li>
+              <li>Could be mitigated by: [augmentation / better prompts / ...]</li>
+            </ul>
+          </div>
+
+          <div class="confusion-pattern">
+            <h4>Most confused pair #2</h4>
+            <ul>
+              <li><strong>[Class C]</strong> → <strong>[Class D]</strong> (one-directional)</li>
+              <li>Asymmetric: [C→D] [N] errors, [D→C] [M] errors</li>
+              <li>Reason for asymmetry: [explanation]</li>
+              <li>Affects: [Method X] more than [Method Y]</li>
+              <li>Solution: [targeted approach]</li>
+            </ul>
+          </div>
+
+          <div class="confusion-pattern">
+            <h4>✓ Well-separated pair</h4>
+            <ul>
+              <li><strong>[Class E]</strong> vs <strong>[Class F]</strong></li>
+              <li>Confusion rate: [near 0%]</li>
+              <li>Why: Highly distinctive visual/semantic difference</li>
+              <li>Model learns: [specific features/prompts]</li>
+            </ul>
+          </div>
+
+          <div class="confusion-pattern">
+            <h4>🤔 Surprising pattern</h4>
+            <ul>
+              <li>Unexpected confusion: [Class X] → [Class Y]</li>
+              <li>Frequency: [rate/count]</li>
+              <li>Analysis: Initially counterintuitive, but [explanation]</li>
+              <li>Lesson: [insight about model behavior]</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>Document confusion patterns</h4>
+          <p>Replace all confusion matrix patterns with extracted pairs from your actual results.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Class-specific Weaknesses -->
+    <section id="weaknesses">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Class analysis</div>
+            <h2>Class-specific weaknesses</h2>
+            <p>Which classes are hardest to classify and why.</p>
+          </div>
+        </div>
+
+        <div class="class-analysis">
+          <div class="class-weakness">
+            <h4>Hardest class: [Class name]</h4>
+            <ul>
+              <li>Accuracy: [XX]%</li>
+              <li>Sample count: [N]</li>
+              <li>Most confused with: [Class X]</li>
+              <li>Main challenge: [reason]</li>
+              <li>Affects: [which methods more]</li>
+            </ul>
+          </div>
+
+          <div class="class-weakness">
+            <h4>2nd hardest: [Class name]</h4>
+            <ul>
+              <li>Accuracy: [XX]%</li>
+              <li>Sample count: [N]</li>
+              <li>Most confused with: [Class Y]</li>
+              <li>Issue: [specific challenge]</li>
+              <li>Why: [explanation]</li>
+            </ul>
+          </div>
+
+          <div class="class-weakness">
+            <h4>Easiest class: [Class name]</h4>
+            <ul>
+              <li>Accuracy: [XX]% (best)</li>
+              <li>Sample count: [N]</li>
+              <li>Rarely confused with: [others]</li>
+              <li>Success reason: [distinctive features]</li>
+              <li>Lesson: [model behavior insight]</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="lesson-box">
+          <strong>Key observation about class difficulty:</strong>
+          <p>
+            Is difficulty correlated with class frequency? Class visual diversity? Text clarity?
+            What patterns emerge when you rank classes by accuracy?
+          </p>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>Analyze class-wise performance</h4>
+          <p>Extract actual per-class accuracies from your results and identify the hardest and easiest classes.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modality-specific Errors -->
+    <section id="mitigation" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Multimodal perspective</div>
+            <h2>Modality-specific failure modes</h2>
+            <p>When image and text disagree, which is trusted? What breaks down?</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Image-misleading cases</h3>
+            <p>
+              When the image is misleading or doesn't match the text:
+            </p>
+            <ul class="checklist">
+              <li>Example: Poor image quality or unusual angle</li>
+              <li>Frequency: [~N% of errors]</li>
+              <li>Model behavior: [tends to trust image / text / conflicted]</li>
+              <li>Best method: [which handles better]</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Text-misleading cases</h3>
+            <p>
+              When text is unclear, generic, or contradicts the image:
+            </p>
+            <ul class="checklist">
+              <li>Example: Vague or inaccurate text description</li>
+              <li>Frequency: [~N% of errors]</li>
+              <li>Model behavior: [tends to trust image / text / conflicted]</li>
+              <li>Best method: [which handles better]</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="lesson-box">
+          <strong>Modality fusion insight:</strong>
+          <p>
+            Do all methods agree when one modality is unreliable? Or do they have different fusion strategies?
+            Is late fusion more robust to single-modality failures than early fusion?
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparative Error Analysis -->
+    <section>
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Method comparison</div>
+            <h2>Method-specific error patterns</h2>
+            <p>Do different methods make different types of errors?</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Zero-shot errors</h3>
+            <ul class="checklist">
+              <li>Error rate: [XX]%</li>
+              <li>Most common error type: [semantic confusion]</li>
+              <li>Affected by: [prompt quality, class similarity]</li>
+              <li>Advantage: [more interpretable errors]</li>
+              <li>Limitation: [struggles with ambiguous samples]</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Few-shot errors</h3>
+            <ul class="checklist">
+              <li>Error rate: [XX]%</li>
+              <li>Most common error type: [OOD or hard negatives]</li>
+              <li>Varied by: [number of shots, method type]</li>
+              <li>Advantage: [learns dataset-specific patterns]</li>
+              <li>Limitation: [may overfit to limited examples]</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="lesson-box">
+          <strong>Comparative insight:</strong>
+          <p>
+            Do zero-shot and few-shot make complementary errors? Could an ensemble help?
+            Are zero-shot errors more interpretable or different in character?
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Practical Lessons -->
+    <section class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Takeaways</div>
+            <h2>Practical lessons learned</h2>
+            <p>What we can learn from these errors for improving models and datasets.</p>
+          </div>
+        </div>
+
+        <div class="lesson-box">
+          <strong>Lesson 1: [Title]</strong>
+          <p>
+            What we learned and how to apply it. For example:
+            "Classes XX and YY are inherently confusable; future work should either merge them or provide better distinguishing features."
+          </p>
+        </div>
+
+        <div class="lesson-box">
+          <strong>Lesson 2: [Title]</strong>
+          <p>
+            Another actionable insight. Could be about preprocessing, data collection, model architecture, or evaluation strategy.
+          </p>
+        </div>
+
+        <div class="lesson-box">
+          <strong>Lesson 3: [Title]</strong>
+          <p>
+            Third key lesson. Focus on practical improvements that could be implemented in a next iteration of the project.
+          </p>
+        </div>
+
+        <div class="grid two" style="margin-top: 24px;">
+          <article class="card">
+            <h3>Recommendations for data collection</h3>
+            <ul class="checklist">
+              <li>Increase diversity in [feature]</li>
+              <li>Improve alignment between image and text</li>
+              <li>Add more examples of [hard class]</li>
+              <li>Clarify ambiguous labeling criteria</li>
+              <li>Audit labels for potential noise</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Recommendations for modeling</h3>
+            <ul class="checklist">
+              <li>Implement class-weighted loss</li>
+              <li>Use data augmentation for [weak classes]</li>
+              <li>Experiment with ensemble methods</li>
+              <li>Try contrastive or metric-learning objectives</li>
+              <li>Add explicit modality fusion mechanism</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>Write your lessons</h4>
+          <p>Add specific, actionable insights from your error analysis that could improve future versions.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Navigation</h3>
+        <ul class="footer-links">
+          <li><a href="../index.html">Back to multimodal home</a></li>
+          <li><a href="../results/index.html">Results & comparison</a></li>
+          <li><a href="../zero-shot/index.html">Zero-shot method</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Further reading</h3>
+        <ul class="footer-links">
+          <li><a href="../dataset-eda/index.html">Dataset properties</a></li>
+          <li><a href="../ablation-interpretability/index.html">Ablation studies</a></li>
+          <li><a href="../few-shot/index.html">Few-shot methods</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

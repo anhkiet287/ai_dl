@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backbone & Head Architecture | Text Branch</title>
+  <meta name="description" content="Backbone and head architecture, training setup, and evaluation for the text branch." />
+  <link rel="stylesheet" href="../../multimodal/multimodal.css" />
+  <link rel="stylesheet" href="../../../assets/styles.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <nav class="nav-links">
+        <a href="../index.html">Overview</a>
+        <a href="../problem-eda/index.html">Dataset & EDA</a>
+        <a href="../dataset-pipeline/index.html">Preprocessing & Dataloader</a>
+        <a href="./index.html">Backbone & Head</a>
+        <a href="../results/index.html">Results & Analysis</a>
+        <a href="../error-analysis/index.html">Error Analysis</a>
+        <a href="../extensions/index.html">Extension</a>
+        <a href="../../assignment1.html" class="btn btn-secondary">Assignment 1</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="../../../index.html">Home</a>
+          <span>/</span>
+          <a href="../../assignment1.html">Assignment 1</a>
+          <span>/</span>
+          <a href="../index.html">Text</a>
+          <span>/</span>
+          <span>Model & Training</span>
+        </div>
+        <div class="badge">Text branch</div>
+        <h1>Model design, training setup, and evaluation</h1>
+        <p class="lead">
+          Describe architectures, loss functions, optimization, and evaluation protocol used for the text classifiers.
+        </p>
+        <div class="callout">
+          <strong>Figures directory:</strong> store diagrams and training curves in <code>../figures/model-design/</code>.
+        </div>
+        <nav class="section-nav" aria-label="On-page navigation">
+          <a href="#architecture">Architecture</a>
+          <a href="#training">Training</a>
+          <a href="#evaluation">Evaluation</a>
+        </nav>
+      </div>
+    </section>
+
+    <section id="architecture" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Models</div>
+            <h2>Architectures</h2>
+            <p>List and justify chosen models.</p>
+          </div>
+        </div>
+        <div class="grid two">
+          <article class="card">
+            <h3>Baseline</h3>
+            <ul class="checklist">
+              <li>Architecture: [e.g., BiLSTM + attention]</li>
+              <li>Embeddings: [GloVe/fastText/random]</li>
+              <li>Pretrained: [yes/no]</li>
+              <li>Head: [classification layers]</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Transformer</h3>
+            <ul class="checklist">
+              <li>Backbone: [e.g., BERT/RoBERTa]</li>
+              <li>Tuning: [linear probe / partial / full]</li>
+              <li>Sequence length: [max tokens]</li>
+              <li>Special tokens: [CLS/pooling strategy]</li>
+            </ul>
+          </article>
+        </div>
+        <div class="figure-grid">
+          <div class="figure-card">
+            <div class="figure-placeholder">[Model diagram]</div>
+            <div class="caption">High-level architecture.</div>
+          </div>
+          <div class="figure-card">
+            <div class="figure-placeholder">[Attention map]</div>
+            <div class="caption">Example attention visualization.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="training">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Optimization</div>
+            <h2>Training setup</h2>
+            <p>Hyperparameters and schedule.</p>
+          </div>
+        </div>
+        <ul class="info-list">
+          <li>Loss: [Cross-entropy / focal / other]</li>
+          <li>Optimizer: [AdamW], LR: [value], Scheduler: [type]</li>
+          <li>Batch size / epochs / warmup</li>
+          <li>Regularization: [dropout, weight decay, label smoothing]</li>
+          <li>Mixed precision: [yes/no]</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="evaluation" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Protocol</div>
+            <h2>Evaluation</h2>
+            <p>How models are validated and tested.</p>
+          </div>
+        </div>
+        <ul class="info-list">
+          <li>Validation strategy: [hold-out / k-fold]</li>
+          <li>Metrics: [accuracy, macro-F1, precision/recall]</li>
+          <li>Reporting: [mean ± std over seeds]</li>
+          <li>Early stopping / checkpointing criteria</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Navigation</h3>
+        <ul class="footer-links">
+          <li><a href="../index.html">Back to text overview</a></li>
+          <li><a href="../../assignment1.html">Assignment 1</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Next</h3>
+        <ul class="footer-links">
+          <li><a href="../results/index.html">Results</a></li>
+          <li><a href="../extensions/index.html">Extensions</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

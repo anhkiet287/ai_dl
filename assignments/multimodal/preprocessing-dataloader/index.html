@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preprocessing & Dataloader | Multimodal</title>
+  <meta name="description" content="Preprocessing, dataloader, and batching strategy for multimodal image-text data." />
+  <link rel="stylesheet" href="../multimodal.css" />
+  <link rel="stylesheet" href="../../assets/styles.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <nav class="nav-links">
+        <a href="../index.html">Overview</a>
+        <a href="../dataset-eda/index.html">Dataset & EDA</a>
+        <a href="./index.html">Preprocessing</a>
+        <a href="../backbone-architecture/index.html">Backbone & Head</a>
+        <a href="../results/index.html">Results</a>
+        <a href="../error-analysis/index.html">Errors</a>
+        <a href="../extension/index.html">Extension</a>
+        <a href="../assignment1.html" class="btn btn-secondary">Assignment 1</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="../../index.html">Home</a>
+          <span>/</span>
+          <a href="../assignment1.html">Assignment 1</a>
+          <span>/</span>
+          <a href="../index.html">Multimodal</a>
+          <span>/</span>
+          <span>Preprocessing & Dataloader</span>
+        </div>
+        <div class="badge">Multimodal branch</div>
+        <h1>Preprocessing & dataloader</h1>
+        <p class="lead">
+          Describe how images and text are cleaned, tokenized, transformed, batched, and synchronized for multimodal training.
+        </p>
+        <div class="callout">
+          <strong>Figures directory:</strong> use <code>./../figures/preprocessing-dataloader/</code> for pipeline diagrams and augmentation examples.
+        </div>
+        <nav class="section-nav" aria-label="On-page navigation">
+          <a href="#pipeline">Pipeline</a>
+          <a href="#image">Image preprocessing</a>
+          <a href="#text">Text preprocessing</a>
+          <a href="#loader">Batching</a>
+        </nav>
+      </div>
+    </section>
+
+    <section id="pipeline" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Flow</div>
+            <h2>Preprocessing pipeline</h2>
+            <p>Overall sequence from raw data to model-ready batches.</p>
+          </div>
+        </div>
+        <div class="figure-grid">
+          <div class="figure-card">
+            <div class="figure-placeholder">[Pipeline diagram]</div>
+            <div class="caption">End-to-end preprocessing and loading.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="image">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Vision</div>
+            <h2>Image preprocessing</h2>
+            <p>Resizing, normalization, augmentations.</p>
+          </div>
+        </div>
+        <ul class="info-list">
+          <li>Resize/crop: [H x W]</li>
+          <li>Normalization: [mean/std]</li>
+          <li>Augmentations: [flip, color jitter, cutmix]</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="text" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Language</div>
+            <h2>Text preprocessing</h2>
+            <p>Tokenization and normalization.</p>
+          </div>
+        </div>
+        <ul class="info-list">
+          <li>Tokenizer: [CLIP/BPE/etc]</li>
+          <li>Max length and truncation</li>
+          <li>Special tokens and padding</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="loader">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Loader</div>
+            <h2>Batching strategy</h2>
+            <p>Aligning images and text in a single dataloader.</p>
+          </div>
+        </div>
+        <ul class="info-list">
+          <li>Batch size, workers, pin memory</li>
+          <li>Collate function handling variable text length</li>
+          <li>Shuffling/stratification</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Navigation</h3>
+        <ul class="footer-links">
+          <li><a href="../index.html">Back to multimodal home</a></li>
+          <li><a href="../results/index.html">Results & Analysis</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Next</h3>
+        <ul class="footer-links">
+          <li><a href="../backbone-architecture/index.html">Backbone & Head</a></li>
+          <li><a href="../error-analysis/index.html">Error Analysis</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

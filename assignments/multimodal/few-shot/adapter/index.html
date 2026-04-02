@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adapter-based Tuning | Few-shot Multimodal</title>
+  <meta name="description" content="Adapter-based few-shot tuning: lightweight modules added to a frozen backbone for multimodal classification." />
+  <link rel="stylesheet" href="../../../../assets/styles.css" />
+  <link rel="stylesheet" href="../../multimodal.css" />
+  <style>
+    .breadcrumb {
+      display: flex;
+      gap: 8px;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      color: var(--muted);
+    }
+    .breadcrumb a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover { color: var(--primary-2); }
+    .breadcrumb span { opacity: 0.5; }
+
+    .method-overview {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 22px;
+      margin: 20px 0;
+    }
+
+    .method-overview h3 {
+      margin: 0 0 16px 0;
+      color: var(--text);
+    }
+
+    .method-overview ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .method-overview li {
+      margin-bottom: 8px;
+      color: var(--muted);
+    }
+
+    .diagram-placeholder {
+      background: linear-gradient(135deg, rgba(110,168,254,.1), rgba(156,137,255,.1));
+      border: 1px solid rgba(110,168,254,0.2);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      margin: 20px 0;
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+    }
+
+    .placeholder-section {
+      background: linear-gradient(135deg, rgba(255,211,110,.08), rgba(156,137,255,.08));
+      border: 1px dashed rgba(255,211,110,.3);
+      border-radius: 16px;
+      padding: 28px;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .placeholder-section h4 {
+      margin: 0 0 8px 0;
+      color: var(--warning);
+    }
+
+    .placeholder-section p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .results-preview {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .results-preview table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .results-preview th,
+    .results-preview td {
+      padding: 10px;
+      text-align: left;
+      font-size: 0.9rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../../../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <nav class="nav-links">
+        <a href="../../index.html">Overview</a>
+        <a href="../../dataset-eda/index.html">Dataset</a>
+        <a href="../../zero-shot/index.html">Zero-shot</a>
+        <a href="../index.html">Few-shot</a>
+        <a href="../../results/index.html">Results</a>
+        <a href="../../error-analysis/index.html">Errors</a>
+        <a href="../../ablation-interpretability/index.html">Ablations</a>
+        <a href="../../../assignment1.html" class="btn btn-secondary">Assignment 1</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="../../../../index.html">Home</a>
+          <span>/</span>
+          <a href="../../index.html">Multimodal</a>
+          <span>/</span>
+          <a href="../index.html">Few-shot</a>
+          <span>/</span>
+          <span>Adapter-based tuning</span>
+        </div>
+        <div class="badge">Few-shot approach</div>
+        <h1>Adapter-based Tuning for Few-shot Multimodal Classification</h1>
+        <p class="lead">
+          Lightweight adapter blocks are inserted into a frozen pretrained backbone to adapt the model with only a few labeled samples.
+          This preserves most pretrained weights while allowing task-specific conditioning through small bottleneck modules.
+        </p>
+        <div class="callout">
+          <strong>Figures directory:</strong> place adapter diagrams and results in <code>../../figures/few-shot/adapter/</code>.
+        </div>
+        <nav class="section-nav" aria-label="On-page navigation">
+          <a href="#overview">Overview</a>
+          <a href="#pipeline">Pipeline</a>
+          <a href="#implementation">Training</a>
+          <a href="#results">Results</a>
+          <a href="#notes">Notes</a>
+        </nav>
+      </div>
+    </section>
+
+    <!-- Method Overview -->
+    <section id="overview" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Method</div>
+            <h2>Adapter-based few-shot adaptation</h2>
+            <p>Insert trainable bottleneck modules while freezing the main vision-language backbone.</p>
+          </div>
+        </div>
+
+        <div class="method-overview">
+          <h3>Key ideas</h3>
+          <ul>
+            <li>Freeze backbone encoders; train only adapter layers and classifier head.</li>
+            <li>Use small bottleneck dimension (e.g., 64-256) to control parameter count.</li>
+            <li>Optionally share adapters across layers or modalities to reduce size.</li>
+            <li>Retain pretrained representations while enabling task-specific conditioning.</li>
+          </ul>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Why adapters?</h3>
+            <ul class="checklist">
+              <li>Parameter efficient compared to full fine-tuning.</li>
+              <li>Faster training; lower memory footprint.</li>
+              <li>Easy to ablate adapter depth/width.</li>
+              <li>Compatible with linear probe as a fallback.</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Design choices</h3>
+            <ul class="checklist">
+              <li>Where to insert: vision encoder, text encoder, or both.</li>
+              <li>Bottleneck size and activation (e.g., GELU).</li>
+              <li>Dropout on adapter outputs.</li>
+              <li>Initialization strategy (e.g., near-zero init).</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>Update with your specifics</h4>
+          <p>Fill in backbone choice, adapter placement, and parameter counts.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pipeline -->
+    <section id="pipeline">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Flow</div>
+            <h2>Pipeline diagram</h2>
+            <p>Show how adapters are inserted into the forward pass.</p>
+          </div>
+        </div>
+
+        <div class="diagram-placeholder">
+          [Diagram placeholder: Image encoder + adapters -> vision features | Text encoder + adapters -> text features -> fusion -> classifier]
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Training strategy</h3>
+            <ul class="checklist">
+              <li>Freeze backbone weights.</li>
+              <li>Train adapters + classifier head.</li>
+              <li>Learning rate scheduling for small modules.</li>
+              <li>Early stopping on validation.</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Adapter placement</h3>
+            <ul class="checklist">
+              <li>Vision encoder layers: [list layers]</li>
+              <li>Text encoder layers: [list layers]</li>
+              <li>Fusion adapter (optional): [yes/no]</li>
+              <li>Total trainable params: [value]</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>Add your diagram</h4>
+          <p>Replace the placeholder above with the exported adapter pipeline figure.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Implementation -->
+    <section id="implementation" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Training</div>
+            <h2>Implementation notes</h2>
+            <p>Summarize hyperparameters and optimization choices for adapters.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Hyperparameters</h3>
+            <ul class="checklist">
+              <li>Adapter bottleneck: [d]</li>
+              <li>Learning rate: [value]</li>
+              <li>Batch size: [value]</li>
+              <li>Epochs: [value]</li>
+              <li>Optimizer: [AdamW, etc.]</li>
+              <li>Weight decay: [value]</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Implementation notes</h3>
+            <ul class="checklist">
+              <li>Initialization: [e.g., near-zero adapter init]</li>
+              <li>Gradient clipping: [threshold]</li>
+              <li>Scheduler: [cosine / step]</li>
+              <li>Mixed precision: [yes/no]</li>
+              <li>Checkpoint selection: [best val metric]</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>Paste code snippets</h4>
+          <p>Add short code excerpts showing adapter definition and insertion points.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results -->
+    <section id="results">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Performance</div>
+            <h2>Results placeholder</h2>
+            <p>Record adapter performance across shot counts.</p>
+          </div>
+        </div>
+
+        <div class="results-preview">
+          <table>
+            <thead>
+              <tr>
+                <th>Shots</th>
+                <th>Accuracy</th>
+                <th>Macro-F1</th>
+                <th>Params (M)</th>
+                <th>Train time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>16-shot</td>
+                <td>[XX.XX]%</td>
+                <td>[XX.XX]%</td>
+                <td>[p]</td>
+                <td>[t] h</td>
+              </tr>
+              <tr>
+                <td>32-shot</td>
+                <td>[XX.XX]%</td>
+                <td>[XX.XX]%</td>
+                <td>[p]</td>
+                <td>[t] h</td>
+              </tr>
+              <tr>
+                <td>64-shot</td>
+                <td>[XX.XX]%</td>
+                <td>[XX.XX]%</td>
+                <td>[p]</td>
+                <td>[t] h</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="table-caption">Replace with your adapter results table.</div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Scaling observations</h3>
+            <ul class="checklist">
+              <li>Performance vs shot count</li>
+              <li>Training time per epoch</li>
+              <li>Adapter size vs accuracy</li>
+              <li>Best trade-off point</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Comparison</h3>
+            <ul class="checklist">
+              <li>vs Zero-shot: [delta]%</li>
+              <li>vs Linear probe: [delta]%</li>
+              <li>vs Full tuning: [delta]%</li>
+              <li>See <a class="text-link" href="../../results/index.html">Results page</a> for full tables</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Notes -->
+    <section id="notes" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Takeaways</div>
+            <h2>Advantages and risks</h2>
+            <p>Summarize when adapters are preferable and where they may underperform.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Use adapters when</h3>
+            <ul class="checklist">
+              <li>GPU memory is limited</li>
+              <li>Rapid iteration is needed</li>
+              <li>Domain shift is moderate</li>
+              <li>You need parameter-efficient fine-tuning</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Consider alternatives if</h3>
+            <ul class="checklist">
+              <li>Maximum accuracy is required</li>
+              <li>Domain shift is extreme</li>
+              <li>Latency budget is tight</li>
+              <li>You can afford full fine-tuning</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Navigation</h3>
+        <ul class="footer-links">
+          <li><a href="../index.html">Back to few-shot overview</a></li>
+          <li><a href="../../index.html">Back to multimodal home</a></li>
+          <li><a href="../../results/index.html">See all results</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Related pages</h3>
+        <ul class="footer-links">
+          <li><a href="../../zero-shot/index.html">Zero-shot baseline</a></li>
+          <li><a href="../../error-analysis/index.html">Error analysis</a></li>
+          <li><a href="../../ablation-interpretability/index.html">Ablation studies</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

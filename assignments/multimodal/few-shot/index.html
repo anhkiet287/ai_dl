@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Few-shot Learning | Multimodal</title>
+  <meta name="description" content="Few-shot learning approaches for multimodal image-text classification." />
+  <link rel="stylesheet" href="../../../assets/styles.css" />
+  <link rel="stylesheet" href="../multimodal.css" />
+  <style>
+    .breadcrumb {
+      display: flex;
+      gap: 8px;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      color: var(--muted);
+    }
+    .breadcrumb a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover { color: var(--primary-2); }
+    .breadcrumb span { opacity: 0.5; }
+
+    .approach-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin: 24px 0;
+    }
+
+    .approach-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 22px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .approach-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(110,168,254,.36);
+      background: rgba(110,168,254,0.08);
+    }
+
+    .approach-icon {
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .approach-card h3 {
+      margin: 0;
+      color: var(--text);
+      font-size: 1.1rem;
+    }
+
+    .approach-desc {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.4;
+      flex-grow: 1;
+    }
+
+    .approach-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .meta-tag {
+      display: inline-block;
+      padding: 4px 10px;
+      background: rgba(110,168,254,0.12);
+      border: 1px solid rgba(110,168,254,0.2);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: var(--primary);
+    }
+
+    .shared-setup {
+      background: linear-gradient(135deg, rgba(126,240,194,.08), rgba(110,168,254,.08));
+      border: 1px solid rgba(126,240,194,.2);
+      border-radius: 16px;
+      padding: 22px;
+      margin: 20px 0;
+    }
+
+    .shared-setup h3 {
+      margin: 0 0 16px 0;
+      color: var(--primary-2);
+    }
+
+    .shared-setup ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .shared-setup li {
+      margin-bottom: 8px;
+      color: var(--muted);
+    }
+
+    .placeholder-section {
+      background: linear-gradient(135deg, rgba(255,211,110,.08), rgba(156,137,255,.08));
+      border: 1px dashed rgba(255,211,110,.3);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .placeholder-section h4 {
+      margin: 0 0 8px 0;
+      color: var(--warning);
+    }
+
+    .placeholder-section p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .comparison-table {
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    .comparison-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.9rem;
+    }
+
+    .comparison-table th {
+      background: rgba(255,255,255,0.05);
+      font-weight: 600;
+    }
+
+    .eval-protocol {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 22px;
+      margin: 20px 0;
+    }
+
+    .eval-protocol h3 {
+      margin: 0 0 16px 0;
+      color: var(--text);
+    }
+
+    .eval-protocol ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .eval-protocol li {
+      margin-bottom: 8px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 1024px) {
+      .approach-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <nav class="nav-links">
+        <a href="../index.html">Overview</a>
+        <a href="../dataset-eda/index.html">Dataset</a>
+        <a href="../zero-shot/index.html">Zero-shot</a>
+        <a href="./index.html">Few-shot</a>
+        <a href="../results/index.html">Results</a>
+        <a href="../error-analysis/index.html">Errors</a>
+        <a href="../ablation-interpretability/index.html">Ablations</a>
+        <a href="../../assignment1.html" class="btn btn-secondary">Assignment 1</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="../../../index.html">Home</a>
+          <span>/</span>
+          <a href="../index.html">Multimodal</a>
+          <span>/</span>
+          <span>Few-shot Learning</span>
+        </div>
+        <div class="badge">Few-shot learning with minimal labels</div>
+        <h1>Few-shot Multimodal Learning</h1>
+        <p class="lead">
+          Few-shot learning adapts pretrained models to a specific task using only a small number of labeled examples
+          (typically 16-128 samples). We compare multiple adaptation strategies to find the best balance between 
+          performance, computational cost, and ease of implementation.
+        </p>
+        <div class="callout">
+          <strong>Figures directory:</strong> place visuals for this overview page in <code>../figures/few-shot/</code>. Method-specific figures go in each method folder inside <code>../figures/few-shot/</code>.
+        </div>
+        <nav class="section-nav" aria-label="On-page navigation">
+          <a href="#definition">Definition</a>
+          <a href="#setup">Shared setup</a>
+          <a href="#approaches">Methods</a>
+          <a href="#evaluation">Evaluation</a>
+          <a href="#next-steps">Next steps</a>
+        </nav>
+      </div>
+    </section>
+
+    <!-- Introduction -->
+    <section id="definition" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Concept</div>
+            <h2>What is few-shot learning?</h2>
+            <p>Understanding the few-shot paradigm and why it matters.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Few-shot vs. other paradigms</h3>
+            <ul class="checklist">
+              <li><strong>Zero-shot:</strong> No labeled data, prompt-based</li>
+              <li><strong>Few-shot:</strong> 16-128 labeled examples, adaptation</li>
+              <li><strong>Fine-tuning:</strong> 1000+ labeled examples, full training</li>
+              <li><strong>Semi-supervised:</strong> Mix of labeled and unlabeled</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Practical scenarios</h3>
+            <ul class="checklist">
+              <li>New product category (e-commerce)</li>
+              <li>Emerging disease detection (medical)</li>
+              <li>Rare events (security/anomaly)</li>
+              <li>Domain adaptation challenges</li>
+              <li>Resource-constrained edge AI</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Shared Training Setup -->
+    <section id="setup">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Common framework</div>
+            <h2>Shared training setup</h2>
+            <p>Aspects common to all few-shot methods in this study.</p>
+          </div>
+        </div>
+
+        <div class="shared-setup">
+          <h3>Training configuration</h3>
+          <ul>
+            <li><strong>Number of shots:</strong> [e.g., 4, 8, 16, 32, 64 examples per class]</li>
+            <li><strong>Backbone architecture:</strong> [e.g., CLIP ViT-B/32, frozen or partially unfrozen]</li>
+            <li><strong>Feature extraction:</strong> [e.g., vision + text embeddings fused]</li>
+            <li><strong>Loss function:</strong> [e.g., cross-entropy, contrastive loss, etc.]</li>
+            <li><strong>Optimizer:</strong> [e.g., Adam with learning rate [X], weight decay [Y]]</li>
+            <li><strong>Batch size:</strong> [e.g., 32 or 64]</li>
+            <li><strong>Training epochs:</strong> [e.g., 50-200 with early stopping]</li>
+            <li><strong>Data augmentation:</strong> [image transforms, text variations, or both]</li>
+            <li><strong>Validation strategy:</strong> [hold-out validation set or cross-validation]</li>
+          </ul>
+        </div>
+
+        <div class="shared-setup">
+          <h3>Backbone & feature extraction</h3>
+          <ul>
+            <li><strong>Vision encoder:</strong> [frozen or trainable] [model_name]</li>
+            <li><strong>Text encoder:</strong> [frozen or trainable] [model_name]</li>
+            <li><strong>Embedding dimension:</strong> [e.g., 512 or 768]</li>
+            <li><strong>Fusion strategy:</strong> [concatenation, addition, cross-attention, or late fusion]</li>
+            <li><strong>Feature normalization:</strong> [L2 normalization, batch norm, or layer norm]</li>
+          </ul>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>Customize for your dataset</h4>
+          <p>Replace all placeholders with your actual training hyperparameters and configuration.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Few-shot Methods -->
+    <section id="approaches">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Strategies</div>
+            <h2>Few-shot approaches</h2>
+            <p>
+              Different ways to adapt pretrained models with minimal labeled data.
+              Click any method to explore details and results.
+            </p>
+          </div>
+        </div>
+
+        <div class="approach-grid">
+          <a href="./<method-1>/index.html" class="approach-card">
+            <div class="approach-icon">M1</div>
+            <h3>Method 1 (e.g., Linear Probe)</h3>
+            <p class="approach-desc">
+              Train only a linear classifier on top of frozen pretrained features.
+              Fast and parameter-efficient, but limited capacity.
+            </p>
+            <div class="approach-meta">
+              <span class="meta-tag">Fast training</span>
+              <span class="meta-tag">Low parameters</span>
+            </div>
+          </a>
+
+          <a href="./<method-2>/index.html" class="approach-card">
+            <div class="approach-icon">M2</div>
+            <h3>Method 2 (e.g., Adapter)</h3>
+            <p class="approach-desc">
+              Add lightweight adapter modules to frozen backbone.
+              Good balance of performance and parameter efficiency.
+            </p>
+            <div class="approach-meta">
+              <span class="meta-tag">Moderate training</span>
+              <span class="meta-tag">Mid parameters</span>
+            </div>
+          </a>
+
+          <a href="./<method-3>/index.html" class="approach-card">
+            <div class="approach-icon">M3</div>
+            <h3>Method 3 (e.g., Full fine-tune)</h3>
+            <p class="approach-desc">
+              Fine-tune the entire model end-to-end.
+              Best accuracy but slower and higher risk of overfitting.
+            </p>
+            <div class="approach-meta">
+              <span class="meta-tag">Slow training</span>
+              <span class="meta-tag">All parameters</span>
+            </div>
+          </a>
+
+          <a href="./<method-4>/index.html" class="approach-card">
+            <div class="approach-icon">M4</div>
+            <h3>Method 4 (Optional)</h3>
+            <p class="approach-desc">
+              [Add description of your 4th method if applicable. E.g., LoRA, prefix tuning, prompt learning, etc.]
+            </p>
+            <div class="approach-meta">
+              <span class="meta-tag">[Tag 1]</span>
+              <span class="meta-tag">[Tag 2]</span>
+            </div>
+          </a>
+        </div>
+
+        <div class="placeholder-section">
+          <h4>Create method-specific pages</h4>
+          <p>
+            Replace <code>&lt;method-N&gt;</code> with your actual method names (e.g., "linear-probe", "adapter", "finetuned").
+            Create a folder and index.html for each method following the template structure.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Evaluation Protocol -->
+    <section id="evaluation" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Methodology</div>
+            <h2>Shared evaluation protocol</h2>
+            <p>How all few-shot methods are evaluated fairly and consistently.</p>
+          </div>
+        </div>
+
+        <div class="eval-protocol">
+            <h3>Evaluation setup</h3>
+          <ul>
+            <li><strong>Test set:</strong> Same held-out test set for all methods</li>
+            <li><strong>Primary metric:</strong> [e.g., Accuracy or Macro-F1]</li>
+            <li><strong>Secondary metrics:</strong> [e.g., Micro-F1, Per-class accuracy, Precision-Recall]</li>
+            <li><strong>Confidence intervals:</strong> [e.g., computed via [N] random seeds]</li>
+            <li><strong>Statistical testing:</strong> [e.g., t-test or bootstrap]</li>
+            <li><strong>Computational budget:</strong> [Training time, memory, inference speed]</li>
+          </ul>
+        </div>
+
+        <div class="eval-protocol">
+          <h3>Few-shot scaling protocol</h3>
+          <ul>
+            <li><strong>Number of shots tested:</strong> [e.g., 4, 8, 16, 32, 64, 128]</li>
+            <li><strong>Selection strategy:</strong> [random sampling, stratified, or class-balanced]</li>
+            <li><strong>Repetitions per shot:</strong> [e.g., 3-5 random seeds for stable estimates]</li>
+            <li><strong>Reported statistics:</strong> [mean, std, confidence interval]</li>
+            <li><strong>Learning curve:</strong> Accuracy vs. number of shots per method</li>
+          </ul>
+        </div>
+
+        <div class="grid two" style="margin-top: 20px;">
+          <article class="card">
+            <h3>Hardware & resources</h3>
+            <ul class="checklist">
+              <li>Device: [e.g., NVIDIA A100 or V100]</li>
+              <li>Memory: [per-method requirements]</li>
+              <li>Total training time: [hours/minutes]</li>
+              <li>Inference latency: [ms/image]</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Reproducibility</h3>
+            <ul class="checklist">
+              <li>Random seeds: [fixed for all runs]</li>
+              <li>Data splits: [recorded and reusable]</li>
+              <li>Hyperparameters: [documented per method]</li>
+              <li>Code release: [link to repo or notebook]</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Comparison -->
+    <section id="next-steps">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Overview</div>
+            <h2>Method comparison preview</h2>
+            <p>Quick reference for all few-shot approaches.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Expected performance ranking</h3>
+            <ul class="checklist">
+              <li>Best accuracy: [method name]</li>
+              <li>Fastest training: [method name]</li>
+              <li>Best trade-off: [method name]</li>
+              <li>Most robust: [method name]</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Next steps</h3>
+            <ul class="checklist">
+              <li>Explore individual method pages</li>
+              <li>See detailed results on <a class="text-link" href="../results/index.html">Results page</a></li>
+              <li>View error patterns on <a class="text-link" href="../error-analysis/index.html">Error Analysis</a></li>
+              <li>Check ablations on <a class="text-link" href="../ablation-interpretability/index.html">Ablation page</a></li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Navigation</h3>
+        <ul class="footer-links">
+          <li><a href="../index.html">Back to multimodal home</a></li>
+          <li><a href="../zero-shot/index.html">Zero-shot classification</a></li>
+          <li><a href="../dataset-eda/index.html">Dataset & EDA</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Results & Analysis</h3>
+        <ul class="footer-links">
+          <li><a href="../results/index.html">Results & comparison</a></li>
+          <li><a href="../error-analysis/index.html">Error analysis</a></li>
+          <li><a href="../ablation-interpretability/index.html">Ablation & interpretability</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
