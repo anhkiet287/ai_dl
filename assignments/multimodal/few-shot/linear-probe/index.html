@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>[Method name] | Few-shot Multimodal</title>
   <meta name="description" content="[Method name]: approach, implementation, and results for few-shot multimodal classification." />
-  <link rel="stylesheet" href="../../../assets/styles.css" />
+  <link rel="stylesheet" href="../../../../assets/styles.css" />
+  <link rel="stylesheet" href="../../multimodal.css" />
   <style>
     .breadcrumb {
       display: flex;
@@ -117,12 +118,16 @@
 <body>
   <header class="nav">
     <div class="container nav-inner">
-      <a href="../../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <a href="../../../../index.html" class="brand">DL<span>CourseHub</span></a>
       <nav class="nav-links">
-        <a href="../index.html">← Few-shot overview</a>
-        <a href="#overview">Method</a>
-        <a href="#implementation">Implementation</a>
-        <a href="#results">Results</a>
+        <a href="../../index.html">Overview</a>
+        <a href="../../dataset-eda/index.html">Dataset</a>
+        <a href="../../zero-shot/index.html">Zero-shot</a>
+        <a href="../index.html">Few-shot</a>
+        <a href="../../results/index.html">Results</a>
+        <a href="../../error-analysis/index.html">Errors</a>
+        <a href="../../ablation-interpretability/index.html">Ablations</a>
+        <a href="../../../assignment1.html" class="btn btn-secondary">Assignment 1</a>
       </nav>
     </div>
   </header>
@@ -132,7 +137,7 @@
     <section class="hero">
       <div class="container">
         <div class="breadcrumb">
-          <a href="../../../index.html">Home</a>
+          <a href="../../../../index.html">Home</a>
           <span>/</span>
           <a href="../../index.html">Multimodal</a>
           <span>/</span>
@@ -140,12 +145,22 @@
           <span>/</span>
           <span>[Method name]</span>
         </div>
-        <div class="badge">🔧 Few-shot approach</div>
+        <div class="badge">Few-shot approach</div>
         <h1>[Method name] for Few-shot Multimodal Classification</h1>
         <p class="lead">
           [Brief 1-2 sentence summary of the method. What makes it distinctive?
           What problem does it solve?]
         </p>
+        <div class="callout">
+          <strong>Figures directory:</strong> place diagrams and results for this method in <code>../../figures/few-shot/linear-probe/</code>.
+        </div>
+        <nav class="section-nav" aria-label="On-page navigation">
+          <a href="#overview">Overview</a>
+          <a href="#pipeline">Pipeline</a>
+          <a href="#implementation">Training</a>
+          <a href="#results">Results</a>
+          <a href="#notes">Notes</a>
+        </nav>
       </div>
     </section>
 
@@ -191,14 +206,14 @@
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Update method description</h4>
+          <h4>Update method description</h4>
           <p>Replace all placeholder bullet points with your actual method characteristics.</p>
         </div>
       </div>
     </section>
 
     <!-- Pipeline & Architecture -->
-    <section>
+    <section id="pipeline">
       <div class="container">
         <div class="section-heading">
           <div>
@@ -237,7 +252,7 @@
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Add architecture diagram</h4>
+          <h4>Add architecture diagram</h4>
           <p>Include a clear diagram showing the pipeline, including frozen and trainable components.</p>
         </div>
       </div>
@@ -286,7 +301,7 @@ for epoch in range(num_epochs):<br/>
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Add implementation code</h4>
+          <h4>Add implementation code</h4>
           <p>Replace pseudocode with actual implementation snippets from your codebase.</p>
         </div>
       </div>
@@ -365,14 +380,14 @@ for epoch in range(num_epochs):<br/>
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Fill in results table</h4>
+          <h4>Fill in results table</h4>
           <p>Replace all [XX.XX]% and [X.X]h values with your actual experimental results.</p>
         </div>
       </div>
     </section>
 
     <!-- Qualitative Analysis -->
-    <section class="alt">
+    <section id="notes" class="alt">
       <div class="container">
         <div class="section-heading">
           <div>
@@ -405,7 +420,7 @@ for epoch in range(num_epochs):<br/>
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Add qualitative analysis</h4>
+          <h4>Add qualitative analysis</h4>
           <p>Describe how this method behaves in practice based on your experiments.</p>
         </div>
       </div>
@@ -451,8 +466,8 @@ for epoch in range(num_epochs):<br/>
       <div>
         <h3>Navigation</h3>
         <ul class="footer-links">
-          <li><a href="../index.html">← Back to few-shot overview</a></li>
-          <li><a href="../../index.html">← Back to multimodal home</a></li>
+          <li><a href="../index.html">Back to few-shot overview</a></li>
+          <li><a href="../../index.html">Back to multimodal home</a></li>
           <li><a href="../../results/index.html">See all results</a></li>
         </ul>
       </div>

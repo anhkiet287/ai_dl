@@ -1,0 +1,196 @@
+/* Shared utilities for the multimodal assignment pages */
+:root {
+  /* re-use global variables declared in assets/styles.css */
+}
+
+.breadcrumb {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+  color: var(--muted);
+}
+
+.breadcrumb a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.breadcrumb a:hover { color: var(--primary-2); }
+.breadcrumb span { opacity: 0.55; }
+
+.section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 12px;
+  margin: 12px 0 24px;
+}
+
+.section-nav a {
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.section-nav a:hover {
+  border-color: rgba(110,168,254,0.45);
+  transform: translateY(-1px);
+}
+
+.content-with-nav {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 20px;
+  align-items: start;
+}
+
+.sticky-nav {
+  position: sticky;
+  top: 86px;
+}
+
+.link-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.link-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.link-card:hover {
+  border-color: rgba(110,168,254,0.36);
+  transform: translateY(-3px);
+}
+
+.link-card .label {
+  font-size: 0.82rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.link-card .title {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.placeholder-box {
+  background: linear-gradient(135deg, rgba(110,168,254,0.10), rgba(126,240,194,0.08));
+  border: 1px dashed rgba(255,255,255,0.35);
+  border-radius: 16px;
+  padding: 28px;
+  text-align: center;
+  color: var(--muted);
+  margin: 20px 0;
+}
+
+.figure-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.figure-card {
+  background: var(--card);
+  border: 1px dashed var(--card-border);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.figure-card .caption {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 10px;
+}
+
+.table-caption {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.resource-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.resource-bar .btn {
+  padding: 10px 14px;
+}
+
+.callout {
+  background: linear-gradient(135deg, rgba(255,211,110,0.10), rgba(156,137,255,0.08));
+  border: 1px solid rgba(255,211,110,0.35);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.captioned-table {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 20px 0;
+}
+
+.captioned-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.captioned-table th,
+.captioned-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  font-size: 0.9rem;
+}
+
+.captioned-table th {
+  text-align: left;
+  background: rgba(255,255,255,0.05);
+  color: #dfe8ff;
+}
+
+@media (max-width: 1024px) {
+  .content-with-nav { grid-template-columns: 1fr; }
+  .sticky-nav { position: static; }
+}

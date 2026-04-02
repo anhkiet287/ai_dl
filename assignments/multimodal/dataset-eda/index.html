@@ -1,11 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dataset & EDA | Multimodal Classification</title>
   <meta name="description" content="Exploratory data analysis, dataset statistics, and image-text pair distributions." />
-  <link rel="stylesheet" href="../../assets/styles.css" />
+  <link rel="stylesheet" href="../../../assets/styles.css" />
+  <link rel="stylesheet" href="../multimodal.css" />
+
   <style>
     .breadcrumb {
       display: flex;
@@ -24,7 +26,7 @@
 
     .stat-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 16px;
       margin: 24px 0;
     }
@@ -76,6 +78,7 @@
       gap: 20px;
       margin: 24px 0;
     }
+    .figure-grid.one-col { grid-template-columns: 1fr; }
 
     .figure-box {
       background: var(--card);
@@ -83,6 +86,102 @@
       border-radius: 16px;
       overflow: hidden;
     }
+    .figure-box img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+    .figure-box.portrait img {
+      width: 100%;
+      height: auto;
+      max-height: 520px;
+      margin: 0 auto;
+      object-fit: contain;
+    }
+
+    .table-compact {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .table-compact th,
+    .table-compact td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .table-compact tr:last-child td { border-bottom: none; }
+    .pill {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    .pill.high { background: rgba(76, 201, 145, 0.2); color: #4cc991; }
+    .pill.mid { background: rgba(255, 211, 110, 0.2); color: #f3b13c; }
+    .pill.low { background: rgba(255, 107, 107, 0.2); color: #ff6b6b; }
+
+    .callout {
+      background: rgba(110,168,254,.08);
+      border: 1px solid rgba(110,168,254,.2);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-top: 10px;
+      font-size: 0.95rem;
+    }
+    .snapshot-section {
+      padding: 12px 0 8px 0;
+    }
+
+    .cluster-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .cluster-card {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      padding: 16px 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+      backdrop-filter: blur(4px);
+    }
+    .cluster-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+    .cluster-title {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chip {
+      padding: 6px 11px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #0a1220;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.9);
+    }
+    .chip.c0 { background: rgba(110,168,254,0.92); color: #0c2f67; }
+    .chip.c1 { background: rgba(156,137,255,0.92); color: #31237e; }
+    .chip.c2 { background: rgba(76,201,145,0.92); color: #0f4b33; }
+    .chip.c3 { background: rgba(255,183,94,0.92); color: #6a3c00; }
+    .chip.c4 { background: rgba(255,138,138,0.92); color: #6a1f1f; }
 
     .figure-box .figure-placeholder {
       background: linear-gradient(135deg, rgba(110,168,254,.1), rgba(156,137,255,.1));
@@ -123,21 +222,33 @@
       border: 1px solid var(--card-border);
       border-radius: 16px;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
     .pair-image {
       width: 100%;
-      aspect-ratio: 1 / 1;
-      background: linear-gradient(135deg, rgba(110,168,254,.1), rgba(156,137,255,.1));
+      max-height: 360px;
+      background: linear-gradient(135deg, rgba(110,168,254,.08), rgba(156,137,255,.08));
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--muted);
       font-size: 0.9rem;
+      overflow: hidden;
+    }
+    .pair-image img {
+      width: 100%;
+      height: auto;
+      max-height: 360px;
+      object-fit: contain;
+      display: block;
     }
 
     .pair-content {
-      padding: 16px;
+      padding: 0 16px 16px 16px;
+      flex: 1;
     }
 
     .pair-content .pair-label {
@@ -214,6 +325,8 @@
       .split-info {
         grid-template-columns: 1fr;
       }
+      .pair-box { flex-direction: column; }
+      .pair-image { width: 100%; max-width: none; }
     }
 
     @media (max-width: 720px) {
@@ -255,6 +368,20 @@
       </div>
     </section>
 
+    <section class="snapshot-section">
+      <div class="container">
+        <div class="figure-grid one-col" style="margin-top:0;">
+          <div class="figure-box">
+            <img src="../../../assets/multimodal/eda/dataset.png" alt="N24News dataset overview collage" loading="lazy" />
+            <div class="figure-caption">
+              <h4>N24News visual snapshot</h4>
+              <p>Example mix of news imagery across the 24 sections.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Dataset Introduction -->
     <section class="alt">
       <div class="container">
@@ -266,42 +393,47 @@
           </div>
         </div>
 
-        <div class="grid two">
-          <article class="card">
-            <h3>Dataset name</h3>
-            <p>
-              Choose a well-known multimodal dataset or create a custom one. Examples:
-              <strong>Flickr30k</strong> (images + captions), 
-              <strong>COCO</strong> (object detection + captions),
-              <strong>Hateful Memes</strong> (image + text classification),
-              or a custom product/news dataset.
-            </p>
-            <ul class="checklist">
-              <li>Real-world task relevance</li>
-              <li>Sufficient scale (100s to 1000s samples)</li>
-              <li>Clear class distribution</li>
-              <li>Balanced or documented imbalance</li>
-            </ul>
-          </article>
+        <article class="card" style="margin-top:16px;">
+          <h3 style="margin-top:0;">Dataset: N24News (NYTimes)</h3>
+          <p style="margin:6px 0 12px 0;">Multimodal news dataset (images + text metadata) with 61,218 samples across 24 sections; used here as a 24-class image classification benchmark.</p>
+          <ul class="checklist">
+            <li>Each sample: news image, section label, headline, abstract, caption, article URL, image URL, image ID.</li>
+            <li>Primary modality for training: image; prompts use class names.</li>
+            <li>Source: New York Times articles; processed split matches counts in stats.</li>
+          </ul>
+          <div class="resource-bar" style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="btn btn-primary" href="https://github.com/billywzh717/N24News" target="_blank" rel="noopener">Dataset repo</a>
+            <a class="btn" href="https://aclanthology.org/2022.lrec-1.729/" target="_blank" rel="noopener">Paper (LREC 2022)</a>
+          </div>
+          <details style="margin-top:10px;">
+            <summary style="cursor:pointer; color:var(--primary);">Citation</summary>
+            <pre style="margin:8px 0 0 0; white-space:pre-wrap; font-family:var(--mono, monospace); background:rgba(255,255,255,0.04); padding:8px; border-radius:8px;">
+@InProceedings{wang-EtAl:2022:LREC3,
+  author    = {Wang, Zhen and Shan, Xu and Zhang, Xiangxie and Yang, Jie},
+  title     = {N24News: A New Dataset for Multimodal News Classification},
+  booktitle = {Proceedings of the Language Resources and Evaluation Conference},
+  month     = {June},
+  year      = {2022},
+  address   = {Marseille, France},
+  publisher = {European Language Resources Association},
+  pages     = {6768--6775},
+  url       = {https://aclanthology.org/2022.lrec-1.729}
+}</pre>
+          </details>
+        </article>
 
-          <article class="card">
-            <h3>Why this dataset?</h3>
-            <p>
-              Explain the practical relevance and challenges:
-            </p>
-            <ul class="checklist">
-              <li>Applications in industry</li>
-              <li>Difficulty level for current models</li>
-              <li>Multimodal fusion opportunities</li>
-              <li>Availability and licensing</li>
-            </ul>
-          </article>
-        </div>
-
-        <div class="placeholder-section">
-          <h4>✏️ Action required</h4>
-          <p>Replace the placeholder text above with your dataset name, description, and motivation.</p>
-        </div>
+        <article class="card" style="margin-top:16px;">
+          <h3>Why this dataset?</h3>
+          <p style="margin-bottom:10px;">
+            Real-world, multi-domain news where images often hint at the section label, but overlaps force fine-grained discrimination.
+          </p>
+          <ul class="checklist">
+            <li><strong>Applications:</strong> news search, recommendations, editorial curation.</li>
+            <li><strong>Challenge:</strong> confusing lookalikes (Economy vs Opinion vs Your Money).</li>
+            <li><strong>Multimodal headroom:</strong> headlines/abstracts for fusion or prompt design.</li>
+            <li><strong>Licensing:</strong> NYT-derived; processed release complies with dataset terms.</li>
+          </ul>
+        </article>
       </div>
     </section>
 
@@ -318,27 +450,30 @@
 
         <div class="stat-grid">
           <div class="stat-box">
-            <span class="number">[N]</span>
+            <span class="number">61,218</span>
             <span class="label">Total samples</span>
           </div>
           <div class="stat-box">
-            <span class="number">[C]</span>
+            <span class="number">24</span>
             <span class="label">Classes</span>
           </div>
           <div class="stat-box">
-            <span class="number">[H]×[W]</span>
+            <span class="number">224 × 224</span>
             <span class="label">Image size</span>
-          </div>
-          <div class="stat-box">
-            <span class="number">[M] tokens</span>
-            <span class="label">Avg text length</span>
           </div>
         </div>
 
-        <div class="placeholder-section">
-          <h4>✏️ Fill in these values</h4>
-          <p>Replace [N], [C], [H]×[W], [M] with your actual dataset numbers.</p>
-        </div>
+        <article class="card" style="margin-top:12px;">
+          <h3 style="margin-top:0;">Statistics summary</h3>
+          <p style="margin:4px 0 10px 0; color:var(--muted);">Condensed view of counts and dimensions.</p>
+          <ul class="checklist">
+            <li>Total images: 61,218 across 24 sections.</li>
+            <li>Mean size: 995 × 530 px (std: 146 × 69); range: 186 × 97 to 1050 × 1412.</li>
+            <li>Aspect ratio — mean: 1.88, median: 1.91, range: 0.42–4.80.</li>
+            <li>Top sections (3,000 each): Health, Science, Television, Travel, Movies, Dance, Real Estate, Sports, Technology, Theater, Opinion, Music, Books, Art & Design, Media, Food, Fashion.</li>
+            <li>Long-tail sections: Style (2,681), Automobiles (1,825), Economy (1,761), Your Money (1,263), Global Business (1,182), Education (825), Well (681).</li>
+          </ul>
+        </article>
       </div>
     </section>
 
@@ -357,35 +492,40 @@
           <div class="split-box">
             <h4>Training set</h4>
             <ul>
-              <li><strong>Samples:</strong> [train_count]</li>
-              <li><strong>Percentage:</strong> [train_pct]%</li>
+              <li><strong>Samples:</strong> 48,974</li>
+              <li><strong>Percentage:</strong> 80%</li>
               <li><strong>Used for:</strong> Model training</li>
-              <li><strong>Notes:</strong> Description</li>
+              <li><strong>Notes:</strong> Stratified by class</li>
             </ul>
           </div>
           <div class="split-box">
             <h4>Validation set</h4>
             <ul>
-              <li><strong>Samples:</strong> [val_count]</li>
-              <li><strong>Percentage:</strong> [val_pct]%</li>
+              <li><strong>Samples:</strong> 6,122</li>
+              <li><strong>Percentage:</strong> 10%</li>
               <li><strong>Used for:</strong> Hyperparameter tuning</li>
-              <li><strong>Notes:</strong> Description</li>
+              <li><strong>Notes:</strong> Early stopping & threshold tuning</li>
             </ul>
           </div>
           <div class="split-box">
             <h4>Test set</h4>
             <ul>
-              <li><strong>Samples:</strong> [test_count]</li>
-              <li><strong>Percentage:</strong> [test_pct]%</li>
+              <li><strong>Samples:</strong> 6,122</li>
+              <li><strong>Percentage:</strong> 10%</li>
               <li><strong>Used for:</strong> Final evaluation</li>
               <li><strong>Notes:</strong> Held-out, no training</li>
             </ul>
           </div>
         </div>
 
-        <div class="placeholder-section">
-          <h4>✏️ Update split details</h4>
-          <p>Replace [train_count], [train_pct], [val_count], [val_pct], [test_count], [test_pct] with your actual splits.</p>
+        <div class="figure-grid one-col" style="margin-top:12px;">
+          <div class="figure-box">
+            <img src="../../../assets/multimodal/eda/train_val_test_split.png" alt="Train/val/test split overview" loading="lazy" />
+            <div class="figure-caption">
+              <h4>Split overview</h4>
+              <p>Proportion of samples allocated to each split.</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -401,24 +541,33 @@
           </div>
         </div>
 
-        <div class="figure-grid">
+        <div class="figure-grid one-col">
           <div class="figure-box">
-            <div class="figure-placeholder">
-              [Bar chart: class distribution across train/val/test]
-            </div>
+            <img src="../../../assets/multimodal/eda/train_distribution.png" alt="Train class distribution" loading="lazy" />
             <div class="figure-caption">
-              <h4>Class distribution</h4>
-              <p>Number of samples per class in each split. Insert bar chart showing class frequencies.</p>
+              <h4>Training class distribution</h4>
+              <p>Count per class in the training split (48,974 samples).</p>
             </div>
           </div>
-
           <div class="figure-box">
-            <div class="figure-placeholder">
-              [Pie chart: class proportions]
+            <img src="../../../assets/multimodal/eda/val_distribution.png" alt="Validation class distribution" loading="lazy" />
+            <div class="figure-caption">
+              <h4>Validation class distribution</h4>
+              <p>Validation split balance (6,122 samples) mirrors train to avoid selection bias.</p>
             </div>
+          </div>
+          <div class="figure-box">
+            <img src="../../../assets/multimodal/eda/test_distribution.png" alt="Test class distribution" loading="lazy" />
+            <div class="figure-caption">
+              <h4>Test class distribution</h4>
+              <p>Held-out evaluation split (6,122 samples) preserves stratification.</p>
+            </div>
+          </div>
+          <div class="figure-box">
+            <img src="../../../assets/multimodal/eda/full_class_proportion.png" alt="Overall class proportions" loading="lazy" />
             <div class="figure-caption">
               <h4>Overall class proportions</h4>
-              <p>Relative class frequencies. Highlight if dataset is highly imbalanced.</p>
+              <p>Pie view of class shares across the full dataset (61,218 samples).</p>
             </div>
           </div>
         </div>
@@ -474,82 +623,229 @@
 
         <div class="figure-grid">
           <div class="figure-box">
-            <div class="figure-placeholder">
-              [Histogram: image size distribution]
-            </div>
+            <img src="../../../assets/multimodal/eda/image_size_distribution.png" alt="Image size distribution" loading="lazy" />
             <div class="figure-caption">
               <h4>Image resolution distribution</h4>
-              <p>Histogram showing distribution of image dimensions (width × height).</p>
+              <p>Histogram of width × height across the dataset; most images cluster near 1K × 530.</p>
             </div>
           </div>
 
           <div class="figure-box">
-            <div class="figure-placeholder">
-              [Grid: sample images from dataset]
-            </div>
+            <img src="../../../assets/multimodal/eda/aspect_ratio_distribution.png" alt="Aspect ratio distribution" loading="lazy" />
             <div class="figure-caption">
-              <h4>Representative image samples</h4>
-              <p>Visual examples showing diversity of images across classes.</p>
+              <h4>Aspect ratio distribution</h4>
+              <p>Spread of width/height ratios; heavy mode near 1.9 with long-tail wide panoramas.</p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Text Statistics -->
-    <section>
+    <!-- Embedding Projections -->
+    <section id="embeddings" class="alt">
       <div class="container">
         <div class="section-heading">
           <div>
-            <div class="eyebrow">Text modality</div>
-            <h2>Text properties & distributions</h2>
-            <p>Linguistic characteristics of the text component.</p>
+            <div class="eyebrow">Representation space</div>
+            <h2>Embedding projections & similarity</h2>
+            <p>Test-set embeddings (5,000 samples, 512-d). Visualized with UMAP, t-SNE, PCA; cosine similarity mined for near-neighbor classes.</p>
           </div>
         </div>
 
         <div class="grid two">
           <article class="card">
-            <h3>Typical observations</h3>
+            <h3>Projection setup</h3>
             <ul class="checklist">
-              <li>Text length (words, characters, tokens)</li>
-              <li>Vocabulary size</li>
-              <li>Language (English, multilingual, etc.)</li>
-              <li>Text style (formal, casual, technical)</li>
-              <li>Named entity presence</li>
+              <li>Embeddings shape: 5,000 × 512; skipped batches: 0.</li>
+              <li>Labels shape: 5,000.</li>
+              <li>Dim. reduction: PCA → t-SNE/UMAP on 50 PC preload.</li>
             </ul>
+            <div class="callout">
+              First 10 PC variance ratios: 0.0552, 0.0470, 0.0314, 0.0306, 0.0272, 0.0224, 0.0211, 0.0186, 0.0176, 0.0174.<br />
+              Cumulative: PC2 = 0.1022, PC10 = 0.2885. PCs for 90/95/99%: 235 / 309 / 427.
+            </div>
           </article>
 
           <article class="card">
-            <h3>Textual analysis</h3>
+            <h3>Interpretation tips</h3>
             <ul class="checklist">
-              <li>Text length distribution</li>
-              <li>Token count histogram</li>
-              <li>Vocabulary coverage</li>
-              <li>Common words / phrases (word clouds)</li>
+              <li>UMAP/t-SNE: cluster tightness ↔ semantic coherence; mixed clusters may signal label noise.</li>
+              <li>PCA scatter: linear separability in top components; elongated shapes suggest correlated features.</li>
+              <li>Variance curve: elbow helps choose projection depth before downstream tasks.</li>
             </ul>
           </article>
         </div>
 
         <div class="figure-grid">
           <div class="figure-box">
-            <div class="figure-placeholder">
-              [Histogram: text length distribution]
-            </div>
+            <img src="../../../assets/multimodal/eda/umap.png" alt="UMAP projection" loading="lazy" />
             <div class="figure-caption">
-              <h4>Text length distribution</h4>
-              <p>Histogram of text length (words, characters, or tokens) per sample.</p>
+              <h4>UMAP (test set)</h4>
+              <p>2D manifold; color = class. Look for tight, well-separated islands.</p>
             </div>
           </div>
-
           <div class="figure-box">
-            <div class="figure-placeholder">
-              [Word cloud or frequency plot]
-            </div>
+            <img src="../../../assets/multimodal/eda/tsne.png" alt="t-SNE projection" loading="lazy" />
             <div class="figure-caption">
-              <h4>Text content analysis</h4>
-              <p>Word cloud or term frequency chart showing most common words in dataset.</p>
+              <h4>t-SNE (test set)</h4>
+              <p>Neighborhood preservation highlights local confusions and rare clusters.</p>
             </div>
           </div>
+          <div class="figure-box">
+            <img src="../../../assets/multimodal/eda/pca.png" alt="PCA scatter" loading="lazy" />
+            <div class="figure-caption">
+              <h4>PCA scatter (PC1 vs PC2)</h4>
+              <p>Linear projection; overlaps hint at classes needing multimodal cues.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="figure-grid one-col">
+          <div class="figure-box portrait">
+            <img src="../../../assets/multimodal/eda/pca_variance.png" alt="PCA variance explained" loading="lazy" />
+            <div class="figure-caption">
+              <h4>PCA variance explained</h4>
+              <p>Elbow around 10 PCs (~29%); long tail until 90% at PC235.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Similarity Matrix -->
+    <section>
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Cosine space</div>
+            <h2>Similarity matrix & nearest class pairs</h2>
+            <p>Cosine similarities computed on test embeddings. High values indicate visually/textually close sections.</p>
+          </div>
+        </div>
+
+        <div class="figure-grid one-col">
+          <div class="figure-box">
+            <img src="../../../assets/multimodal/eda/similarity.png" alt="Cosine similarity heatmap across classes" loading="lazy" />
+            <div class="figure-caption">
+              <h4>Similarity matrix heatmap</h4>
+              <p>Diagonal dominates; warm off-diagonal blocks reveal confusing section pairs.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div>
+            <table class="table-compact">
+              <thead>
+                <tr><th>#</th><th>Class 1</th><th>Class 2</th><th>Similarity</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td>Fashion</td><td>Style</td><td><span class="pill high">0.984</span></td></tr>
+                <tr><td>2</td><td>Movies</td><td>Television</td><td><span class="pill high">0.967</span></td></tr>
+                <tr><td>3</td><td>Economy</td><td>Opinion</td><td><span class="pill high">0.966</span></td></tr>
+                <tr><td>4</td><td>Economy</td><td>Your Money</td><td><span class="pill high">0.965</span></td></tr>
+                <tr><td>5</td><td>Media</td><td>Television</td><td><span class="pill high">0.963</span></td></tr>
+                <tr><td>6</td><td>Education</td><td>Your Money</td><td><span class="pill high">0.961</span></td></tr>
+                <tr><td>7</td><td>Media</td><td>Style</td><td><span class="pill high">0.955</span></td></tr>
+                <tr><td>8</td><td>Media</td><td>Opinion</td><td><span class="pill high">0.955</span></td></tr>
+                <tr><td>9</td><td>Health</td><td>Well</td><td><span class="pill high">0.954</span></td></tr>
+                <tr><td>10</td><td>Movies</td><td>Style</td><td><span class="pill high">0.953</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <article class="card">
+            <h3>Similarity insights</h3>
+            <ul class="checklist">
+              <li>High (>0.9): Fashion↔Style, Movies↔Television likely need multimodal cues to disambiguate.</li>
+              <li>Finance cluster: Economy with Opinion/Your Money; consider class-merging or sharper prompts.</li>
+              <li>Health↔Well closeness suggests overlapping vocabulary; add image-specific augmentations.</li>
+              <li>Use heatmap blocks to pick hard negatives for contrastive finetuning.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Label Clusters -->
+    <section class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Cluster analysis</div>
+            <h2>Class clusters from embeddings</h2>
+            <p>Classes grouped by cosine similarity in embedding space (k-means on 5k test embeddings). High-contrast chips for quick scan.</p>
+          </div>
+        </div>
+
+        <div class="cluster-grid">
+          <article class="cluster-card">
+            <div class="cluster-header">
+              <span class="cluster-title">Cluster 0</span>
+              <span class="pill high" style="background: rgba(110,168,254,0.18); color:#7ec9c2;">18 classes</span>
+            </div>
+            <div class="chip-row">
+              <span class="chip c0">Art & Design</span>
+              <span class="chip c0">Books</span>
+              <span class="chip c0">Economy</span>
+              <span class="chip c0">Education</span>
+              <span class="chip c0">Fashion</span>
+              <span class="chip c0">Global Business</span>
+              <span class="chip c0">Health</span>
+              <span class="chip c0">Media</span>
+              <span class="chip c0">Movies</span>
+              <span class="chip c0">Opinion</span>
+              <span class="chip c0">Real Estate</span>
+              <span class="chip c0">Science</span>
+              <span class="chip c0">Style</span>
+              <span class="chip c0">Technology</span>
+              <span class="chip c0">Television</span>
+              <span class="chip c0">Travel</span>
+              <span class="chip c0">Well</span>
+              <span class="chip c0">Your Money</span>
+            </div>
+          </article>
+
+          <article class="cluster-card">
+            <div class="cluster-header">
+              <span class="cluster-title">Cluster 1</span>
+              <span class="pill mid" style="background: rgba(156,137,255,0.18); color:#a5a0ff;">3 classes</span>
+            </div>
+            <div class="chip-row">
+              <span class="chip c1">Dance</span>
+              <span class="chip c1">Music</span>
+              <span class="chip c1">Theater</span>
+            </div>
+          </article>
+
+          <article class="cluster-card">
+            <div class="cluster-header">
+              <span class="cluster-title">Cluster 2</span>
+              <span class="pill mid" style="background: rgba(76,201,145,0.18); color:#7de0b4;">1 class</span>
+            </div>
+            <div class="chip-row">
+              <span class="chip c2">Sports</span>
+            </div>
+          </article>
+
+          <article class="cluster-card">
+            <div class="cluster-header">
+              <span class="cluster-title">Cluster 3</span>
+              <span class="pill mid" style="background: rgba(255,183,94,0.18); color:#f8c273;">1 class</span>
+            </div>
+            <div class="chip-row">
+              <span class="chip c3">Automobiles</span>
+            </div>
+          </article>
+
+          <article class="cluster-card">
+            <div class="cluster-header">
+              <span class="cluster-title">Cluster 4</span>
+              <span class="pill mid" style="background: rgba(255,138,138,0.18); color:#ffb0b0;">1 class</span>
+            </div>
+            <div class="chip-row">
+              <span class="chip c4">Food</span>
+            </div>
+          </article>
         </div>
       </div>
     </section>
@@ -567,50 +863,58 @@
 
         <div class="sample-pairs">
           <div class="pair-box">
-            <div class="pair-image">[Image placeholder]</div>
+            <div class="pair-image">
+              <img src="../../../assets/multimodal/eda/sample1.png" alt="Economy sample image" loading="lazy" />
+            </div>
             <div class="pair-content">
-              <span class="pair-label">Class: [label]</span>
+              <span class="pair-label">Class: Economy</span>
               <p class="pair-text">
-                "Text description goes here. This is the accompanying text for this image. Can be a caption, title, description, or label text depending on your dataset."
+                Headline: “As Walmart Buys Online Retailers, Their Health Benefits Suffer”<br/>
+                Image ID: 14f40a29-2665-558a-854b-8f7a773b028b · Field: headline · Source: image_url
               </p>
             </div>
           </div>
 
           <div class="pair-box">
-            <div class="pair-image">[Image placeholder]</div>
+            <div class="pair-image">
+              <img src="../../../assets/multimodal/eda/sample2.png" alt="Economy sample image" loading="lazy" />
+            </div>
             <div class="pair-content">
-              <span class="pair-label">Class: [label]</span>
+              <span class="pair-label">Class: Dance</span>
               <p class="pair-text">
-                "Another representative sample. Shows different domain or visual characteristics. Demonstrates the multimodal nature of the task."
+                Headline: “The Best Dance of 2016”<br/>
+                Image ID: 0f2f6434-59e1-597b-9e1f-bc51766f1b58 · Field: headline · Source: image_url
               </p>
             </div>
           </div>
 
           <div class="pair-box">
-            <div class="pair-image">[Image placeholder]</div>
+            <div class="pair-image">
+              <img src="../../../assets/multimodal/eda/sample3.png" alt="Economy sample image" loading="lazy" />
+            </div>
             <div class="pair-content">
-              <span class="pair-label">Class: [label]</span>
+              <span class="pair-label">Class: Sports</span>
               <p class="pair-text">
-                "Edge case or challenging example. Perhaps low image quality, ambiguous text, or misleading visual-text mismatch. Shows real-world challenges."
+                Headline: “N.F.L. Adds New Covid-19 Protocols to Keep Season on Track”<br/>
+                Image ID: 1158bde7-d93e-5c4b-a73e-c8a381e1a4fa · Field: headline · Source: image_url
               </p>
             </div>
           </div>
 
           <div class="pair-box">
-            <div class="pair-image">[Image placeholder]</div>
+            <div class="pair-image">
+              <img src="../../../assets/multimodal/eda/sample4.png" alt="Economy sample image" loading="lazy" />
+            </div>
             <div class="pair-content">
-              <span class="pair-label">Class: [label]</span>
+              <span class="pair-label">Class: Automobiles</span>
               <p class="pair-text">
-                "Diverse domain example. Demonstrates coverage across different visual domains or text styles represented in dataset."
+                Headline: “Wheelies: The Philanthropic Pony Car Edition”<br/>
+                Image ID: 461f66b7-0449-5f2f-88f9-8e077dcf7c62 · Field: headline · Source: image_url
               </p>
             </div>
           </div>
         </div>
 
-        <div class="placeholder-section">
-          <h4>✏️ Add real samples</h4>
-          <p>Replace image placeholders and text snippets with actual dataset examples. Show 4-8 representative pairs per class.</p>
-        </div>
       </div>
     </section>
 
@@ -682,7 +986,7 @@
       <div>
         <h3>Navigation</h3>
         <ul class="footer-links">
-          <li><a href="./index.html">← Back to multimodal home</a></li>
+          <li><a href="./index.html">â† Back to multimodal home</a></li>
           <li><a href="./zero-shot/index.html">Zero-shot classification</a></li>
           <li><a href="./few-shot/index.html">Few-shot learning</a></li>
         </ul>
@@ -699,3 +1003,5 @@
   </footer>
 </body>
 </html>
+
+

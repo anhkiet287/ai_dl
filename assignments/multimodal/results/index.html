@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Results & Comparison | Multimodal</title>
   <meta name="description" content="Comprehensive results, performance comparison, and analysis of all methods." />
-  <link rel="stylesheet" href="../../assets/styles.css" />
+  <link rel="stylesheet" href="../../../assets/styles.css" />
+  <link rel="stylesheet" href="../multimodal.css" />
   <style>
     .breadcrumb {
       display: flex;
@@ -211,12 +212,16 @@
 <body>
   <header class="nav">
     <div class="container nav-inner">
-      <a href="../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <a href="../../../index.html" class="brand">DL<span>CourseHub</span></a>
       <nav class="nav-links">
-        <a href="./index.html">← Multimodal home</a>
-        <a href="#comparison">Comparison</a>
-        <a href="#scaling">Scaling</a>
-        <a href="#analysis">Analysis</a>
+        <a href="../index.html">Overview</a>
+        <a href="../dataset-eda/index.html">Dataset</a>
+        <a href="../zero-shot/index.html">Zero-shot</a>
+        <a href="../few-shot/index.html">Few-shot</a>
+        <a href="./index.html">Results</a>
+        <a href="../error-analysis/index.html">Errors</a>
+        <a href="../ablation-interpretability/index.html">Ablations</a>
+        <a href="../../assignment1.html" class="btn btn-secondary">Assignment 1</a>
       </nav>
     </div>
   </header>
@@ -226,18 +231,29 @@
     <section class="hero">
       <div class="container">
         <div class="breadcrumb">
-          <a href="../../index.html">Home</a>
+          <a href="../../../index.html">Home</a>
           <span>/</span>
-          <a href="./index.html">Multimodal</a>
+          <a href="../index.html">Multimodal</a>
           <span>/</span>
           <span>Results & Comparison</span>
         </div>
-        <div class="badge">📈 Performance comparison & analysis</div>
+        <div class="badge">Performance comparison and analysis</div>
         <h1>Results & Performance Analysis</h1>
         <p class="lead">
           Comprehensive comparison of all methods across accuracy, efficiency, and robustness metrics.
           Includes learning curves, confusion matrices, and key insights from our experiments.
         </p>
+        <div class="callout">
+          <strong>Figures directory:</strong> place tables, curves, and matrices for this page in <code>../figures/results/</code>.
+        </div>
+        <nav class="section-nav" aria-label="On-page navigation">
+          <a href="#comparison">Comparison</a>
+          <a href="#scaling">Scaling</a>
+          <a href="#matrices">Confusion</a>
+          <a href="#efficiency">Efficiency</a>
+          <a href="#analysis">Interpretation</a>
+          <a href="#significance">Significance</a>
+        </nav>
       </div>
     </section>
 
@@ -307,7 +323,7 @@
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Fill in results table</h4>
+          <h4>Fill in results table</h4>
           <p>Replace all [XX.XX] placeholders with your actual experimental results and confidence intervals.</p>
         </div>
 
@@ -381,7 +397,7 @@
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Add learning curves</h4>
+          <h4>Add learning curves</h4>
           <p>Replace chart placeholders with line plots showing accuracy vs. number of shots for each method.</p>
         </div>
       </div>
@@ -452,14 +468,14 @@
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Add per-class results</h4>
+          <h4>Add per-class results</h4>
           <p>Replace placeholders with actual per-class accuracy values and visualizations.</p>
         </div>
       </div>
     </section>
 
     <!-- Confusion Matrices -->
-    <section>
+    <section id="matrices">
       <div class="container">
         <div class="section-heading">
           <div>
@@ -486,7 +502,7 @@
         </div>
 
         <div class="findings-box">
-          <h4>📌 Key confusion patterns</h4>
+          <h4>Key confusion patterns</h4>
           <ul>
             <li>Most common confusion: [Class X] ↔ [Class Y] ([N] misclassifications)</li>
             <li>Best-distinguished pair: [Class A] vs [Class B] (0 confusions)</li>
@@ -496,14 +512,14 @@
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Add confusion matrices</h4>
+          <h4>Add confusion matrices</h4>
           <p>Replace placeholders with actual confusion matrix heatmaps for best and baseline methods.</p>
         </div>
       </div>
     </section>
 
     <!-- Efficiency Comparison -->
-    <section class="alt">
+    <section id="efficiency" class="alt">
       <div class="container">
         <div class="section-heading">
           <div>
@@ -546,14 +562,14 @@
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Add efficiency charts</h4>
+          <h4>Add efficiency charts</h4>
           <p>Include bar charts and scatter plots showing computational trade-offs.</p>
         </div>
       </div>
     </section>
 
     <!-- Key Findings & Interpretation -->
-    <section>
+    <section id="insights">
       <div class="container">
         <div class="section-heading">
           <div>
@@ -564,7 +580,7 @@
         </div>
 
         <div class="findings-box">
-          <h4>🔍 Overall performance ranking</h4>
+          <h4>Overall performance ranking</h4>
           <ul>
             <li><strong>Best accuracy:</strong> [Method] achieves [XX.XX]% accuracy with [X] shots</li>
             <li><strong>Best trade-off:</strong> [Method] provides [XX.XX]% accuracy with minimal training overhead</li>
@@ -619,14 +635,14 @@
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Write your findings</h4>
+          <h4>Write your findings</h4>
           <p>Replace all placeholder findings with your actual observations and interpretations from the results.</p>
         </div>
       </div>
     </section>
 
     <!-- Statistical Significance -->
-    <section class="alt">
+    <section id="significance" class="alt">
       <div class="container">
         <div class="section-heading">
           <div>
@@ -651,7 +667,7 @@
             <h3>Significance testing</h3>
             <ul class="checklist">
               <li>Statistical test: [t-test / bootstrap / other]</li>
-              <li>P-value threshold: α = 0.05</li>
+              <li>P-value threshold: alpha = 0.05</li>
               <li>Results: [Method X] > [Method Y]? [Yes/No, p < [p-val]]</li>
               <li>Overlapping intervals indicate non-significance</li>
             </ul>
@@ -659,7 +675,7 @@
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Add statistical details</h4>
+          <h4>Add statistical details</h4>
           <p>Document your confidence intervals, number of runs, and significance test methodology.</p>
         </div>
       </div>
@@ -671,7 +687,7 @@
       <div>
         <h3>Navigation</h3>
         <ul class="footer-links">
-          <li><a href="./index.html">← Back to multimodal home</a></li>
+          <li><a href="../index.html">Back to multimodal home</a></li>
           <li><a href="../zero-shot/index.html">Zero-shot method</a></li>
           <li><a href="../few-shot/index.html">Few-shot methods</a></li>
         </ul>

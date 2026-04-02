@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Error Analysis | Multimodal</title>
   <meta name="description" content="Failure cases, error patterns, and challenges in multimodal classification." />
-  <link rel="stylesheet" href="../../assets/styles.css" />
+  <link rel="stylesheet" href="../../../assets/styles.css" />
+  <link rel="stylesheet" href="../multimodal.css" />
   <style>
     .breadcrumb {
       display: flex;
@@ -208,12 +209,16 @@
 <body>
   <header class="nav">
     <div class="container nav-inner">
-      <a href="../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <a href="../../../index.html" class="brand">DL<span>CourseHub</span></a>
       <nav class="nav-links">
-        <a href="./index.html">← Multimodal home</a>
-        <a href="#failures">Failures</a>
-        <a href="#patterns">Patterns</a>
-        <a href="#weaknesses">Weaknesses</a>
+        <a href="../index.html">Overview</a>
+        <a href="../dataset-eda/index.html">Dataset</a>
+        <a href="../zero-shot/index.html">Zero-shot</a>
+        <a href="../few-shot/index.html">Few-shot</a>
+        <a href="../results/index.html">Results</a>
+        <a href="./index.html">Errors</a>
+        <a href="../ablation-interpretability/index.html">Ablations</a>
+        <a href="../../assignment1.html" class="btn btn-secondary">Assignment 1</a>
       </nav>
     </div>
   </header>
@@ -223,24 +228,33 @@
     <section class="hero">
       <div class="container">
         <div class="breadcrumb">
-          <a href="../../index.html">Home</a>
+          <a href="../../../index.html">Home</a>
           <span>/</span>
-          <a href="./index.html">Multimodal</a>
+          <a href="../index.html">Multimodal</a>
           <span>/</span>
           <span>Error Analysis</span>
         </div>
-        <div class="badge">⚠️ Failure case analysis</div>
+        <div class="badge">Failure case analysis</div>
         <h1>Error Analysis & Failure Cases</h1>
         <p class="lead">
           Understanding not just what works, but why models fail is essential.
           This page presents representative failure cases, systematic confusion patterns,
           class-specific weaknesses, and practical lessons learned from our experiments.
         </p>
+        <div class="callout">
+          <strong>Figures directory:</strong> place failure case visuals and charts for this page in <code>../figures/error-analysis/</code>.
+        </div>
+        <nav class="section-nav" aria-label="On-page navigation">
+          <a href="#failures">Failures</a>
+          <a href="#patterns">Patterns</a>
+          <a href="#weaknesses">Weaknesses</a>
+          <a href="#mitigation">Mitigation</a>
+        </nav>
       </div>
     </section>
 
     <!-- Error Overview -->
-    <section class="alt">
+    <section id="overview" class="alt">
       <div class="container">
         <div class="section-heading">
           <div>
@@ -251,7 +265,7 @@
         </div>
 
         <div class="error-categories">
-          <h3>📋 Common error categories</h3>
+          <h3>Common error categories</h3>
           <ul>
             <li>
               <strong>Semantic confusion:</strong>
@@ -367,7 +381,7 @@
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Add failure cases</h4>
+          <h4>Add failure cases</h4>
           <p>Replace each placeholder with actual failure examples from your test set. Include images and annotations.</p>
         </div>
       </div>
@@ -386,7 +400,7 @@
 
         <div class="confusion-grid">
           <div class="confusion-pattern">
-            <h4>⚠️ Most confused pair #1</h4>
+            <h4>Most confused pair #1</h4>
             <ul>
               <li><strong>[Class A]</strong> ↔ <strong>[Class B]</strong></li>
               <li>Forward confusion: [N] errors</li>
@@ -397,7 +411,7 @@
           </div>
 
           <div class="confusion-pattern">
-            <h4>⚠️ Most confused pair #2</h4>
+            <h4>Most confused pair #2</h4>
             <ul>
               <li><strong>[Class C]</strong> → <strong>[Class D]</strong> (one-directional)</li>
               <li>Asymmetric: [C→D] [N] errors, [D→C] [M] errors</li>
@@ -429,7 +443,7 @@
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Document confusion patterns</h4>
+          <h4>Document confusion patterns</h4>
           <p>Replace all confusion matrix patterns with extracted pairs from your actual results.</p>
         </div>
       </div>
@@ -490,14 +504,14 @@
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Analyze class-wise performance</h4>
+          <h4>Analyze class-wise performance</h4>
           <p>Extract actual per-class accuracies from your results and identify the hardest and easiest classes.</p>
         </div>
       </div>
     </section>
 
     <!-- Modality-specific Errors -->
-    <section class="alt">
+    <section id="mitigation" class="alt">
       <div class="container">
         <div class="section-heading">
           <div>
@@ -648,7 +662,7 @@
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Write your lessons</h4>
+          <h4>Write your lessons</h4>
           <p>Add specific, actionable insights from your error analysis that could improve future versions.</p>
         </div>
       </div>
@@ -660,7 +674,7 @@
       <div>
         <h3>Navigation</h3>
         <ul class="footer-links">
-          <li><a href="./index.html">← Back to multimodal home</a></li>
+          <li><a href="../index.html">Back to multimodal home</a></li>
           <li><a href="../results/index.html">Results & comparison</a></li>
           <li><a href="../zero-shot/index.html">Zero-shot method</a></li>
         </ul>

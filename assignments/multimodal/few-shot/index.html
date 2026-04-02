@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Few-shot Learning | Multimodal</title>
   <meta name="description" content="Few-shot learning approaches for multimodal image-text classification." />
-  <link rel="stylesheet" href="../../assets/styles.css" />
+  <link rel="stylesheet" href="../../../assets/styles.css" />
+  <link rel="stylesheet" href="../multimodal.css" />
   <style>
     .breadcrumb {
       display: flex;
@@ -183,12 +184,16 @@
 <body>
   <header class="nav">
     <div class="container nav-inner">
-      <a href="../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <a href="../../../index.html" class="brand">DL<span>CourseHub</span></a>
       <nav class="nav-links">
-        <a href="./index.html">← Multimodal home</a>
-        <a href="#setup">Setup</a>
-        <a href="#approaches">Methods</a>
-        <a href="#evaluation">Evaluation</a>
+        <a href="../index.html">Overview</a>
+        <a href="../dataset-eda/index.html">Dataset</a>
+        <a href="../zero-shot/index.html">Zero-shot</a>
+        <a href="./index.html">Few-shot</a>
+        <a href="../results/index.html">Results</a>
+        <a href="../error-analysis/index.html">Errors</a>
+        <a href="../ablation-interpretability/index.html">Ablations</a>
+        <a href="../../assignment1.html" class="btn btn-secondary">Assignment 1</a>
       </nav>
     </div>
   </header>
@@ -198,24 +203,34 @@
     <section class="hero">
       <div class="container">
         <div class="breadcrumb">
-          <a href="../../index.html">Home</a>
+          <a href="../../../index.html">Home</a>
           <span>/</span>
-          <a href="./index.html">Multimodal</a>
+          <a href="../index.html">Multimodal</a>
           <span>/</span>
           <span>Few-shot Learning</span>
         </div>
-        <div class="badge">🔧 Few-shot Learning · Minimal labels</div>
+        <div class="badge">Few-shot learning with minimal labels</div>
         <h1>Few-shot Multimodal Learning</h1>
         <p class="lead">
           Few-shot learning adapts pretrained models to a specific task using only a small number of labeled examples
           (typically 16-128 samples). We compare multiple adaptation strategies to find the best balance between 
           performance, computational cost, and ease of implementation.
         </p>
+        <div class="callout">
+          <strong>Figures directory:</strong> place visuals for this overview page in <code>../figures/few-shot/</code>. Method-specific figures go in each method folder inside <code>../figures/few-shot/</code>.
+        </div>
+        <nav class="section-nav" aria-label="On-page navigation">
+          <a href="#definition">Definition</a>
+          <a href="#setup">Shared setup</a>
+          <a href="#approaches">Methods</a>
+          <a href="#evaluation">Evaluation</a>
+          <a href="#next-steps">Next steps</a>
+        </nav>
       </div>
     </section>
 
     <!-- Introduction -->
-    <section class="alt">
+    <section id="definition" class="alt">
       <div class="container">
         <div class="section-heading">
           <div>
@@ -262,7 +277,7 @@
         </div>
 
         <div class="shared-setup">
-          <h3>🎯 Training configuration</h3>
+          <h3>Training configuration</h3>
           <ul>
             <li><strong>Number of shots:</strong> [e.g., 4, 8, 16, 32, 64 examples per class]</li>
             <li><strong>Backbone architecture:</strong> [e.g., CLIP ViT-B/32, frozen or partially unfrozen]</li>
@@ -277,7 +292,7 @@
         </div>
 
         <div class="shared-setup">
-          <h3>🔧 Backbone & feature extraction</h3>
+          <h3>Backbone & feature extraction</h3>
           <ul>
             <li><strong>Vision encoder:</strong> [frozen or trainable] [model_name]</li>
             <li><strong>Text encoder:</strong> [frozen or trainable] [model_name]</li>
@@ -288,7 +303,7 @@
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Customize for your dataset</h4>
+          <h4>Customize for your dataset</h4>
           <p>Replace all placeholders with your actual training hyperparameters and configuration.</p>
         </div>
       </div>
@@ -310,7 +325,7 @@
 
         <div class="approach-grid">
           <a href="./<method-1>/index.html" class="approach-card">
-            <div class="approach-icon">📌</div>
+            <div class="approach-icon">M1</div>
             <h3>Method 1 (e.g., Linear Probe)</h3>
             <p class="approach-desc">
               Train only a linear classifier on top of frozen pretrained features.
@@ -323,7 +338,7 @@
           </a>
 
           <a href="./<method-2>/index.html" class="approach-card">
-            <div class="approach-icon">⚙️</div>
+            <div class="approach-icon">M2</div>
             <h3>Method 2 (e.g., Adapter)</h3>
             <p class="approach-desc">
               Add lightweight adapter modules to frozen backbone.
@@ -336,7 +351,7 @@
           </a>
 
           <a href="./<method-3>/index.html" class="approach-card">
-            <div class="approach-icon">🔄</div>
+            <div class="approach-icon">M3</div>
             <h3>Method 3 (e.g., Full fine-tune)</h3>
             <p class="approach-desc">
               Fine-tune the entire model end-to-end.
@@ -349,7 +364,7 @@
           </a>
 
           <a href="./<method-4>/index.html" class="approach-card">
-            <div class="approach-icon">🎨</div>
+            <div class="approach-icon">M4</div>
             <h3>Method 4 (Optional)</h3>
             <p class="approach-desc">
               [Add description of your 4th method if applicable. E.g., LoRA, prefix tuning, prompt learning, etc.]
@@ -362,7 +377,7 @@
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Create method-specific pages</h4>
+          <h4>Create method-specific pages</h4>
           <p>
             Replace <code>&lt;method-N&gt;</code> with your actual method names (e.g., "linear-probe", "adapter", "finetuned").
             Create a folder and index.html for each method following the template structure.
@@ -383,7 +398,7 @@
         </div>
 
         <div class="eval-protocol">
-          <h3>📊 Evaluation setup</h3>
+            <h3>Evaluation setup</h3>
           <ul>
             <li><strong>Test set:</strong> Same held-out test set for all methods</li>
             <li><strong>Primary metric:</strong> [e.g., Accuracy or Macro-F1]</li>
@@ -395,7 +410,7 @@
         </div>
 
         <div class="eval-protocol">
-          <h3>🔄 Few-shot scaling protocol</h3>
+          <h3>Few-shot scaling protocol</h3>
           <ul>
             <li><strong>Number of shots tested:</strong> [e.g., 4, 8, 16, 32, 64, 128]</li>
             <li><strong>Selection strategy:</strong> [random sampling, stratified, or class-balanced]</li>
@@ -430,7 +445,7 @@
     </section>
 
     <!-- Quick Comparison -->
-    <section>
+    <section id="next-steps">
       <div class="container">
         <div class="section-heading">
           <div>
@@ -470,7 +485,7 @@
       <div>
         <h3>Navigation</h3>
         <ul class="footer-links">
-          <li><a href="./index.html">← Back to multimodal home</a></li>
+          <li><a href="../index.html">Back to multimodal home</a></li>
           <li><a href="../zero-shot/index.html">Zero-shot classification</a></li>
           <li><a href="../dataset-eda/index.html">Dataset & EDA</a></li>
         </ul>

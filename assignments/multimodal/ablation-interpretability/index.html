@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ablation & Interpretability | Multimodal</title>
   <meta name="description" content="Ablation studies, component analysis, and model interpretability." />
-  <link rel="stylesheet" href="../../assets/styles.css" />
+  <link rel="stylesheet" href="../../../assets/styles.css" />
+  <link rel="stylesheet" href="../multimodal.css" />
   <style>
     .breadcrumb {
       display: flex;
@@ -206,12 +207,16 @@
 <body>
   <header class="nav">
     <div class="container nav-inner">
-      <a href="../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <a href="../../../index.html" class="brand">DL<span>CourseHub</span></a>
       <nav class="nav-links">
-        <a href="./index.html">← Multimodal home</a>
-        <a href="#ablations">Ablations</a>
-        <a href="#interpretability">Interpretability</a>
-        <a href="#importance">Importance</a>
+        <a href="../index.html">Overview</a>
+        <a href="../dataset-eda/index.html">Dataset</a>
+        <a href="../zero-shot/index.html">Zero-shot</a>
+        <a href="../few-shot/index.html">Few-shot</a>
+        <a href="../results/index.html">Results</a>
+        <a href="../error-analysis/index.html">Errors</a>
+        <a href="./index.html">Ablations</a>
+        <a href="../../assignment1.html" class="btn btn-secondary">Assignment 1</a>
       </nav>
     </div>
   </header>
@@ -221,19 +226,27 @@
     <section class="hero">
       <div class="container">
         <div class="breadcrumb">
-          <a href="../../index.html">Home</a>
+          <a href="../../../index.html">Home</a>
           <span>/</span>
-          <a href="./index.html">Multimodal</a>
+          <a href="../index.html">Multimodal</a>
           <span>/</span>
           <span>Ablation & Interpretability</span>
         </div>
-        <div class="badge">🔍 Component analysis & interpretability</div>
+        <div class="badge">Component analysis and interpretability</div>
         <h1>Ablation Studies & Interpretability</h1>
         <p class="lead">
           Ablation studies systematically remove components to understand their contribution.
           Interpretability analyses reveal what the models learn and how they make decisions.
           Together, they build intuition about model behavior and identify optimization opportunities.
         </p>
+        <div class="callout">
+          <strong>Figures directory:</strong> place ablation plots and interpretability visuals in <code>../figures/ablation-interpretability/</code>.
+        </div>
+        <nav class="section-nav" aria-label="On-page navigation">
+          <a href="#ablations">Ablations</a>
+          <a href="#interpretability">Interpretability</a>
+          <a href="#importance">Recommendations</a>
+        </nav>
       </div>
     </section>
 
@@ -249,7 +262,7 @@
         </div>
 
         <div class="ablation-card">
-          <h4>🎯 What we ablated</h4>
+          <h4>What we ablated</h4>
           <ul>
             <li>Vision encoder: [frozen vs. fine-tuned]</li>
             <li>Text encoder: [frozen vs. fine-tuned]</li>
@@ -691,7 +704,7 @@
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Add embedding visualizations</h4>
+          <h4>Add embedding visualizations</h4>
           <p>Include dimensionality reduction plots (t-SNE, UMAP) showing class cluster structure.</p>
         </div>
       </div>
@@ -738,7 +751,7 @@
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Compute your importance scores</h4>
+          <h4>Compute your importance scores</h4>
           <p>
             Use permutation importance, gradient-based methods, or ablation to measure component contributions.
             Replace the example percentages with your actual results.
@@ -790,7 +803,7 @@
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Update with your calibration analysis</h4>
+          <h4>Update with your calibration analysis</h4>
           <p>Compute calibration plots and reliability diagrams for your models.</p>
         </div>
       </div>
@@ -844,7 +857,7 @@
       <div>
         <h3>Navigation</h3>
         <ul class="footer-links">
-          <li><a href="./index.html">← Back to multimodal home</a></li>
+          <li><a href="../index.html">Back to multimodal home</a></li>
           <li><a href="../results/index.html">Results & comparison</a></li>
           <li><a href="../error-analysis/index.html">Error analysis</a></li>
         </ul>

@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Zero-shot Classification | Multimodal</title>
   <meta name="description" content="Zero-shot multimodal classification using pretrained vision-language models." />
-  <link rel="stylesheet" href="../../assets/styles.css" />
+  <link rel="stylesheet" href="../../../assets/styles.css" />
+  <link rel="stylesheet" href="../multimodal.css" />
   <style>
     .breadcrumb {
       display: flex;
@@ -201,12 +202,16 @@
 <body>
   <header class="nav">
     <div class="container nav-inner">
-      <a href="../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <a href="../../../index.html" class="brand">DL<span>CourseHub</span></a>
       <nav class="nav-links">
-        <a href="./index.html">← Multimodal home</a>
-        <a href="#pipeline">Pipeline</a>
-        <a href="#prompts">Prompts</a>
-        <a href="#results">Results</a>
+        <a href="../index.html">Overview</a>
+        <a href="../dataset-eda/index.html">Dataset</a>
+        <a href="./index.html">Zero-shot</a>
+        <a href="../few-shot/index.html">Few-shot</a>
+        <a href="../results/index.html">Results</a>
+        <a href="../error-analysis/index.html">Errors</a>
+        <a href="../ablation-interpretability/index.html">Ablations</a>
+        <a href="../../assignment1.html" class="btn btn-secondary">Assignment 1</a>
       </nav>
     </div>
   </header>
@@ -216,24 +221,34 @@
     <section class="hero">
       <div class="container">
         <div class="breadcrumb">
-          <a href="../../index.html">Home</a>
+          <a href="../../../index.html">Home</a>
           <span>/</span>
-          <a href="./index.html">Multimodal</a>
+          <a href="../index.html">Multimodal</a>
           <span>/</span>
           <span>Zero-shot Classification</span>
         </div>
-        <div class="badge">🎓 Zero-shot Learning · No fine-tuning</div>
+        <div class="badge">Zero-shot learning - no fine-tuning</div>
         <h1>Zero-shot Classification</h1>
         <p class="lead">
           Zero-shot learning classifies images without any task-specific fine-tuning.
           We use pretrained vision-language models (e.g., CLIP) to compute semantic similarity
           between image embeddings and textual label descriptions, then select the highest-scoring label.
         </p>
+        <div class="callout">
+          <strong>Figures directory:</strong> place diagrams and visuals for this page in <code>../figures/zero-shot/</code>.
+        </div>
+        <nav class="section-nav" aria-label="On-page navigation">
+          <a href="#motivation">Motivation</a>
+          <a href="#pipeline">Pipeline</a>
+          <a href="#prompts">Prompts</a>
+          <a href="#implementation">Implementation</a>
+          <a href="#results">Results</a>
+        </nav>
       </div>
     </section>
 
     <!-- Motivation -->
-    <section class="alt">
+    <section id="motivation" class="alt">
       <div class="container">
         <div class="section-heading">
           <div>
@@ -349,11 +364,11 @@
         </div>
 
         <div class="diagram-box">
-          [Pipeline diagram placeholder: Image → Encoder → Embedding space ← Label text encodings]
+          [Pipeline diagram placeholder: Image -> Encoder -> Embedding space <- Label text encodings]
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Add visual diagram</h4>
+          <h4>Add visual diagram</h4>
           <p>Consider adding a flow diagram or architecture visualization showing the pipeline above.</p>
         </div>
       </div>
@@ -437,14 +452,14 @@
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Add your prompt outcomes</h4>
+          <h4>Add your prompt outcomes</h4>
           <p>Replace the placeholder variations and performance numbers with your actual experiments.</p>
         </div>
       </div>
     </section>
 
     <!-- Implementation Details -->
-    <section>
+    <section id="implementation">
       <div class="container">
         <div class="section-heading">
           <div>
@@ -461,7 +476,7 @@
               <li><strong>Model:</strong> [e.g., CLIP ViT-B/32]</li>
               <li><strong>Pretrained on:</strong> [e.g., 400M image-text pairs]</li>
               <li><strong>Framework:</strong> [PyTorch, TensorFlow, HuggingFace]</li>
-              <li><strong>Image resolution:</strong> [e.g., 224×224 or 336×336]</li>
+              <li><strong>Image resolution:</strong> [e.g., 224 x 224 or 336 x 336]</li>
               <li><strong>Hardware:</strong> [GPU/CPU, memory, time]</li>
             </ul>
           </article>
@@ -495,7 +510,7 @@ for image in test_images:<br/>
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Add implementation details</h4>
+          <h4>Add implementation details</h4>
           <p>Replace placeholders with your actual model details, hyperparameters, and code snippets.</p>
         </div>
       </div>
@@ -610,7 +625,7 @@ for image in test_images:<br/>
         </div>
 
         <div class="placeholder-section">
-          <h4>✏️ Fill in results</h4>
+          <h4>Fill in results</h4>
           <p>Replace [XX.XX%] and [X ms/image] with your actual zero-shot performance metrics.</p>
         </div>
 
@@ -646,7 +661,7 @@ for image in test_images:<br/>
       <div>
         <h3>Navigation</h3>
         <ul class="footer-links">
-          <li><a href="./index.html">← Back to multimodal home</a></li>
+          <li><a href="../index.html">Back to multimodal home</a></li>
           <li><a href="../dataset-eda/index.html">Dataset & EDA</a></li>
           <li><a href="../few-shot/index.html">Few-shot methods</a></li>
         </ul>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backbone & Head | Multimodal</title>
+  <meta name="description" content="Backbone, fusion, and head architecture for multimodal classification." />
+  <link rel="stylesheet" href="../multimodal.css" />
+  <link rel="stylesheet" href="../../assets/styles.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <nav class="nav-links">
+        <a href="../index.html">Overview</a>
+        <a href="../dataset-eda/index.html">Dataset & EDA</a>
+        <a href="../preprocessing-dataloader/index.html">Preprocessing</a>
+        <a href="./index.html">Backbone & Head</a>
+        <a href="../results/index.html">Results</a>
+        <a href="../error-analysis/index.html">Errors</a>
+        <a href="../extension/index.html">Extension</a>
+        <a href="../assignment1.html" class="btn btn-secondary">Assignment 1</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="../../index.html">Home</a>
+          <span>/</span>
+          <a href="../assignment1.html">Assignment 1</a>
+          <span>/</span>
+          <a href="../index.html">Multimodal</a>
+          <span>/</span>
+          <span>Backbone & Head</span>
+        </div>
+        <div class="badge">Multimodal branch</div>
+        <h1>Backbone & head architecture</h1>
+        <p class="lead">
+          Describe the vision-language backbone, fusion strategy, adapters/heads, and training configurations.
+        </p>
+        <div class="callout">
+          <strong>Figures directory:</strong> use <code>./../figures/backbone-architecture/</code> for architecture and fusion diagrams.
+        </div>
+        <nav class="section-nav" aria-label="On-page navigation">
+          <a href="#backbone">Backbone</a>
+          <a href="#fusion">Fusion</a>
+          <a href="#head">Head</a>
+          <a href="#training">Training</a>
+        </nav>
+      </div>
+    </section>
+
+    <section id="backbone" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Encoders</div>
+            <h2>Backbone choices</h2>
+            <p>Vision and language encoders used.</p>
+          </div>
+        </div>
+        <ul class="info-list">
+          <li>Vision: [CLIP ViT / ConvNet]</li>
+          <li>Text: [CLIP Text / BERT]</li>
+          <li>Frozen vs tuned: [details]</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="fusion">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Fusion</div>
+            <h2>Fusion strategy</h2>
+            <p>How modalities are combined.</p>
+          </div>
+        </div>
+        <ul class="info-list">
+          <li>Early/mid/late fusion: [approach]</li>
+          <li>Similarity vs concatenation vs cross-attention</li>
+          <li>Adapters or projection layers</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="head" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Classifier</div>
+            <h2>Head design</h2>
+            <p>Classification head and losses.</p>
+          </div>
+        </div>
+        <ul class="info-list">
+          <li>Head: [MLP / linear]</li>
+          <li>Loss: [cross-entropy / focal / contrastive]</li>
+          <li>Regularization: [dropout, label smoothing]</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="training">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Optimization</div>
+            <h2>Training setup</h2>
+            <p>Hyperparameters and schedules.</p>
+          </div>
+        </div>
+        <ul class="info-list">
+          <li>Optimizer / LR / scheduler</li>
+          <li>Batch size / epochs</li>
+          <li>Mixed precision: [yes/no]</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Navigation</h3>
+        <ul class="footer-links">
+          <li><a href="../index.html">Back to multimodal home</a></li>
+          <li><a href="../results/index.html">Results & Analysis</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Next</h3>
+        <ul class="footer-links">
+          <li><a href="../preprocessing-dataloader/index.html">Preprocessing</a></li>
+          <li><a href="../error-analysis/index.html">Error Analysis</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

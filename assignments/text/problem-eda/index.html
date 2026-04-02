@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Problem & EDA | Text Branch</title>
+  <meta name="description" content="Problem statement and exploratory data analysis for the text classification branch." />
+  <link rel="stylesheet" href="../../multimodal/multimodal.css" />
+  <link rel="stylesheet" href="../../../assets/styles.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <nav class="nav-links">
+        <a href="../index.html">Overview</a>
+        <a href="./index.html">Problem & EDA</a>
+        <a href="../dataset-pipeline/index.html">Dataset & Pipeline</a>
+        <a href="../model-design/index.html">Model & Training</a>
+        <a href="../results/index.html">Results</a>
+        <a href="../extensions/index.html">Extensions</a>
+        <a href="../../assignment1.html" class="btn btn-secondary">Assignment 1</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="../../../index.html">Home</a>
+          <span>/</span>
+          <a href="../../assignment1.html">Assignment 1</a>
+          <span>/</span>
+          <a href="../index.html">Text</a>
+          <span>/</span>
+          <span>Problem & EDA</span>
+        </div>
+        <div class="badge">Text branch</div>
+        <h1>Problem statement & EDA</h1>
+        <p class="lead">
+          Define the text classification task, objectives, evaluation metrics, and summarize key findings from exploratory data analysis.
+        </p>
+        <div class="callout">
+          <strong>Figures directory:</strong> use <code>../figures/problem-eda/</code> for plots and examples.
+        </div>
+        <nav class="section-nav" aria-label="On-page navigation">
+          <a href="#problem">Problem</a>
+          <a href="#dataset">Dataset</a>
+          <a href="#eda">EDA</a>
+          <a href="#metrics">Metrics</a>
+        </nav>
+      </div>
+    </section>
+
+    <section id="problem" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Task</div>
+            <h2>Problem definition</h2>
+            <p>Describe the classification objective and constraints.</p>
+          </div>
+        </div>
+        <ul class="info-list">
+          <li><strong>Goal:</strong> [e.g., classify text into K categories]</li>
+          <li><strong>Context:</strong> [domain/application]</li>
+          <li><strong>Evaluation:</strong> [primary metrics]</li>
+          <li><strong>Challenges:</strong> [class imbalance, sarcasm, length]</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="dataset">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Data</div>
+            <h2>Dataset overview</h2>
+            <p>Summarize source, splits, and licensing.</p>
+          </div>
+        </div>
+        <div class="grid two">
+          <article class="card">
+            <h3>Composition</h3>
+            <ul class="checklist">
+              <li>Total samples: [N]</li>
+              <li>Classes: [C]</li>
+              <li>Language(s): [en/vi/etc]</li>
+              <li>Average length: [tokens]</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Splits</h3>
+            <ul class="checklist">
+              <li>Train: [count / %]</li>
+              <li>Val: [count / %]</li>
+              <li>Test: [count / %]</li>
+              <li>Stratification: [yes/no]</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="eda" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Exploration</div>
+            <h2>Exploratory analysis</h2>
+            <p>Key plots and findings.</p>
+          </div>
+        </div>
+        <div class="figure-grid">
+          <div class="figure-card">
+            <div class="figure-placeholder">[Class distribution]</div>
+            <div class="caption">Class counts and imbalance notes.</div>
+          </div>
+          <div class="figure-card">
+            <div class="figure-placeholder">[Text length histogram]</div>
+            <div class="caption">Length distribution (tokens).</div>
+          </div>
+          <div class="figure-card">
+            <div class="figure-placeholder">[Word cloud / top terms]</div>
+            <div class="caption">Frequent tokens or n-grams.</div>
+          </div>
+        </div>
+        <div class="observations-list">
+          <h4>EDA observations</h4>
+          <ul>
+            <li>[Observation 1]</li>
+            <li>[Observation 2]</li>
+            <li>[Observation 3]</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="metrics">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Evaluation</div>
+            <h2>Planned metrics</h2>
+            <p>Clarify how performance will be measured.</p>
+          </div>
+        </div>
+        <ul class="info-list">
+          <li>Primary: [Accuracy / Macro-F1]</li>
+          <li>Secondary: [Precision/Recall per class]</li>
+          <li>Robustness: [OOV handling, imbalance]</li>
+          <li>Calibration: [if evaluated]</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Navigation</h3>
+        <ul class="footer-links">
+          <li><a href="../index.html">Back to text overview</a></li>
+          <li><a href="../../assignment1.html">Assignment 1</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Next</h3>
+        <ul class="footer-links">
+          <li><a href="../dataset-pipeline/index.html">Dataset & Pipeline</a></li>
+          <li><a href="../model-design/index.html">Model & Training</a></li>
+          <li><a href="../results/index.html">Results</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
