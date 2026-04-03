@@ -337,12 +337,17 @@
 <body>
   <header class="nav">
     <div class="container nav-inner">
-      <a href="../../index.html" class="brand">DL<span>CourseHub</span></a>
+      <a href="../index.html" class="brand">DL<span>CourseHub</span></a>
       <nav class="nav-links">
-        <a href="./index.html">← Multimodal home</a>
-        <a href="#split">Data split</a>
+        <a href="../index.html" class="nav-home">&larr; Back to multimodal home</a>
+        <a href="#overview">Overview</a>
+        <a href="#distribution">Distribution</a>
+        <a href="#properties">Properties</a>
+        <a href="#embeddings">Embeddings</a>
+        <a href="#similarity">Similarity</a>
+        <a href="#clusters">Clusters</a>
+        <a href="#findings">Findings</a>
         <a href="#samples">Samples</a>
-        <a href="#statistics">Statistics</a>
       </nav>
     </div>
   </header>
@@ -383,7 +388,7 @@
     </section>
 
     <!-- Dataset Introduction -->
-    <section class="alt">
+    <section id="overview" class="alt">
       <div class="container">
         <div class="section-heading">
           <div>
@@ -438,7 +443,7 @@
     </section>
 
     <!-- Dataset Statistics -->
-    <section>
+    <section id="distribution">
       <div class="container">
         <div class="section-heading">
           <div>
@@ -477,59 +482,6 @@
       </div>
     </section>
 
-    <!-- Data Split -->
-    <section id="split" class="alt">
-      <div class="container">
-        <div class="section-heading">
-          <div>
-            <div class="eyebrow">Partitioning</div>
-            <h2>Train / Validation / Test split</h2>
-            <p>How the dataset is divided for training and evaluation.</p>
-          </div>
-        </div>
-
-        <div class="split-info">
-          <div class="split-box">
-            <h4>Training set</h4>
-            <ul>
-              <li><strong>Samples:</strong> 48,974</li>
-              <li><strong>Percentage:</strong> 80%</li>
-              <li><strong>Used for:</strong> Model training</li>
-              <li><strong>Notes:</strong> Stratified by class</li>
-            </ul>
-          </div>
-          <div class="split-box">
-            <h4>Validation set</h4>
-            <ul>
-              <li><strong>Samples:</strong> 6,122</li>
-              <li><strong>Percentage:</strong> 10%</li>
-              <li><strong>Used for:</strong> Hyperparameter tuning</li>
-              <li><strong>Notes:</strong> Early stopping & threshold tuning</li>
-            </ul>
-          </div>
-          <div class="split-box">
-            <h4>Test set</h4>
-            <ul>
-              <li><strong>Samples:</strong> 6,122</li>
-              <li><strong>Percentage:</strong> 10%</li>
-              <li><strong>Used for:</strong> Final evaluation</li>
-              <li><strong>Notes:</strong> Held-out, no training</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="figure-grid one-col" style="margin-top:12px;">
-          <div class="figure-box">
-            <img src="../../../assets/multimodal/eda/train_val_test_split.png" alt="Train/val/test split overview" loading="lazy" />
-            <div class="figure-caption">
-              <h4>Split overview</h4>
-              <p>Proportion of samples allocated to each split.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Class Distribution -->
     <section>
       <div class="container">
@@ -543,24 +495,10 @@
 
         <div class="figure-grid one-col">
           <div class="figure-box">
-            <img src="../../../assets/multimodal/eda/train_distribution.png" alt="Train class distribution" loading="lazy" />
+            <img src="../../../assets/multimodal/eda/distribution.png" alt="Class distribution across splits" loading="lazy" />
             <div class="figure-caption">
-              <h4>Training class distribution</h4>
-              <p>Count per class in the training split (48,974 samples).</p>
-            </div>
-          </div>
-          <div class="figure-box">
-            <img src="../../../assets/multimodal/eda/val_distribution.png" alt="Validation class distribution" loading="lazy" />
-            <div class="figure-caption">
-              <h4>Validation class distribution</h4>
-              <p>Validation split balance (6,122 samples) mirrors train to avoid selection bias.</p>
-            </div>
-          </div>
-          <div class="figure-box">
-            <img src="../../../assets/multimodal/eda/test_distribution.png" alt="Test class distribution" loading="lazy" />
-            <div class="figure-caption">
-              <h4>Test class distribution</h4>
-              <p>Held-out evaluation split (6,122 samples) preserves stratification.</p>
+              <h4>Class distribution</h4>
+              <p>Unified view of class counts/proportions across train/val/test splits.</p>
             </div>
           </div>
           <div class="figure-box">
@@ -585,7 +523,7 @@
     </section>
 
     <!-- Image Statistics -->
-    <section id="statistics" class="alt">
+    <section id="properties" class="alt">
       <div class="container">
         <div class="section-heading">
           <div>
@@ -647,7 +585,7 @@
         <div class="section-heading">
           <div>
             <div class="eyebrow">Representation space</div>
-            <h2>Embedding projections & similarity</h2>
+            <h2>Embedding projections</h2>
             <p>Test-set embeddings (5,000 samples, 512-d). Visualized with UMAP, t-SNE, PCA; cosine similarity mined for near-neighbor classes.</p>
           </div>
         </div>
@@ -691,13 +629,7 @@
               <p>Neighborhood preservation highlights local confusions and rare clusters.</p>
             </div>
           </div>
-          <div class="figure-box">
-            <img src="../../../assets/multimodal/eda/pca.png" alt="PCA scatter" loading="lazy" />
-            <div class="figure-caption">
-              <h4>PCA scatter (PC1 vs PC2)</h4>
-              <p>Linear projection; overlaps hint at classes needing multimodal cues.</p>
-            </div>
-          </div>
+
         </div>
 
         <div class="figure-grid one-col">
@@ -713,7 +645,7 @@
     </section>
 
     <!-- Similarity Matrix -->
-    <section>
+    <section id="similarity">
       <div class="container">
         <div class="section-heading">
           <div>
@@ -767,7 +699,7 @@
     </section>
 
     <!-- Label Clusters -->
-    <section class="alt">
+    <section id="clusters" class="alt">
       <div class="container">
         <div class="section-heading">
           <div>
@@ -919,7 +851,7 @@
     </section>
 
     <!-- Key Observations -->
-    <section>
+    <section id="findings">
       <div class="container">
         <div class="section-heading">
           <div>
@@ -986,22 +918,19 @@
       <div>
         <h3>Navigation</h3>
         <ul class="footer-links">
-          <li><a href="./index.html">â† Back to multimodal home</a></li>
-          <li><a href="./zero-shot/index.html">Zero-shot classification</a></li>
-          <li><a href="./few-shot/index.html">Few-shot learning</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3>Next steps</h3>
-        <ul class="footer-links">
-          <li><a href="./results/index.html">View results</a></li>
-          <li><a href="./error-analysis/index.html">Error analysis</a></li>
-          <li><a href="./ablation-interpretability/index.html">Ablation studies</a></li>
+          <li><a href="../index.html">&larr; Back to multimodal home</a></li>
+          <li><a href="../dataset-eda/index.html">Dataset</a></li>
+          <li><a href="../preprocessing-dataloader/index.html">Preprocessing</a></li>
+          <li><a href="../backbone-architecture/index.html">Backbone</a></li>
+          <li><a href="../results/index.html">Results</a></li>
+          <li><a href="../error-analysis/index.html">Errors</a></li>
+          <li><a href="../extension/index.html">Extension</a></li>
         </ul>
       </div>
     </div>
   </footer>
 </body>
 </html>
+
 
 

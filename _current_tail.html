@@ -1,0 +1,504 @@
+﻿<section id="image" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Vision preprocessing</div>
+            <h2>Image preprocessing</h2>
+            <p>All image normalization and resizing are delegated to CLIP's official processor to stay aligned with the pretrained checkpoint.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Inside <code>N24NewsCLIPDataset</code></h3>
+            <ul class="info-list">
+              <li>Read image with PIL</li>
+              <li>Convert to RGB</li>
+              <li>Call <code>processor(images=image, return_tensors="pt")</code></li>
+              <li>Squeeze to a single <code>pixel_values</code> tensor</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Why use CLIPProcessor</h3>
+            <ul class="checklist">
+              <li>Applies the same resize / crop / rescale / normalize recipe used during CLIP pretraining</li>
+              <li>Produces the exact tensor shape expected by the frozen vision encoder</li>
+              <li>Reduces preprocessing bugs compared with hand-written transforms</li>
+            </ul>
+          </article>
+        </div>
+        <div class="grid two" style="margin-top:16px;">
+          <article class="card" style="grid-column: 1 / -1;">
+            <h4>Original sample</h4>
+            <img src="../../../assets/multimodal/preprocess/sample_org.png" alt="Original raw image sample" style="width:100%; border-radius:12px; display:block;" />
+          </article>
+        </div>
+        <div class="grid two" style="margin-top:12px;">
+          <article class="card">
+            <h4>After resize</h4>
+            <img src="../../../assets/multimodal/preprocess/sample_resized.png" alt="Resized image sample" style="width:100%; border-radius:12px; display:block;" />
+          </article>
+          <article class="card">
+            <h4>After CLIPProcessor</h4>
+            <img src="../../../assets/multimodal/preprocess/sample_processed.png" alt="Processed tensor visualization" style="width:100%; border-radius:12px; display:block;" />
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="prompts">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Prompt engineering</div>
+            <h2>Prompt preprocessing on the text side</h2>
+            <p>This project uses class-name prompts instead of per-sample text inputs.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Class prompt construction</h3>
+            <p>Zero-shot templates (fill <code>{class}</code> with the normalized label text):</p>
+            <div class="code-box" style="max-height:230px;">
+<pre class="code-pre">PROMPT_TEMPLATES_ZS = [
+  "a news photo about {class}",
+  "a newspaper image about {class}",
+  "a press photograph of {class}",
+  "a journalistic image related to {class}",
+  "an editorial photo showing {class}",
+  "a media image illustrating {class}",
+]</pre>
+            </div>
+            <p style="margin-top:10px;">Sample expansions (scrollable):</p>
+            <div class="code-box" style="max-height:260px;">
+<pre class="code-pre">Label: Art & Design
+  • a news photo about art and design
+  • a newspaper image about art and design
+  • a press photograph of art and design
+  • a journalistic image related to art and design
+  • an editorial photo showing art and design
+  • a media image illustrating art and design
+--------------------------------------------------
+Label: Automobiles
+  • a news photo about automobiles
+  • a newspaper image about automobiles
+  • a press photograph of automobiles
+  • a journalistic image related to automobiles
+  • an editorial photo showing automobiles
+  • a media image illustrating automobiles
+--------------------------------------------------
+Label: Books
+  • a news photo about books
+  • a newspaper image about books
+  • a press photograph of books
+  • a journalistic image related to books
+  • an editorial photo showing books
+  • a media image illustrating books
+--------------------------------------------------
+Label: Dance
+  • a news photo about dance
+  • a newspaper image about dance
+  • a press photograph of dance
+  • a journalistic image related to dance
+  • an editorial photo showing dance
+  • a media image illustrating dance
+--------------------------------------------------
+Label: Economy
+  • a news photo about economy
+  • a newspaper image about economy
+  • a press photograph of economy
+  • a journalistic image related to economy
+  • an editorial photo showing economy
+  • a media image illustrating economy
+--------------------------------------------------
+Label: Education
+  • a news photo about education
+  • a newspaper image about education
+  • a press photograph of education
+  • a journalistic image related to education
+  • an editorial photo showing education
+  • a media image illustrating education
+--------------------------------------------------
+Label: Fashion
+  • a news photo about fashion
+  • a newspaper image about fashion
+  • a press photograph of fashion
+  • a journalistic image related to fashion
+  • an editorial photo showing fashion
+  • a media image illustrating fashion
+--------------------------------------------------
+Label: Food
+  • a news photo about food
+  • a newspaper image about food
+  • a press photograph of food
+  • a journalistic image related to food
+  • an editorial photo showing food
+  • a media image illustrating food
+--------------------------------------------------
+Label: Global Business
+  • a news photo about global business
+  • a newspaper image about global business
+  • a press photograph of global business
+  • a journalistic image related to global business
+  • an editorial photo showing global business
+  • a media image illustrating global business
+--------------------------------------------------
+Label: Health
+  • a news photo about health
+  • a newspaper image about health
+  • a press photograph of health
+  • a journalistic image related to health
+  • an editorial photo showing health
+  • a media image illustrating health
+--------------------------------------------------
+Label: Media
+  • a news photo about media
+  • a newspaper image about media
+  • a press photograph of media
+  • a journalistic image related to media
+  • an editorial photo showing media
+  • a media image illustrating media
+--------------------------------------------------
+Label: Movies
+  • a news photo about movies
+  • a newspaper image about movies
+  • a press photograph of movies
+  • a journalistic image related to movies
+  • an editorial photo showing movies
+  • a media image illustrating movies
+--------------------------------------------------
+Label: Music
+  • a news photo about music
+  • a newspaper image about music
+  • a press photograph of music
+  • a journalistic image related to music
+  • an editorial photo showing music
+  • a media image illustrating music
+--------------------------------------------------
+Label: Opinion
+  • a news photo about opinion
+  • a newspaper image about opinion
+  • a press photograph of opinion
+  • a journalistic image related to opinion
+  • an editorial photo showing opinion
+  • a media image illustrating opinion
+--------------------------------------------------
+Label: Real Estate
+  • a news photo about real estate
+  • a newspaper image about real estate
+  • a press photograph of real estate
+  • a journalistic image related to real estate
+  • an editorial photo showing real estate
+  • a media image illustrating real estate
+--------------------------------------------------
+Label: Science
+  • a news photo about science
+  • a newspaper image about science
+  • a press photograph of science
+  • a journalistic image related to science
+  • an editorial photo showing science
+  • a media image illustrating science
+--------------------------------------------------
+Label: Sports
+  • a news photo about sports
+  • a newspaper image about sports
+  • a press photograph of sports
+  • a journalistic image related to sports
+  • an editorial photo showing sports
+  • a media image illustrating sports
+--------------------------------------------------
+Label: Style
+  • a news photo about style
+  • a newspaper image about style
+  • a press photograph of style
+  • a journalistic image related to style
+  • an editorial photo showing style
+  • a media image illustrating style
+--------------------------------------------------
+Label: Technology
+  • a news photo about technology
+  • a newspaper image about technology
+  • a press photograph of technology
+  • a journalistic image related to technology
+  • an editorial photo showing technology
+  • a media image illustrating technology
+--------------------------------------------------
+Label: Television
+  • a news photo about television
+  • a newspaper image about television
+  • a press photograph of television
+  • a journalistic image related to television
+  • an editorial photo showing television
+  • a media image illustrating television
+--------------------------------------------------
+Label: Theater
+  • a news photo about theater
+  • a newspaper image about theater
+  • a press photograph of theater
+  • a journalistic image related to theater
+  • an editorial photo showing theater
+  • a media image illustrating theater
+--------------------------------------------------
+Label: Travel
+  • a news photo about travel
+  • a newspaper image about travel
+  • a press photograph of travel
+  • a journalistic image related to travel
+  • an editorial photo showing travel
+  • a media image illustrating travel
+--------------------------------------------------
+Label: Well
+  • a news photo about health and wellness
+  • a newspaper image about health and wellness
+  • a press photograph of health and wellness
+  • a journalistic image related to health and wellness
+  • an editorial photo showing health and wellness
+  • a media image illustrating health and wellness
+--------------------------------------------------
+Label: Your Money
+  • a news photo about personal finance
+  • a newspaper image about personal finance
+  • a press photograph of personal finance
+  • a journalistic image related to personal finance
+  • an editorial photo showing personal finance
+  • a media image illustrating personal finance</pre>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>Tokenization details</h3>
+            <ul class="info-list">
+              <li><strong>Tokenizer:</strong> CLIP tokenizer via <code>CLIPProcessor</code></li>
+              <li><strong>Padding:</strong> enabled</li>
+              <li><strong>Truncation:</strong> enabled</li>
+              <li><strong>Maximum length:</strong> 77 tokens</li>
+              <li><strong>Output:</strong> class-level text embeddings in the shared 512-d CLIP space</li>
+            </ul>
+            <div class="code-box" style="margin-top:10px; max-height:220px;">
+<pre class="code-pre">CLIPProcessor return keys
+- pixel_values: image tensor batch (C, H, W), resized & normalized
+- input_ids: tokenized text ids
+- attention_mask: 1 for real tokens, 0 for padding
+
+Notes
+- Wraps CLIPImageProcessor + CLIPTokenizer
+- Returns PyTorch / TensorFlow tensors when requested; lists otherwise</pre>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="loader" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Batch assembly</div>
+            <h2>DataLoader and collate function</h2>
+            <p>The loader is designed to be robust against image read failures while keeping batch metadata available for later analysis.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Standard loaders</h3>
+            <ul class="info-list">
+              <li><strong>Batch size:</strong> 32</li>
+              <li><strong>Shuffle:</strong> train = true, val/test = false</li>
+              <li><strong>num_workers:</strong> 0</li>
+              <li><strong>pin_memory:</strong> false</li>
+              <li><strong>drop_last:</strong> false</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3><code>clip_collate_fn</code></h3>
+            <p>The custom collate function filters out <code>None</code> samples and returns a structured batch dictionary.</p>
+            <div class="code-box"><code>{
+  "pixel_values": [B, 3, 224, 224],
+  "label_id":     [B],
+  "image_id":     list[str],
+  "image_path":   list[str],
+  "section":      list[str]
+}</code></div>
+            <ul class="info-list">
+              <li>Filters <code>None</code> samples before stacking.</li>
+              <li>Keeps ids/paths/section strings for analysis and error tracing.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="fewshot">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Few-shot protocol</div>
+            <h2>Few-shot sampler</h2>
+            <p>Few-shot training uses a separate loader that samples exactly <em>k</em> examples per class from the training split.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>How the sampler works</h3>
+            <ol class="report-list">
+              <li>Group <code>train_df</code> by <code>label_id</code>.</li>
+              <li>Sample <code>min(shot, len(class_subset))</code> examples per class.</li>
+              <li>Reset the index and rebuild a dataset from the sampled rows.</li>
+              <li>Create a new DataLoader with <strong>batch_size = 16</strong>.</li>
+            </ol>
+          </article>
+
+          <article class="card">
+            <h3>Main experiment setting</h3>
+            <ul class="info-list">
+              <li><strong>Main comparison shot:</strong> 10 examples per class</li>
+              <li><strong>Few-shot batch size:</strong> 16</li>
+              <li><strong>Shot-scaling study:</strong> 1, 4, and 10 shots</li>
+              <li><strong>Reason:</strong> isolate sample efficiency under limited supervision</li>
+            </ul>
+          </article>
+        </div>
+        <div class="grid two" style="margin-top:16px;">
+          <article class="card">
+            <h3>Few-shot flow (visual)</h3>
+            <p class="muted">Per-class buckets → k samples → concatenated few-shot set → 16-size loader.</p>
+            <div class="figure-box" style="background:rgba(0,0,0,0.25); border:1px solid var(--card-border); border-radius:14px; padding:10px;">
+              <svg viewBox="0 0 1120 280" role="img" aria-label="Few-shot sampling flowchart" style="width:100%; height:auto;">
+                <defs>
+                  <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L0,6 L9,3 z" fill="#6ea8fe" />
+                  </marker>
+                  <style>
+                    .node { fill: rgba(255,255,255,0.04); stroke: #6ea8fe; stroke-width:1.4; rx:10; ry:10; }
+                    .note { fill: rgba(255,211,110,0.16); stroke: rgba(255,211,110,0.9); }
+                    .ellipse { fill: rgba(126,240,194,0.16); stroke: rgba(126,240,194,0.8); }
+                    .text { fill: #e8eefb; font-size:14px; font-family: 'Inter', 'Segoe UI', sans-serif; }
+                  </style>
+                </defs>
+                <!-- Main chain -->
+                <rect class="node" x="10" y="100" width="130" height="70"/>
+                <text class="text" x="75" y="130" text-anchor="middle">Training split</text>
+                <text class="text" x="75" y="148" text-anchor="middle">train_df</text>
+
+                <rect class="node" x="170" y="100" width="130" height="70"/>
+                <text class="text" x="235" y="130" text-anchor="middle">Group by</text>
+                <text class="text" x="235" y="148" text-anchor="middle">label_id</text>
+
+                <ellipse class="ellipse" cx="360" cy="135" rx="70" ry="40"/>
+                <text class="text" x="360" y="132" text-anchor="middle">For each</text>
+                <text class="text" x="360" y="150" text-anchor="middle">class</text>
+
+                <rect class="node" x="460" y="100" width="150" height="70"/>
+                <text class="text" x="535" y="130" text-anchor="middle">Sample</text>
+                <text class="text" x="535" y="148" text-anchor="middle">min(shot, n_c)</text>
+
+                <rect class="node" x="640" y="100" width="140" height="70"/>
+                <text class="text" x="710" y="130" text-anchor="middle">Concat sampled</text>
+                <text class="text" x="710" y="148" text-anchor="middle">rows</text>
+
+                <rect class="node" x="810" y="100" width="120" height="70"/>
+                <text class="text" x="870" y="130" text-anchor="middle">Reset</text>
+                <text class="text" x="870" y="148" text-anchor="middle">index</text>
+
+                <rect class="node" x="960" y="70" width="140" height="70"/>
+                <text class="text" x="1030" y="98" text-anchor="middle">Rebuild few-shot</text>
+                <text class="text" x="1030" y="118" text-anchor="middle">dataset</text>
+
+                <rect class="node" x="960" y="160" width="140" height="70"/>
+                <text class="text" x="1030" y="188" text-anchor="middle">Specialized</text>
+                <text class="text" x="1030" y="206" text-anchor="middle">DataLoader</text>
+                <text class="text" x="1030" y="224" text-anchor="middle">batch=16</text>
+
+                <!-- Arrows main -->
+                <line x1="140" y1="135" x2="170" y2="135" stroke="#6ea8fe" stroke-width="2" marker-end="url(#arrow)"/>
+                <line x1="300" y1="135" x2="360-70+360?"/>
+      </div>
+    </section>
+  </main>
+
+    <section id="image" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Vision preprocessing</div>
+            <h2>Image preprocessing</h2>
+            <p>All image normalization and resizing are delegated to CLIP's official processor to stay aligned with the pretrained checkpoint.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Inside <code>N24NewsCLIPDataset</code></h3>
+            <ul class="info-list">
+              <li>Read image with PIL</li>
+              <li>Convert to RGB</li>
+              <li>Call <code>processor(images=image, return_tensors="pt")</code></li>
+              <li>Squeeze to a single <code>pixel_values</code> tensor</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Why use CLIPProcessor</h3>
+            <ul class="checklist">
+              <li>Applies the same resize / crop / rescale / normalize recipe used during CLIP pretraining</li>
+              <li>Produces the exact tensor shape expected by the frozen vision encoder</li>
+              <li>Reduces preprocessing bugs compared with hand-written transforms</li>
+            </ul>
+          </article>
+        </div>
+                <div class="grid two" style="margin-top:16px;">
+          <article class="card" style="grid-column: 1 / -1;">
+            <h3>Few-shot flow (visual)</h3>
+            <p class="muted">Per-class buckets &rarr; k samples &rarr; concatenated few-shot set &rarr; 16-size loader.</p>
+            <div class="flow-card">
+              <div class="flow-lane">
+                <div class="flow-node">Training split<span class="mini">train_df</span></div>
+                <div class="flow-arrow">&rarr;</div>
+                <div class="flow-node">Group by<span class="mini">label_id</span></div>
+                <div class="flow-arrow">&rarr;</div>
+                <div class="flow-node ellipse">For each<span class="mini">class</span></div>
+                <div class="flow-arrow">&rarr;</div>
+                <div class="flow-node">Sample<span class="mini">min(shot, n_c)</span></div>
+                <div class="flow-arrow">&rarr;</div>
+                <div class="flow-node">Concat sampled<span class="mini">rows</span></div>
+                <div class="flow-arrow">&rarr;</div>
+                <div class="flow-node">Reset<span class="mini">index</span></div>
+                <div class="flow-arrow">&rarr;</div>
+                <div class="flow-stack">
+                  <div class="flow-node stack">Rebuild few-shot dataset</div>
+                  <div class="flow-node stack">Specialized DataLoader<span class="mini">batch = 16</span></div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Navigation</h3>
+        <ul class="footer-links">
+          <li><a href="../index.html">Back to multimodal home</a></li>
+          <li><a href="../backbone-architecture/index.html">Backbone &amp; Head</a></li>
+          <li><a href="../results/index.html">Results &amp; Analysis</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Suggested visuals</h3>
+        <ul class="footer-links">
+          <li>Pipeline diagram</li>
+          <li>Before/after CLIP processor figure</li>
+          <li>Batch dictionary screenshot</li>
+          <li>Few-shot sampling illustration</li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
