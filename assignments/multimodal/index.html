@@ -196,9 +196,7 @@
           We evaluate how pretrained vision and language models can be leveraged to solve multimodal classification
           without extensive fine-tuning, and compare this with adapter-based few-shot methods.
         </p>
-        <div class="callout">
-          <strong>Figures directory:</strong> place hero/overview visuals for this page in <code>./figures/overview/</code>.
-        </div>
+
         <div class="quick-links">
           <a class="quick-link-btn" href="./dataset-eda/index.html">Dataset &amp; EDA</a>
           <a class="quick-link-btn" href="./zero-shot/index.html">Zero-shot</a>
@@ -257,33 +255,31 @@
         <div class="section-heading">
           <div>
             <div class="eyebrow">Task definition</div>
-            <h2>Problem statement</h2>
-            <p>Understanding the multimodal classification task and why it matters.</p>
+            <h2>Assignment Requirements</h2>
+            <p>This assignment focuses on multimodal classification: given a matched image–text pair, predict the correct class label.</p>
           </div>
         </div>
 
         <div class="grid two">
           <article class="card">
-            <h3>What we're solving</h3>
-            <p>
-              Given an image and associated text (e.g., product description, caption, label), predict a class label.
-              The models must learn to fuse visual and textual information to make accurate predictions.
-            </p>
+            <h3>What we must demonstrate</h3>
+            <p>Requirements for the multimodal assignment.</p>
             <ul class="checklist">
-              <li>Leverage pre-trained vision & language models</li>
-              <li>Fuse multimodal representations effectively</li>
-              <li>Compare zero-shot vs. few-shot paradigms</li>
-              <li>Evaluate on realistic image-text datasets</li>
+              <li>Build a multimodal classification pipeline for image + text inputs.</li>
+              <li>Use a valid multimodal dataset with real paired image–text samples (≥5 classes, enough size).</li>
+              <li>Compare zero-shot and few-shot approaches on the same task.</li>
+              <li>Report accuracy, and F1 when classes are imbalanced.</li>
+              <li>Present dataset exploration, preprocessing/DataLoader setup, model design, training/adaptation, evaluation, and comparison with tables/figures.</li>
             </ul>
           </article>
 
           <article class="card">
-            <h3>Key questions</h3>
+            <h3>Dataset expectations</h3>
             <ul class="checklist">
-              <li>How much do we need to fine-tune?</li>
-              <li>Can zero-shot work without adaptation?</li>
-              <li>Which fusion strategy is most effective?</li>
-              <li>What is the cost-accuracy trade-off?</li>
+              <li>Pairs must describe the same entity/event (no random pairings).</li>
+              <li>At least 5 classes with sufficient samples.</li>
+              <li>Supports zero-shot vs. few-shot evaluation.</li>
+              <li>Realistic image–text distribution (not synthetic noise).</li>
             </ul>
           </article>
         </div>
@@ -372,7 +368,7 @@
         <div class="section-heading">
           <div>
             <div class="eyebrow">Explore</div>
-            <h2>Detailed analysis</h2>
+            <h2>Detailed task and analysis</h2>
             <p>Dive deeper into each aspect of our work.</p>
           </div>
         </div>
@@ -499,21 +495,15 @@
   <footer class="site-footer">
     <div class="container footer-grid">
       <div>
-        <h3>Explore</h3>
+        <h3>Navigation</h3>
         <ul class="footer-links">
-          <li><a href="../../assignments/assignment1.html">Back to Assignment 1</a></li>
-          <li><a href="./dataset-eda/index.html">Dataset & EDA</a></li>
-          <li><a href="./zero-shot/index.html">Zero-shot method</a></li>
-          <li><a href="./few-shot/index.html">Few-shot methods</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3>Results</h3>
-        <ul class="footer-links">
-          <li><a href="./results/index.html">Results & comparison</a></li>
-          <li><a href="./error-analysis/index.html">Error analysis</a></li>
-          <li><a href="./ablation-interpretability/index.html">Ablation & interpretability</a></li>
-          <li><a href="#">Full report (add link)</a></li>
+          <li><a href="./index.html">&larr; Back to multimodal home</a></li>
+          <li><a href="./dataset-eda/index.html">Dataset</a></li>
+          <li><a href="./preprocessing-dataloader/index.html">Preprocessing</a></li>
+          <li><a href="./backbone-architecture/index.html">Backbone</a></li>
+          <li><a href="./results/index.html">Results</a></li>
+          <li><a href="./error-analysis/index.html">Errors</a></li>
+          <li><a href="./extension/index.html">Extension</a></li>
         </ul>
       </div>
     </div>
