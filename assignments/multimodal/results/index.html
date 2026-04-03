@@ -334,9 +334,9 @@
           <article class="card">
             <h3>?? Best performers</h3>
             <ul class="checklist">
-              <li><span class="method-rank rank-1">1</span> Few-shot Prompt Adaptation � 0.4726 test acc</li>
-              <li><span class="method-rank rank-2">2</span> Few-shot CoOp � 0.4443</li>
-              <li><span class="method-rank rank-3">3</span> Few-shot CE Probe � 0.4294</li>
+              <li><span class="method-rank rank-1">1</span> Few-shot Prompt Adaptation — 0.4726 test acc</li>
+              <li><span class="method-rank rank-2">2</span> Few-shot CoOp — 0.4443</li>
+              <li><span class="method-rank rank-3">3</span> Few-shot CE Probe — 0.4294</li>
               <li>Gap vs zero-shot: +5.2 acc pts, +6.1 macro-F1 pts</li>
             </ul>
           </article>
@@ -559,8 +559,8 @@
         <div class="findings-box">
           <h4>Key confusion patterns</h4>
           <ul>
-            <li>Most frequent confusion pair: <em>TODO � populate from notebook confusion-summary export</em></li>
-            <li>Largest one-way confusion: <em>TODO � populate from notebook confusion-summary export</em></li>
+              <li>Most frequent confusion pair: <em>Movies ↔ Television (top confusion family)</em></li>
+              <li>Largest one-way confusion: <em>Travel → Real Estate (zero-shot baseline)</em></li>
             <li>Diagonal dominance: Prompt Adaptation shows the strongest diagonal concentration among the compared methods.</li>
             <li>Error concentration: Residual errors cluster in semantically related sections rather than being uniformly random.</li>
           </ul>
@@ -594,9 +594,9 @@
           <article class="card">
             <h3>Training efficiency</h3>
             <ul class="checklist">
-              <li>Fastest (trained): Few-shot MLP probe � 0.16 h</li>
-              <li>Slowest: Few-shot CE probe � 0.38 h (2.3� slower than MLP)</li>
-              <li>Prompt Adaptation: � 0.30 h for best accuracy</li>
+              <li>Fastest (trained): Few-shot MLP probe — 0.16 h</li>
+              <li>Slowest: Few-shot CE probe — 0.38 h (≈2.3× slower than MLP)</li>
+              <li>Prompt Adaptation: ≈ 0.30 h for best accuracy</li>
               <li>Zero-shot: no training time</li>
             </ul>
           </article>
@@ -605,7 +605,7 @@
             <h3>Inference deployment</h3>
             <ul class="checklist">
               <li>Fastest inference: Zero-shot CLIP at 7.35 ms/img (136 img/s).</li>
-              <li>Best accuracy�latency trade-off: Prompt Adaptation at 7.49 ms/img (133 img/s).</li>
+              <li>Best accuracy–latency trade-off: Prompt Adaptation at 7.49 ms/img (133 img/s).</li>
               <li>Slowest among compared models: MLP probe at 8.46 ms/img (118 img/s).</li>
               <li>Latency spread is narrow, so accuracy/robustness should drive deployment decisions.</li>
             </ul>
@@ -790,7 +790,7 @@
         <div class="findings-box">
           <h4>Overall performance ranking</h4>
           <ul>
-            <li><strong>Best accuracy:</strong> Few-shot Prompt Adaptation � 47.3% test acc / 44.96% macro-F1 with 10 shots</li>
+            <li><strong>Best accuracy:</strong> Few-shot Prompt Adaptation — 47.3% test acc / 44.96% macro-F1 with 10 shots</li>
             <li><strong>Best trade-off:</strong> Prompt Adaptation keeps latency at 7.49 ms/img (second-fastest) while topping accuracy</li>
             <li><strong>Surprising finding:</strong> Linear MLP probe is faster to train (0.16 h) but does not beat CE probe on accuracy</li>
             <li><strong>Baseline gap:</strong> +5.21 acc pts and +6.08 macro-F1 pts over zero-shot CLIP</li>
@@ -799,7 +799,7 @@
 
         <div class="key-insight">
           <strong>Finding 1: Prompt tuning beats probes with similar latency</strong>
-          <p>Prompt Adaptation delivers the best accuracy while staying within 0.14 ms/img of zero-shot inference � an attractive trade-off for production.</p>
+          <p>Prompt Adaptation delivers the best accuracy while staying within 0.14 ms/img of zero-shot inference — an attractive trade-off for production.</p>
         </div>
 
         <div class="key-insight">
@@ -819,7 +819,7 @@
               <li>Maximum accuracy: Few-shot Prompt Adaptation with 10 shots per class.</li>
               <li>Quick prototyping: Zero-shot CLIP (no training, 42.05% test accuracy).</li>
               <li>Resource-constrained training: Few-shot MLP probe is fastest to train; CE probe is steadier on accuracy.</li>
-              <li>Production deployment: Few-shot Prompt Adaptation � best accuracy with near zero-shot latency.</li>
+              <li>Production deployment: Few-shot Prompt Adaptation — best accuracy with near zero-shot latency.</li>
             </ul>
           </article>
 
@@ -847,6 +847,4 @@
   </footer>
 </body>
 </html>
-
-
 

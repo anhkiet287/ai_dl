@@ -154,15 +154,13 @@
           We adapt a pretrained CLIP backbone using a small labeled subset of the dataset.
           The goal is to measure how much performance improves over the zero-shot baseline when only a few examples are available for each class.
         </p>
-        <figure class="figure-frame" style="margin-top:12px;">
-          <a href="https://blog.bytebytego.com/p/openai-clip-the-model-that-learnt" target="_blank" rel="noreferrer">
-            <img src="../../../assets/multimodal/fewshot/contrastive_learn.png" alt="Contrastive learning illustration for CLIP" />
-          </a>
-          <figcaption>
-            Contrastive learning overview (source: <a class="text-link" href="https://blog.bytebytego.com/p/openai-clip-the-model-that-learnt" target="_blank" rel="noreferrer">ByteByteGo</a>).
-          </figcaption>
-        </figure>
-
+        <nav class="section-nav" aria-label="On-page navigation">
+          <a href="#overview">Overview</a>
+          <a href="#setup">Setup</a>
+          <a href="#methods">Methods</a>
+          <a href="#results">Results</a>
+          <a href="#conclusion">Takeaway</a>
+        </nav>
       </div>
     </section>
 
@@ -185,6 +183,13 @@
             <li><strong>Main question:</strong> which adaptation strategy gives the best gain over zero-shot?</li>
           </ul>
         </div>
+
+        <figure class="figure-frame">
+          <img src="../figures/few-shot/few-shot-methods.svg" alt="Few-shot methods overview" />
+          <figcaption>
+            Suggested figure 1. Method overview for the four approaches compared in your notebook.
+          </figcaption>
+        </figure>
       </div>
     </section>
 
@@ -229,7 +234,6 @@
             <div class="eyebrow">Methods</div>
             <h2>Approaches compared</h2>
             <p>Short descriptions only, so the page stays concise.</p>
-            <p style="margin-top:6px;"><a class="text-link" href="../backbone-architecture/index.html#variants">See classifier heads &amp; prompts in backbone page →</a></p>
           </div>
         </div>
 
@@ -315,21 +319,16 @@
         </div>
 
         <figure class="figure-frame">
-          <img src="../../../assets/multimodal/fewshot/few-shot-results.svg" alt="Few-shot results comparison" />
+          <img src="../figures/few-shot/few-shot-results.svg" alt="Few-shot results comparison" />
           <figcaption>
-            Compact performance chart for the few-shot page.
+            Suggested figure 2. Compact performance chart for the few-shot page.
           </figcaption>
         </figure>
 
         <figure class="figure-frame">
-          <img src="../../../assets/multimodal/fewshot/few_shot_compact_performance.svg" alt="Few-shot compact performance summary" style="width:100%; height:auto; border-radius:12px; border:1px solid var(--card-border);" />
-          <figcaption>Compact performance summary for few-shot methods.</figcaption>
-        </figure>
-
-        <figure class="figure-frame">
-          <img src="../../../assets/multimodal/fewshot/few-shot-shot-scaling.svg" alt="Shot scaling curve" style="width:100%; height:auto; border-radius:12px; border:1px solid var(--card-border);" />
+          <img src="../figures/few-shot/few-shot-shot-scaling.svg" alt="Shot scaling curve" />
           <figcaption>
-            Shot-scaling summary from 1-shot to 10-shot.
+            Suggested figure 3. Shot-scaling summary from 1-shot to 10-shot. This is a lighter version for the page. You can also replace it with the notebook-exported PNG at the same section.
           </figcaption>
         </figure>
       </div>
@@ -353,6 +352,21 @@
           </p>
         </div>
 
+        <div class="grid two" style="margin-top:20px;">
+          <figure class="figure-frame">
+            <img src="../figures/few-shot/prompt-adaptation-confusion-matrix.png" alt="Prompt adaptation confusion matrix" />
+            <figcaption>
+              Optional figure 4. Actual confusion matrix for the best method, extracted from your notebook.
+            </figcaption>
+          </figure>
+
+          <figure class="figure-frame">
+            <img src="../figures/few-shot/training-time-from-notebook.png" alt="Training time comparison" />
+            <figcaption>
+              Optional figure 5. Training-time comparison from the notebook, useful if you want to discuss efficiency briefly.
+            </figcaption>
+          </figure>
+        </div>
       </div>
     </section>
   </main>

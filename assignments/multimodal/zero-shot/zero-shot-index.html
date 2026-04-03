@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -173,11 +173,13 @@
           We use a pretrained CLIP model as the zero-shot baseline for multimodal classification.
           Each test image is matched against class-specific text prompts, and the class with the highest image–text similarity is selected as the prediction.
         </p>
-        <figure class="figure-frame" style="margin-top:12px;">
-          <img src="../../../assets/multimodal/zeroshot/zeroshot.png" alt="CLIP zero-shot classification illustration" loading="lazy" />
-          <figcaption>Illustration of CLIP zero-shot classification workflow (source: <a class="text-link" href="https://blog.bytebytego.com/p/openai-clip-the-model-that-learnt" target="_blank" rel="noreferrer">pinecone.io</a>).</figcaption>
-        </figure>
-
+        <nav class="section-nav" aria-label="On-page navigation">
+          <a href="#overview">Overview</a>
+          <a href="#prompts">Prompts</a>
+          <a href="#setup">Setup</a>
+          <a href="#results">Results</a>
+          <a href="#takeaway">Takeaway</a>
+        </nav>
       </div>
     </section>
 
@@ -204,7 +206,7 @@
         <figure class="figure-frame">
           <img src="../figures/zero-shot/zero-shot-pipeline.svg" alt="Zero-shot CLIP pipeline diagram" />
           <figcaption>
-            Zero-shot CLIP pipeline diagram.
+            Suggested figure 1. Use this pipeline diagram directly, or replace the file with your own version while keeping the same path.
           </figcaption>
         </figure>
       </div>
@@ -233,24 +235,19 @@
             <h4>Template 3</h4>
             <p>a press photograph of <em>{class}</em></p>
           </article>
-          <article class="prompt-card">
-            <h4>Template 4</h4>
-            <p>a journalistic image related to <em>{class}</em></p>
-          </article>
-          <article class="prompt-card">
-            <h4>Template 5</h4>
-            <p>an editorial photo showing <em>{class}</em></p>
-          </article>
-          <article class="prompt-card">
-            <h4>Template 6</h4>
-            <p>a media image illustrating <em>{class}</em></p>
-          </article>
         </div>
 
         <p>
-          We average these six prompt variants per class to stabilize zero-shot predictions, especially for ambiguous categories such as <em>Opinion</em>, <em>Media</em>, or <em>Your Money</em>.
+          We average multiple prompt variants for each class to make the zero-shot prediction more stable.
+          This is especially useful for ambiguous news categories such as <em>Opinion</em>, <em>Media</em>, or <em>Your Money</em>.
         </p>
 
+        <figure class="figure-frame">
+          <img src="../figures/zero-shot/zero-shot-prompts.svg" alt="Prompt template figure" />
+          <figcaption>
+            Suggested figure 2. Prompt template summary. You can keep this as-is or replace it with a screenshot of your actual prompt dictionary from the notebook.
+          </figcaption>
+        </figure>
       </div>
     </section>
 
@@ -364,6 +361,12 @@
           </div>
         </div>
 
+        <figure class="figure-frame">
+          <img src="../figures/zero-shot/zero-shot-confusion-matrix.png" alt="Zero-shot confusion matrix" />
+          <figcaption>
+            Optional figure 3. Actual zero-shot confusion matrix extracted from your notebook. Use this if you want one more visual without writing extra explanation.
+          </figcaption>
+        </figure>
       </div>
     </section>
   </main>
@@ -386,4 +389,3 @@
   </footer>
 </body>
 </html>
-
