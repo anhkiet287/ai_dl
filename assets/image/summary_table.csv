@@ -1,0 +1,8 @@
+Model,Type,Test Acc,Macro F1,Macro AUC,Params (M),Train (min),Inf. (s),Inf/Sample (ms)
+ViT-L16-PT,Pretrained,1.0000,1.0000,1.0000,303.32,70.6,53.30,35.53
+ViT-B16-PT,Pretrained,0.9980,0.9979,1.0000,85.81,22.0,19.77,13.18
+ResNet-101-PT,Pretrained,0.9933,0.9935,0.9999,42.54,8.5,8.28,5.52
+ResNet-50-PT,Pretrained,0.9913,0.9913,0.9998,23.55,5.7,5.28,3.52
+ResNet-Scratch,Scratch,0.7033,0.6978,0.9688,11.19,22.2,4.46,2.97
+CNN-Scratch,Scratch,0.4580,0.4338,0.9108,15.73,23.0,4.74,3.16
+ViT-Scratch,Scratch,0.1467,0.1161,0.6822,14.57,27.8,5.32,3.55

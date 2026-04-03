@@ -1,0 +1,20 @@
+Combination,Size,Acc,Macro F1,Gain vs Best Single
+ResNet-101-PT + ViT-L16-PT,2,0.9993,0.9994,-0.0007
+ViT-B16-PT + ViT-L16-PT,2,0.9993,0.9994,-0.0007
+ResNet-50-PT + ViT-B16-PT + ViT-L16-PT,3,0.9993,0.9994,-0.0007
+ResNet-101-PT + ViT-B16-PT + ViT-L16-PT,3,0.9993,0.9994,-0.0007
+ViT-Scratch + ViT-L16-PT,2,0.9993,0.9992,-0.0007
+ResNet-50-PT + ResNet-101-PT + ViT-B16-PT + ViT-L16-PT,4,0.9987,0.9987,-0.0013
+ResNet-50-PT + ViT-L16-PT,2,0.998,0.998,-0.002
+ResNet-50-PT + ResNet-101-PT + ViT-L16-PT,3,0.998,0.998,-0.002
+ResNet-101-PT + ViT-B16-PT,2,0.9973,0.9974,-0.0027
+ResNet-50-PT + ResNet-101-PT + ViT-B16-PT,3,0.9967,0.9966,-0.0033
+ResNet-50-PT + ViT-B16-PT,2,0.996,0.996,-0.004
+ViT-Scratch + ViT-B16-PT,2,0.996,0.9958,-0.004
+ResNet-50-PT + ResNet-101-PT,2,0.9927,0.9926,-0.0073
+ResNet-Scratch + ResNet-101-PT,2,0.9887,0.9883,-0.0113
+ResNet-Scratch + ResNet-50-PT,2,0.9847,0.9844,-0.0153
+ResNet-Scratch + ViT-Scratch,2,0.6853,0.6814,-0.3147
+CNN-Scratch + ResNet-Scratch,2,0.6773,0.6726,-0.3227
+CNN-Scratch + ResNet-Scratch + ViT-Scratch,3,0.672,0.6663,-0.328
+CNN-Scratch + ViT-Scratch,2,0.434,0.4075,-0.566
