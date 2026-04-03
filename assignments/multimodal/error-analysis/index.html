@@ -4,205 +4,43 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Error Analysis | Multimodal</title>
-  <meta name="description" content="Failure cases, error patterns, and challenges in multimodal classification." />
+  <meta name="description" content="Failure cases, confusion patterns, and lessons from multimodal classification." />
   <link rel="stylesheet" href="../../../assets/styles.css" />
   <link rel="stylesheet" href="../multimodal.css" />
   <style>
-    .breadcrumb {
-      display: flex;
-      gap: 8px;
-      font-size: 0.9rem;
-      margin-bottom: 16px;
-      color: var(--muted);
-    }
-    .breadcrumb a {
-      color: var(--primary);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .breadcrumb a:hover { color: var(--primary-2); }
-    .breadcrumb span { opacity: 0.5; }
+    .summary-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:14px; margin-top:12px; }
+    .summary-card { background: var(--card); border:1px solid var(--card-border); border-radius:14px; padding:14px; }
+    .summary-card h4 { margin:0 0 6px 0; font-size:1rem; }
+    .summary-card p { margin:0; color:var(--muted); font-size:0.95rem; }
 
-    .failure-case {
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      overflow: hidden;
-      margin: 20px 0;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
+    .failure-grid { display:grid; grid-template-columns: 1fr; gap:14px; margin-top:14px; }
+    .failure-card { background: var(--card); border:1px solid var(--card-border); border-radius:14px; padding:12px; display:flex; flex-direction:column; gap:10px; }
+    .failure-thumb { position:relative; border:1px solid var(--card-border); border-radius:12px; background: linear-gradient(135deg, rgba(110,168,254,.10), rgba(156,137,255,.10)); background-size:cover; background-position:center; aspect-ratio: 16 / 9; overflow:hidden; }
+    .failure-thumb .fallback { position:absolute; inset:auto 10px 10px 10px; background:rgba(0,0,0,0.55); color:#f0f4ff; padding:6px 8px; border-radius:10px; font-size:0.82rem; }
+    .failure-meta { display:flex; flex-wrap:wrap; gap:8px; font-size:0.9rem; color:var(--muted); }
+    .failure-meta span { background: rgba(255,255,255,0.04); border:1px solid var(--card-border); border-radius:10px; padding:4px 8px; }
+    .failure-card h4 { margin:0; font-size:1.02rem; }
+    .failure-card p { margin:0; color:var(--muted); }
 
-    .failure-image {
-      background: linear-gradient(135deg, rgba(110,168,254,.1), rgba(156,137,255,.1));
-      aspect-ratio: 1 / 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
+    .captioned-table { background: var(--card); border:1px solid var(--card-border); border-radius:16px; overflow:hidden; margin:14px 0; }
+    .captioned-table table { width:100%; border-collapse:collapse; }
+    .captioned-table th, .captioned-table td { padding:10px 12px; border-bottom:1px solid rgba(255,255,255,0.08); font-size:0.92rem; text-align:left; }
+    .captioned-table th { background: rgba(255,255,255,0.04); color:#dfe8ff; }
+    .captioned-table tr:last-child td { border-bottom:none; }
+    .table-caption { color:var(--muted); font-size:0.88rem; margin-top:6px; }
 
-    .failure-details {
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
+    .insight-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:12px; margin-top:10px; }
+    .insight-card { background: var(--card); border:1px solid var(--card-border); border-radius:12px; padding:12px; }
+    .insight-card h4 { margin:0 0 6px 0; font-size:0.98rem; }
+    .insight-card p { margin:0; color:var(--muted); }
 
-    .failure-details h4 {
-      margin: 0 0 8px 0;
-      color: var(--text);
-    }
+    .method-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:14px; }
+    .score-best { background: rgba(76,201,145,0.2); color:#1f8b5f; border-radius:8px; padding:2px 8px; font-weight:700; }
+    .score-worst { background: rgba(255,107,107,0.2); color:#b33a3a; border-radius:8px; padding:2px 8px; font-weight:700; }
+    .grid.two { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:14px; }
 
-    .failure-annotation {
-      background: rgba(255,107,107,.1);
-      border-left: 3px solid rgba(255,107,107,.3);
-      padding: 8px 12px;
-      border-radius: 6px;
-      margin: 8px 0;
-      font-size: 0.85rem;
-    }
-
-    .failure-annotation strong {
-      color: #ff6b6b;
-      display: block;
-      margin-bottom: 3px;
-    }
-
-    .confusion-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      margin: 20px 0;
-    }
-
-    .confusion-pattern {
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 16px;
-    }
-
-    .confusion-pattern h4 {
-      margin: 0 0 10px 0;
-      color: var(--text);
-      font-size: 0.95rem;
-    }
-
-    .confusion-pattern ul {
-      margin: 0;
-      padding-left: 18px;
-      font-size: 0.9rem;
-    }
-
-    .confusion-pattern li {
-      margin-bottom: 6px;
-    }
-
-    .class-analysis {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin: 20px 0;
-    }
-
-    .class-weakness {
-      background: rgba(255,107,107,.08);
-      border: 1px solid rgba(255,107,107,.15);
-      border-left: 3px solid rgba(255,107,107,.3);
-      padding: 14px;
-      border-radius: 12px;
-    }
-
-    .class-weakness h4 {
-      margin: 0 0 8px 0;
-      color: #ff6b6b;
-      font-size: 0.9rem;
-    }
-
-    .class-weakness ul {
-      margin: 0;
-      padding-left: 16px;
-      font-size: 0.85rem;
-    }
-
-    .lesson-box {
-      background: linear-gradient(135deg, rgba(126,240,194,.08), rgba(110,168,254,.08));
-      border: 1px solid rgba(126,240,194,.2);
-      border-left: 3px solid rgba(126,240,194,.4);
-      padding: 16px;
-      border-radius: 12px;
-      margin: 16px 0;
-    }
-
-    .lesson-box strong {
-      color: var(--primary-2);
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    .lesson-box p {
-      margin: 0;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    .placeholder-section {
-      background: linear-gradient(135deg, rgba(255,211,110,.08), rgba(156,137,255,.08));
-      border: 1px dashed rgba(255,211,110,.3);
-      border-radius: 16px;
-      padding: 32px;
-      text-align: center;
-      margin: 20px 0;
-    }
-
-    .placeholder-section h4 {
-      margin: 0 0 8px 0;
-      color: var(--warning);
-    }
-
-    .placeholder-section p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .error-categories {
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 20px;
-      margin: 20px 0;
-    }
-
-    .error-categories h3 {
-      margin: 0 0 16px 0;
-    }
-
-    .error-categories ul {
-      margin: 0;
-      padding-left: 18px;
-    }
-
-    .error-categories li {
-      margin-bottom: 8px;
-      color: var(--muted);
-    }
-
-    @media (max-width: 1024px) {
-      .failure-case {
-        grid-template-columns: 1fr;
-      }
-
-      .failure-image {
-        min-height: 200px;
-      }
-
-      .confusion-grid,
-      .class-analysis {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width: 720px) {
+      .summary-grid, .failure-grid, .insight-grid, .method-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -210,14 +48,20 @@
   <header class="nav">
     <div class="container nav-inner">
       <a href="../index.html" class="brand">DL<span>CourseHub</span></a>
-            <nav class="nav-links">
+      <nav class="nav-links">
         <a href="../index.html" class="nav-home">&larr; Back to multimodal home</a>
+        <a href="#failures">Failures</a>
+        <a href="#patterns">Patterns</a>
+        <a href="#weaknesses">Classes</a>
+        <a href="#mitigation">Modality</a>
+        <a href="#methods">Methods</a>
+        <a href="#lessons">Lessons</a>
       </nav>
     </div>
   </header>
 
   <main>
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section class="hero">
       <div class="container">
         <div class="breadcrumb">
@@ -230,427 +74,321 @@
         <div class="badge">Failure case analysis</div>
         <h1>Error Analysis & Failure Cases</h1>
         <p class="lead">
-          Understanding not just what works, but why models fail is essential.
-          This page presents representative failure cases, systematic confusion patterns,
-          class-specific weaknesses, and practical lessons learned from our experiments.
+          Error analysis shows where multimodal classifiers still break. Most mistakes cluster in semantically adjacent sections and in samples with weak or cross-domain cues. Prompt Adaptation leads, but persistent confusion families remain.
         </p>
-        <div class="callout">
-          <strong>Figures directory:</strong> place failure case visuals and charts for this page in <code>../figures/error-analysis/</code>.
+        <div class="summary-grid">
+          <article class="summary-card">
+            <h4>Best analyzed method</h4>
+            <p><strong>Few-shot Prompt Adaptation</strong> — anchor method for all comparisons.</p>
+          </article>
+          <article class="summary-card">
+            <h4>Persistent confusion family</h4>
+            <p>Entertainment/editorial: <strong>Movies ↔ Television</strong>, <strong>Music → Theater</strong>.</p>
+          </article>
+          <article class="summary-card">
+            <h4>Hardest recurring classes</h4>
+            <p>Style, Media, Your Money, Well, Economy.</p>
+          </article>
+          <article class="summary-card">
+            <h4>Main lesson</h4>
+            <p>Semantic overlap matters more than raw confidence; many wrong predictions are high-confidence.</p>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- Error Overview -->
-    <section id="overview" class="alt">
-      <div class="container">
-        <div class="section-heading">
-          <div>
-            <div class="eyebrow">Context</div>
-            <h2>Error types & patterns</h2>
-            <p>Categorizing and understanding the different sources of errors.</p>
-          </div>
-        </div>
-
-        <div class="error-categories">
-          <h3>Common error categories</h3>
-          <ul>
-            <li>
-              <strong>Semantic confusion:</strong>
-              Model confuses visually or semantically similar classes that could be legitimate failures
-            </li>
-            <li>
-              <strong>Modality mismatch:</strong>
-              Image and text point to different classes (e.g., misleading caption)
-            </li>
-            <li>
-              <strong>Out-of-distribution:</strong>
-              Sample looks different from training data (unusual lighting, angle, style)
-            </li>
-            <li>
-              <strong>Ambiguity:</strong>
-              Sample could reasonably belong to multiple classes (genuinely ambiguous examples)
-            </li>
-            <li>
-              <strong>Label noise:</strong>
-              Sample is mislabeled in the ground truth
-            </li>
-            <li>
-              <strong>Feature ambiguity:</strong>
-              Both modalities are informative but point in conflicting directions
-            </li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- Representative Failure Cases -->
-    <section id="failures">
+    <!-- Representative failure cases -->
+    <section id="failures" class="alt">
       <div class="container">
         <div class="section-heading">
           <div>
             <div class="eyebrow">Examples</div>
             <h2>Representative failure cases</h2>
-            <p>
-              Concrete examples showing different types of misclassifications.
-              Each case illustrates a particular challenge or systematic behavior.
-            </p>
+            <p>Six diverse, high-impact mistakes across methods.</p>
           </div>
         </div>
 
-        <!-- Failure Case 1 -->
-        <div class="failure-case">
-          <div class="failure-image">[Image placeholder]</div>
-          <div class="failure-details">
-            <h4>Failure case 1: [Brief title]</h4>
-            <p style="margin: 0 0 8px 0; color: var(--muted); font-size: 0.9rem;">
-              Ground truth: <strong>[Class A]</strong> | Predicted: <strong>[Class B]</strong>
-            </p>
-            <div class="failure-annotation">
-              <strong>Error type:</strong><br/>
-              [Semantic confusion / Modality mismatch / OOD / Ambiguity]
+        <div class="failure-grid">
+          <article class="failure-card">
+            <div class="failure-thumb" style="background-image:url('../../../assets/multimodal/error/music_thetre.jpg');">
+              <div class="fallback">Music → Theater (0.969)</div>
             </div>
-            <div class="failure-annotation">
-              <strong>Why it failed:</strong><br/>
-              Explanation of what the model saw and why it made this mistake.
-              What's the challenge here?
+            <div class="failure-meta">
+              <span>Prompt Adaptation</span><span>Error: Semantic overlap</span><span>Confidence 0.969</span>
             </div>
-            <div class="failure-annotation">
-              <strong>Insight:</strong><br/>
-              What does this teach us about the model or dataset?
-            </div>
-          </div>
-        </div>
+            <h4>Opera podcast framed as theater</h4>
+            <p><strong>GT:</strong> Music · <strong>Pred:</strong> Theater</p>
+            <p class="muted">Stage lighting and costumes push the model to Theater despite audio-centric content.</p>
+            <p><strong>Takeaway:</strong> Stage cues dominate over instrument cues; add concert-specific tokens.</p>
+            <p class="muted" style="font-size:0.82rem;">Image URL: https://static01.nyt.com/images/2018/12/31/art...</p>
+          </article>
 
-        <!-- Failure Case 2 -->
-        <div class="failure-case">
-          <div class="failure-image">[Image placeholder]</div>
-          <div class="failure-details">
-            <h4>Failure case 2: [Brief title]</h4>
-            <p style="margin: 0 0 8px 0; color: var(--muted); font-size: 0.9rem;">
-              Ground truth: <strong>[Class C]</strong> | Predicted: <strong>[Class D]</strong>
-            </p>
-            <div class="failure-annotation">
-              <strong>Error type:</strong><br/>
-              [Different error type from case 1]
+          <article class="failure-card">
+            <div class="failure-thumb" style="background-image:url('../../../assets/multimodal/error/travel_food.jpg');">
+              <div class="fallback">Travel → Food (0.927)</div>
             </div>
-            <div class="failure-annotation">
-              <strong>Why it failed:</strong><br/>
-              Different failure mode—perhaps image is unusual, text is misleading, or classes are too similar.
+            <div class="failure-meta">
+              <span>Prompt Adaptation</span><span>Error: Cross-topic</span><span>Confidence 0.927</span>
             </div>
-            <div class="failure-annotation">
-              <strong>Insight:</strong><br/>
-              Lessons from this particular failure pattern.
-            </div>
-          </div>
-        </div>
+            <h4>Destination article dominated by cuisine</h4>
+            <p><strong>GT:</strong> Travel · <strong>Pred:</strong> Food</p>
+            <p class="muted">Food photography overwhelms travel context; headline mentions a restaurant.</p>
+            <p><strong>Takeaway:</strong> Add place anchors (“city”, “trip”, “tourism”) to travel prompts.</p>
+            <p class="muted" style="font-size:0.82rem;">Image URL: https://static01.nyt.com/images/2018/11/04/tra...</p>
+          </article>
 
-        <!-- Failure Case 3 -->
-        <div class="failure-case">
-          <div class="failure-image">[Image placeholder]</div>
-          <div class="failure-details">
-            <h4>Failure case 3: [Brief title]</h4>
-            <p style="margin: 0 0 8px 0; color: var(--muted); font-size: 0.9rem;">
-              Ground truth: <strong>[Class E]</strong> | Predicted: <strong>[Class F]</strong>
-            </p>
-            <div class="failure-annotation">
-              <strong>Error type:</strong><br/>
-              [Third distinct error category]
+          <article class="failure-card">
+            <div class="failure-thumb" style="background-image:url('../../../assets/multimodal/error/eco-real.jpg');">
+              <div class="fallback">Economy → Real Estate (0.992)</div>
             </div>
-            <div class="failure-annotation">
-              <strong>Why it failed:</strong><br/>
-              Another failure mode. Show diversity in error types.
+            <div class="failure-meta">
+              <span>Zero-shot CLIP</span><span>Error: Taxonomy overlap</span><span>Confidence 0.992</span>
             </div>
-            <div class="failure-annotation">
-              <strong>Insight:</strong><br/>
-              What this tells us about model limitations or dataset properties.
-            </div>
-          </div>
-        </div>
-
-        <div class="placeholder-section">
-          <h4>Add failure cases</h4>
-          <p>Replace each placeholder with actual failure examples from your test set. Include images and annotations.</p>
+            <h4>Housing market article</h4>
+            <p><strong>GT:</strong> Economy · <strong>Pred:</strong> Real Estate</p>
+            <p class="muted">Property imagery + price language push the baseline away from macroeconomics.</p>
+            <p><strong>Takeaway:</strong> Zero-shot prompts need explicit “macro” cues for Economy.</p>
+            <p class="muted" style="font-size:0.82rem;">Image URL: https://static01.nyt.com/images/2013/09/25/bus...</p>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- Confusion Patterns -->
-    <section id="patterns" class="alt">
+    <!-- Confusion patterns -->
+    <section id="patterns">
       <div class="container">
         <div class="section-heading">
           <div>
             <div class="eyebrow">Systematic errors</div>
             <h2>Confusion patterns</h2>
-            <p>Classes that are frequently confused with each other.</p>
+            <p>Counts reflect the top observed confusion pairs.</p>
           </div>
         </div>
 
-        <div class="confusion-grid">
-          <div class="confusion-pattern">
-            <h4>Most confused pair #1</h4>
-            <ul>
-              <li><strong>[Class A]</strong> ↔ <strong>[Class B]</strong></li>
-              <li>Forward confusion: [N] errors</li>
-              <li>Reverse confusion: [N] errors</li>
-              <li>Root cause: [Visual/semantic similarity / Dataset issue]</li>
-              <li>Could be mitigated by: [augmentation / better prompts / ...]</li>
-            </ul>
-          </div>
-
-          <div class="confusion-pattern">
-            <h4>Most confused pair #2</h4>
-            <ul>
-              <li><strong>[Class C]</strong> → <strong>[Class D]</strong> (one-directional)</li>
-              <li>Asymmetric: [C→D] [N] errors, [D→C] [M] errors</li>
-              <li>Reason for asymmetry: [explanation]</li>
-              <li>Affects: [Method X] more than [Method Y]</li>
-              <li>Solution: [targeted approach]</li>
-            </ul>
-          </div>
-
-          <div class="confusion-pattern">
-            <h4>✓ Well-separated pair</h4>
-            <ul>
-              <li><strong>[Class E]</strong> vs <strong>[Class F]</strong></li>
-              <li>Confusion rate: [near 0%]</li>
-              <li>Why: Highly distinctive visual/semantic difference</li>
-              <li>Model learns: [specific features/prompts]</li>
-            </ul>
-          </div>
-
-          <div class="confusion-pattern">
-            <h4>🤔 Surprising pattern</h4>
-            <ul>
-              <li>Unexpected confusion: [Class X] → [Class Y]</li>
-              <li>Frequency: [rate/count]</li>
-              <li>Analysis: Initially counterintuitive, but [explanation]</li>
-              <li>Lesson: [insight about model behavior]</li>
-            </ul>
-          </div>
+        <div class="captioned-table">
+          <table>
+            <thead>
+              <tr><th>Method</th><th>Dominant pair</th><th>Count</th><th>Pattern type</th><th>Interpretation</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Zero-shot CLIP</td><td>Travel → Real Estate</td><td>64</td><td>Destination ↔ property</td><td>Property imagery in travel stories triggers real-estate terms.</td></tr>
+              <tr><td>Zero-shot CLIP</td><td>Music → Theater</td><td>55</td><td>Entertainment overlap</td><td>Stage cues override instrument cues without fine-grained prompts.</td></tr>
+              <tr><td>Prompt Adaptation</td><td>Movies → Television</td><td>59</td><td>Bidirectional entertainment</td><td>Film/TV visuals are interchangeable without title/format hints.</td></tr>
+              <tr><td>Prompt Adaptation</td><td>Fashion → Style</td><td>54</td><td>Lifestyle boundary</td><td>Apparel-heavy frames shift lifestyle content into Fashion.</td></tr>
+              <tr><td>CoOp</td><td>Health → Science</td><td>63</td><td>Medical vs research</td><td>Clinical imagery aligns with science cues when text is neutral.</td></tr>
+              <tr><td>CoOp</td><td>Style → Fashion</td><td>62</td><td>Lifestyle boundary</td><td>Personal style content collapses to fashion without broader context.</td></tr>
+            </tbody>
+          </table>
         </div>
 
-        <div class="placeholder-section">
-          <h4>Document confusion patterns</h4>
-          <p>Replace all confusion matrix patterns with extracted pairs from your actual results.</p>
+        <div class="insight-grid">
+          <article class="insight-card">
+            <h4>Bidirectional entertainment</h4>
+            <p>Movies ↔ Television persists even after adaptation; requires metadata cues (format, network, runtime).</p>
+          </article>
+          <article class="insight-card">
+            <h4>Lifestyle boundaries</h4>
+            <p>Style ↔ Fashion stays hard because visuals are nearly identical; textual cues decide the label.</p>
+          </article>
+          <article class="insight-card">
+            <h4>News taxonomy overlap</h4>
+            <p>Media / Technology / Opinion / Your Money frequently cross over, reflecting mixed platform-business stories.</p>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- Class-specific Weaknesses -->
-    <section id="weaknesses">
+    <!-- Class-specific weaknesses -->
+    <section id="weaknesses" class="alt">
       <div class="container">
         <div class="section-heading">
           <div>
             <div class="eyebrow">Class analysis</div>
             <h2>Class-specific weaknesses</h2>
-            <p>Which classes are hardest to classify and why.</p>
+            <p>Prompt Adaptation hardest vs easiest classes and where it gains over zero-shot.</p>
           </div>
         </div>
 
-        <div class="class-analysis">
-          <div class="class-weakness">
-            <h4>Hardest class: [Class name]</h4>
-            <ul>
-              <li>Accuracy: [XX]%</li>
-              <li>Sample count: [N]</li>
-              <li>Most confused with: [Class X]</li>
-              <li>Main challenge: [reason]</li>
-              <li>Affects: [which methods more]</li>
-            </ul>
-          </div>
+        <div class="captioned-table">
+          <table>
+            <thead>
+              <tr><th colspan="6">Prompt Adaptation · hardest 5 vs easiest 5</th></tr>
+              <tr><th>Class</th><th>Precision</th><th>Recall</th><th>F1</th><th>Support</th><th>Comment</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Style</td><td>0.1674</td><td>0.1343</td><td class="score-worst">0.1491</td><td>268</td><td>Visuals overlap with Fashion; captions rarely disambiguate.</td></tr>
+              <tr><td>Media</td><td>0.2162</td><td>0.1333</td><td>0.1649</td><td>300</td><td>Platform/business stories drift into Technology or Opinion.</td></tr>
+              <tr><td>Your Money</td><td>0.1245</td><td>0.2540</td><td>0.1671</td><td>126</td><td>Personal finance resembles Economy and Education topics.</td></tr>
+              <tr><td>Well</td><td>0.1311</td><td>0.3971</td><td>0.1971</td><td>68</td><td>Health/fitness visuals collide with Health and Science.</td></tr>
+              <tr><td>Economy</td><td>0.2261</td><td>0.2955</td><td>0.2562</td><td>176</td><td>Macro vs personal finance boundary remains fuzzy.</td></tr>
+              <tr><td>Sports</td><td>0.7844</td><td>0.8733</td><td class="score-best">0.8265</td><td>300</td><td>Distinctive uniforms, fields, and text cues.</td></tr>
+              <tr><td>Automobiles</td><td>0.8287</td><td>0.8197</td><td>0.8242</td><td>183</td><td>Highly visual domain with clear object cues.</td></tr>
+              <tr><td>Dance</td><td>0.7624</td><td>0.7700</td><td>0.7662</td><td>300</td><td>Pose and motion cues well captured in images.</td></tr>
+              <tr><td>Food</td><td>0.6687</td><td>0.7267</td><td>0.6965</td><td>300</td><td>Strong visual signatures (plates, dishes).</td></tr>
+              <tr><td>Theater</td><td>0.5723</td><td>0.6200</td><td>0.5952</td><td>300</td><td>Stage cues are clear when musical elements are absent.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-caption">Hardest classes remain broad editorial/lifestyle categories; easiest classes are visually distinctive.</div>
 
-          <div class="class-weakness">
-            <h4>2nd hardest: [Class name]</h4>
-            <ul>
-              <li>Accuracy: [XX]%</li>
-              <li>Sample count: [N]</li>
-              <li>Most confused with: [Class Y]</li>
-              <li>Issue: [specific challenge]</li>
-              <li>Why: [explanation]</li>
-            </ul>
-          </div>
-
-          <div class="class-weakness">
-            <h4>Easiest class: [Class name]</h4>
-            <ul>
-              <li>Accuracy: [XX]% (best)</li>
-              <li>Sample count: [N]</li>
-              <li>Rarely confused with: [others]</li>
-              <li>Success reason: [distinctive features]</li>
-              <li>Lesson: [model behavior insight]</li>
-            </ul>
-          </div>
+        <h3 style="margin-top:14px;">Who improved the most over zero-shot?</h3>
+        <div class="captioned-table">
+          <table>
+            <thead><tr><th>Class</th><th>Zero-shot F1</th><th>Prompt Adaptation F1</th><th>Gain</th></tr></thead>
+            <tbody>
+              <tr><td>Global Business</td><td>0.1719</td><td>0.3347</td><td class="score-best">+0.1628</td></tr>
+              <tr><td>Television</td><td>0.2538</td><td>0.4055</td><td>+0.1517</td></tr>
+              <tr><td>Technology</td><td>0.3822</td><td>0.5188</td><td>+0.1366</td></tr>
+              <tr><td>Science</td><td>0.4740</td><td>0.5938</td><td>+0.1198</td></tr>
+              <tr><td>Books</td><td>0.2612</td><td>0.3603</td><td>+0.0991</td></tr>
+            </tbody>
+          </table>
         </div>
 
-        <div class="lesson-box">
-          <strong>Key observation about class difficulty:</strong>
-          <p>
-            Is difficulty correlated with class frequency? Class visual diversity? Text clarity?
-            What patterns emerge when you rank classes by accuracy?
-          </p>
+        <h3 style="margin-top:12px;">Classes with limited gains</h3>
+        <div class="captioned-table">
+          <table>
+            <thead><tr><th>Class</th><th>Zero-shot F1</th><th>Prompt Adaptation F1</th><th>Gain</th></tr></thead>
+            <tbody>
+              <tr><td>Food</td><td>0.7036</td><td>0.6965</td><td class="score-worst">-0.0071</td></tr>
+              <tr><td>Dance</td><td>0.7608</td><td>0.7662</td><td>+0.0054</td></tr>
+              <tr><td>Music</td><td>0.5443</td><td>0.5515</td><td>+0.0072</td></tr>
+              <tr><td>Fashion</td><td>0.4090</td><td>0.4188</td><td>+0.0098</td></tr>
+              <tr><td>Economy</td><td>0.2413</td><td>0.2562</td><td>+0.0149</td></tr>
+            </tbody>
+          </table>
         </div>
-
-        <div class="placeholder-section">
-          <h4>Analyze class-wise performance</h4>
-          <p>Extract actual per-class accuracies from your results and identify the hardest and easiest classes.</p>
-        </div>
+        <p class="muted">Few-shot helps most when zero-shot semantics are too generic; already distinctive classes see smaller gains.</p>
       </div>
     </section>
 
-    <!-- Modality-specific Errors -->
-    <section id="mitigation" class="alt">
+    <!-- Modality-specific failure modes -->
+    <section id="mitigation">
       <div class="container">
         <div class="section-heading">
           <div>
             <div class="eyebrow">Multimodal perspective</div>
             <h2>Modality-specific failure modes</h2>
-            <p>When image and text disagree, which is trusted? What breaks down?</p>
+            <p>Image, text, and cross-modal ambiguity each drive distinct errors.</p>
           </div>
         </div>
 
-        <div class="grid two">
-          <article class="card">
-            <h3>Image-misleading cases</h3>
-            <p>
-              When the image is misleading or doesn't match the text:
-            </p>
-            <ul class="checklist">
-              <li>Example: Poor image quality or unusual angle</li>
-              <li>Frequency: [~N% of errors]</li>
-              <li>Model behavior: [tends to trust image / text / conflicted]</li>
-              <li>Best method: [which handles better]</li>
-            </ul>
+        <div class="insight-grid">
+          <article class="insight-card">
+            <h4>Image-dominant mistakes</h4>
+            <p>Travel → Food (restaurant imagery), Technology → Automobiles (cars in frame), Style → Fashion (runway visuals). Images override textual context.</p>
           </article>
-
-          <article class="card">
-            <h3>Text-misleading cases</h3>
-            <p>
-              When text is unclear, generic, or contradicts the image:
-            </p>
-            <ul class="checklist">
-              <li>Example: Vague or inaccurate text description</li>
-              <li>Frequency: [~N% of errors]</li>
-              <li>Model behavior: [tends to trust image / text / conflicted]</li>
-              <li>Best method: [which handles better]</li>
-            </ul>
+          <article class="insight-card">
+            <h4>Text-dominant mistakes</h4>
+            <p>Your Money → Education (financial-aid wording) and Music → Theater (headline mentions performance) despite mixed visuals.</p>
           </article>
-        </div>
-
-        <div class="lesson-box">
-          <strong>Modality fusion insight:</strong>
-          <p>
-            Do all methods agree when one modality is unreliable? Or do they have different fusion strategies?
-            Is late fusion more robust to single-modality failures than early fusion?
-          </p>
+          <article class="insight-card">
+            <h4>Cross-modal ambiguity</h4>
+            <p>Media → Technology: both modalities reference platforms; taxonomy itself is fuzzy. High-confidence errors signal overlapping label space, not just model failure.</p>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- Comparative Error Analysis -->
-    <section>
+    <!-- Method-specific error patterns -->
+    <section id="methods" class="alt">
       <div class="container">
         <div class="section-heading">
           <div>
             <div class="eyebrow">Method comparison</div>
             <h2>Method-specific error patterns</h2>
-            <p>Do different methods make different types of errors?</p>
+            <p>How the three methods differ in strengths and failure modes.</p>
           </div>
         </div>
 
-        <div class="grid two">
+        <div class="method-grid">
           <article class="card">
-            <h3>Zero-shot errors</h3>
+            <h3>Zero-shot CLIP</h3>
             <ul class="checklist">
-              <li>Error rate: [XX]%</li>
-              <li>Most common error type: [semantic confusion]</li>
-              <li>Affected by: [prompt quality, class similarity]</li>
-              <li>Advantage: [more interpretable errors]</li>
-              <li>Limitation: [struggles with ambiguous samples]</li>
+              <li><strong>Strength:</strong> Interpretable saliency, no training.</li>
+              <li><strong>Failures:</strong> Travel → Real Estate, Music → Theater; high confidence even when wrong.</li>
+              <li><strong>Pattern:</strong> Relies on coarse scene cues; lacks fine-grained editorial wording.</li>
+              <li><strong>Implication:</strong> Needs prompt enrichment for macro/business vs lifestyle distinctions.</li>
             </ul>
           </article>
-
           <article class="card">
-            <h3>Few-shot errors</h3>
+            <h3>Few-shot Prompt Adaptation</h3>
             <ul class="checklist">
-              <li>Error rate: [XX]%</li>
-              <li>Most common error type: [OOD or hard negatives]</li>
-              <li>Varied by: [number of shots, method type]</li>
-              <li>Advantage: [learns dataset-specific patterns]</li>
-              <li>Limitation: [may overfit to limited examples]</li>
+              <li><strong>Strength:</strong> Best overall balance; major gains for Global Business, Television, Technology.</li>
+              <li><strong>Failures:</strong> Movies ↔ Television, Fashion ↔ Style, Media drift into Technology/Opinion.</li>
+              <li><strong>Pattern:</strong> Improves weak classes but still struggles with overlapping lifestyle/finance labels.</li>
+              <li><strong>Implication:</strong> Add class-specific negative prompts and calibrate confidence.</li>
             </ul>
           </article>
-        </div>
-
-        <div class="lesson-box">
-          <strong>Comparative insight:</strong>
-          <p>
-            Do zero-shot and few-shot make complementary errors? Could an ensemble help?
-            Are zero-shot errors more interpretable or different in character?
-          </p>
+          <article class="card">
+            <h3>Few-shot CoOp</h3>
+            <ul class="checklist">
+              <li><strong>Strength:</strong> Strong gains on Global Business and Books.</li>
+              <li><strong>Failures:</strong> Well collapses (F1 0.0552); Health → Science and Style → Fashion dominate errors.</li>
+              <li><strong>Pattern:</strong> More brittle to class imbalance; prompt tokens overfit to dominant visuals.</li>
+              <li><strong>Implication:</strong> Requires re-weighting or balanced episodes for lifestyle/health classes.</li>
+            </ul>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- Practical Lessons -->
-    <section class="alt">
+    <!-- Practical lessons -->
+    <section id="lessons">
       <div class="container">
         <div class="section-heading">
           <div>
             <div class="eyebrow">Takeaways</div>
             <h2>Practical lessons learned</h2>
-            <p>What we can learn from these errors for improving models and datasets.</p>
+            <p>Actionable guidance derived from the failures and patterns.</p>
           </div>
         </div>
 
-        <div class="lesson-box">
-          <strong>Lesson 1: [Title]</strong>
-          <p>
-            What we learned and how to apply it. For example:
-            "Classes XX and YY are inherently confusable; future work should either merge them or provide better distinguishing features."
-          </p>
+        <div class="insight-grid">
+          <article class="insight-card">
+            <h4>Semantic neighbors dominate</h4>
+            <p>Remaining errors cluster in adjacent editorial categories; outright off-topic mistakes are rare.</p>
+          </article>
+          <article class="insight-card">
+            <h4>Confidence is not correctness</h4>
+            <p>Many wrong predictions exceed 0.95 probability; calibration and selective prediction are needed.</p>
+          </article>
+          <article class="insight-card">
+            <h4>Few-shot helps broad labels</h4>
+            <p>Largest gains are for broad business/editorial classes; visually distinctive classes see modest change.</p>
+          </article>
+          <article class="insight-card">
+            <h4>Label space ambiguity</h4>
+            <p>Some boundaries (Media vs Technology, Style vs Fashion) are inherently fuzzy in news taxonomy.</p>
+          </article>
         </div>
 
-        <div class="lesson-box">
-          <strong>Lesson 2: [Title]</strong>
-          <p>
-            Another actionable insight. Could be about preprocessing, data collection, model architecture, or evaluation strategy.
-          </p>
-        </div>
-
-        <div class="lesson-box">
-          <strong>Lesson 3: [Title]</strong>
-          <p>
-            Third key lesson. Focus on practical improvements that could be implemented in a next iteration of the project.
-          </p>
-        </div>
-
-        <div class="grid two" style="margin-top: 24px;">
+        <div class="grid two" style="margin-top:16px; gap:14px;">
           <article class="card">
-            <h3>Recommendations for data collection</h3>
+            <h3>Recommendations · Data curation</h3>
             <ul class="checklist">
-              <li>Increase diversity in [feature]</li>
-              <li>Improve alignment between image and text</li>
-              <li>Add more examples of [hard class]</li>
-              <li>Clarify ambiguous labeling criteria</li>
-              <li>Audit labels for potential noise</li>
+              <li>Add more disambiguating samples for Style, Media, Your Money, Well, Economy.</li>
+              <li>Capture mixed-modality cases (e.g., concerts vs theater) with explicit labels.</li>
+              <li>Audit Media/Technology/Opinion overlaps; relabel or add secondary tags.</li>
             </ul>
           </article>
-
           <article class="card">
-            <h3>Recommendations for modeling</h3>
+            <h3>Recommendations · Prompt / label engineering</h3>
             <ul class="checklist">
-              <li>Implement class-weighted loss</li>
-              <li>Use data augmentation for [weak classes]</li>
-              <li>Experiment with ensemble methods</li>
-              <li>Try contrastive or metric-learning objectives</li>
-              <li>Add explicit modality fusion mechanism</li>
+              <li>Enrich prompts with format cues (film vs series), financial scope (macro vs personal).</li>
+              <li>Add class-specific negatives to reduce cross-domain drift.</li>
+              <li>Use calibration or temperature scaling to down-weight overconfident ambiguous cases.</li>
             </ul>
           </article>
         </div>
 
-        <div class="placeholder-section">
-          <h4>Write your lessons</h4>
-          <p>Add specific, actionable insights from your error analysis that could improve future versions.</p>
+        <div class="card" style="margin-top:12px;">
+          <h3>Recommendations · Modeling</h3>
+          <ul class="checklist">
+            <li>Class-weight or re-sample for Well and Your Money to counter imbalance.</li>
+            <li>Contrastive training with hard negatives for Movies/Television and Style/Fashion.</li>
+            <li>Late-fusion or text-aware prompts for Media vs Technology boundary cases.</li>
+          </ul>
         </div>
       </div>
     </section>
@@ -674,6 +412,3 @@
   </footer>
 </body>
 </html>
-
-
-
