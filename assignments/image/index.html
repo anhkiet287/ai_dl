@@ -1,12 +1,24 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Image Branch | Assignment 1</title>
-  <meta name="description" content="Image classification branch: problem, data pipeline, model design, results, and extensions." />
-  <link rel="stylesheet" href="../multimodal/multimodal.css" />
+  <meta name="description" content="Image classification branch on a balanced 20-class ImageNet subset: data, pipeline, models, results, errors, and extensions." />
+  <link rel="stylesheet" href="./image.css" />
   <link rel="stylesheet" href="../../assets/styles.css" />
+  <style>
+    .quick-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-top: 14px; }
+    .quick-link-btn { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 12px; border-radius: 12px; background: rgba(110,168,254,0.1); border: 1px solid rgba(110,168,254,0.2); color: var(--primary); text-decoration: none; font-weight: 600; transition: transform 0.15s ease, border-color 0.15s ease; }
+    .quick-link-btn:hover { transform: translateY(-1px); border-color: rgba(110,168,254,0.4); }
+    .findings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 12px; }
+    .finding-box { background: linear-gradient(135deg, rgba(126,240,194,.12), rgba(110,168,254,.08)); border: 1px solid rgba(126,240,194,.22); border-radius: 16px; padding: 14px; }
+    .finding-box strong { display:block; color: var(--primary-2); margin-bottom:6px; }
+    .mini-table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; overflow: hidden; }
+    .mini-table th, .mini-table td { padding: 10px 12px; border-bottom: 1px solid var(--card-border); text-align: left; font-size: 0.95rem; }
+    .mini-table th { background: rgba(255,255,255,0.04); color: var(--text); }
+    .mini-table tr:last-child td { border-bottom: none; }
+  </style>
 </head>
 <body>
   <header class="nav">
@@ -14,11 +26,11 @@
       <a href="../../index.html" class="brand">DL<span>CourseHub</span></a>
       <nav class="nav-links">
         <a href="./index.html">Overview</a>
-        <a href="./problem-eda/index.html">Dataset & EDA</a>
-        <a href="./dataset-pipeline/index.html">Preprocessing & Dataloader</a>
-        <a href="./model-design/index.html">Backbone & Head</a>
-        <a href="./results/index.html">Results & Analysis</a>
-        <a href="./error-analysis/index.html">Error Analysis</a>
+        <a href="./problem-eda/index.html">Dataset</a>
+        <a href="./dataset-pipeline/index.html">Preprocessing</a>
+        <a href="./model-design/index.html">Backbone</a>
+        <a href="./results/index.html">Results</a>
+        <a href="./error-analysis/index.html">Errors</a>
         <a href="./extensions/index.html">Extension</a>
         <a href="../assignment1.html" class="btn btn-secondary">Assignment 1</a>
       </nav>
@@ -38,46 +50,109 @@
         <div class="badge">Image classification branch</div>
         <h1>Image Classification</h1>
         <p class="lead">
-          End-to-end image classification pipeline: define the problem, analyze the dataset, build and train models, report results, and discuss extensions or limitations.
+          Balanced 20-class ImageNet subset (10k images: 7k/1.5k/1.5k). Seven models (3 scratch, 4 pretrained) with best test accuracy 1.000 (ViT-L/16-PT); ensembles explored for small gains.
         </p>
-        <div class="callout">
-          <strong>Figures directory:</strong> store plots and images for this branch in <code>./figures/</code> (subfolders per page).
+        <div class="quick-links">
+          <a class="quick-link-btn" href="./problem-eda/index.html">Dataset &amp; EDA</a>
+          <a class="quick-link-btn" href="./dataset-pipeline/index.html">Preprocessing</a>
+          <a class="quick-link-btn" href="./model-design/index.html">Backbone</a>
+          <a class="quick-link-btn" href="./results/index.html">Results</a>
+          <a class="quick-link-btn" href="./error-analysis/index.html">Errors</a>
+          <a class="quick-link-btn" href="./extensions/index.html">Extension</a>
         </div>
         <nav class="section-nav" aria-label="On-page navigation">
-          <a href="#links">Quick links</a>
+          <a href="#requirements">Requirements</a>
+          <a href="#approaches">Approaches</a>
+          <a href="#summary">Summary</a>
           <a href="#pages">Pages</a>
-          <a href="#outline">Report outline</a>
+          <a href="#quick-reference">Quick ref</a>
         </nav>
       </div>
     </section>
 
-    <section id="links" class="alt">
+    <section id="requirements" class="alt">
       <div class="container">
         <div class="section-heading">
           <div>
-            <div class="eyebrow">Resources</div>
-            <h2>Essential links</h2>
-            <p>Add your real links for the image branch.</p>
+            <div class="eyebrow">Task definition</div>
+            <h2>Assignment Requirements</h2>
+            <p>Image classification pipeline on a balanced 20-class ImageNet subset.</p>
           </div>
         </div>
         <div class="grid two">
           <article class="card">
-            <h3>Project assets</h3>
-            <ul class="info-list">
-              <li><strong>Notebook:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add image notebook]</a></li>
-              <li><strong>Dataset:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add dataset link]</a></li>
-              <li><strong>Code repo:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add repo link]</a></li>
-              <li><strong>Report PDF:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add report link]</a></li>
+            <h3>What we must demonstrate</h3>
+            <ul class="checklist">
+              <li>Build an end-to-end image classification pipeline.</li>
+              <li>Use a valid dataset with ≥5 classes (here: 20 classes, 10k images, balanced).</li>
+              <li>Report accuracy and macro-F1; include calibration (ECE) and robustness checks.</li>
+              <li>Show EDA, preprocessing/DataLoader, model design, training, evaluation, and comparisons with figures/tables.</li>
             </ul>
           </article>
           <article class="card">
-            <h3>Media</h3>
-            <ul class="info-list">
-              <li><strong>Presentation:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add slides or video]</a></li>
-              <li><strong>Demo:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add demo]</a></li>
-              <li><strong>Additional:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add extra link]</a></li>
+            <h3>Dataset expectations</h3>
+            <ul class="checklist">
+              <li>Balanced splits: 7k train / 1.5k val / 1.5k test (500 per class).</li>
+              <li>Real images, 224×224; documented transform pipeline.</li>
+              <li>Train augments only; val/test use resize+centercrop+normalize.</li>
+              <li>Hyperparameters declared: LR, scheduler, label smoothing, MixUp/CutMix usage.</li>
             </ul>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="approaches">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Methodology</div>
+            <h2>Compared approaches</h2>
+            <p>Three groups: scratch models, pretrained finetune, and ensembles.</p>
+          </div>
+        </div>
+        <div class="section-cards" style="grid-template-columns: repeat(3, minmax(0, 1fr));">
+          <div class="nav-card">
+            <div class="nav-card-icon">S</div>
+            <h3>Scratch models</h3>
+            <p>CNN-Scratch, ResNet-18-Scratch, ViT-Scratch; 30 epochs; MixUp/CutMix per model.</p>
+          </div>
+          <div class="nav-card">
+            <div class="nav-card-icon">P</div>
+            <h3>Pretrained finetune</h3>
+            <p>ResNet-50/101, ViT-B/L with 20-way heads; head-only then full finetune (5 epochs total).</p>
+          </div>
+          <div class="nav-card">
+            <div class="nav-card-icon">E</div>
+            <h3>Ensembles</h3>
+            <p>2–4 model combos; top accuracy 0.9993 (no gain over best single ViT-L/16-PT).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="summary" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Summary</div>
+            <h2>Key findings</h2>
+            <p>Main takeaways from experiments.</p>
+          </div>
+        </div>
+        <div class="findings-grid">
+          <div class="finding-box">
+            <strong>Pretrained ViTs dominate</strong>
+            ViT-L/16-PT hits 1.000 test acc; ViT-B/16-PT reaches 0.9980 with far fewer params.
+          </div>
+          <div class="finding-box">
+            <strong>Scratch lag</strong>
+            Best scratch (ResNet-Scratch) 0.7033 acc; CNN-Scratch 0.4580; ViT-Scratch 0.1467.
+          </div>
+          <div class="finding-box">
+            <strong>Ensembles flat</strong>
+            Top ensemble 0.9993 acc; small uplift vs other pretrained but below ViT-L.
+          </div>
         </div>
       </div>
     </section>
@@ -86,62 +161,70 @@
       <div class="container">
         <div class="section-heading">
           <div>
-            <div class="eyebrow">Navigation</div>
-            <h2>Image branch pages</h2>
-            <p>Jump to any section of the report.</p>
+            <div class="eyebrow">Explore</div>
+            <h2>Detailed task and analysis</h2>
+            <p>Dive into each part of the image branch.</p>
           </div>
         </div>
-        <div class="section-cards">
+        <div class="section-cards" style="grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));">
           <a href="./problem-eda/index.html" class="nav-card">
-            <div class="nav-card-icon">1</div>
-            <h3>Dataset & EDA</h3>
-            <p>Problem statement, goals, dataset overview, and exploratory analysis.</p>
+            <div class="nav-card-icon">EDA</div>
+            <h3>Dataset &amp; EDA</h3>
+            <p>Balanced splits, class stats, pixel stats, similarity heatmaps, sample grids.</p>
           </a>
           <a href="./dataset-pipeline/index.html" class="nav-card">
-            <div class="nav-card-icon">2</div>
-            <h3>Preprocessing & Dataloader</h3>
-            <p>Data splits, preprocessing, augmentation, and dataloader setup.</p>
+            <div class="nav-card-icon">PRE</div>
+            <h3>Preprocessing &amp; Dataloader</h3>
+            <p>Transforms, MixUp/CutMix, batch size 16, per-model augmentation rules.</p>
           </a>
           <a href="./model-design/index.html" class="nav-card">
-            <div class="nav-card-icon">3</div>
-            <h3>Backbone & Head</h3>
-            <p>Architectures, heads, loss, optimization, and evaluation setup.</p>
+            <div class="nav-card-icon">BB</div>
+            <h3>Backbone &amp; Head</h3>
+            <p>Scratch CNN/ResNet/ViT and pretrained heads; optimizer/scheduler.</p>
           </a>
           <a href="./results/index.html" class="nav-card">
-            <div class="nav-card-icon">4</div>
-            <h3>Results & Analysis</h3>
-            <p>Metrics, comparisons, plots, and qualitative findings.</p>
+            <div class="nav-card-icon">R</div>
+            <h3>Results &amp; Analysis</h3>
+            <p>Metrics, curves, per-class heatmaps, ROC, robustness, ensembles, dashboard.</p>
           </a>
           <a href="./error-analysis/index.html" class="nav-card">
-            <div class="nav-card-icon">5</div>
+            <div class="nav-card-icon">EA</div>
             <h3>Error Analysis</h3>
-            <p>Failure cases, confusion patterns, and lessons learned.</p>
+            <p>Confidence distributions, reliability diagrams, top confused pairs.</p>
           </a>
           <a href="./extensions/index.html" class="nav-card">
-            <div class="nav-card-icon">6</div>
+            <div class="nav-card-icon">EXT</div>
             <h3>Extension</h3>
-            <p>Limitations, ablations, and future extensions.</p>
+            <p>Ablations (label smoothing, MixUp/CutMix, augmentation study), limitations, interpretability.</p>
           </a>
         </div>
       </div>
     </section>
 
-    <section id="outline" class="alt">
+    <section id="quick-reference" class="alt">
       <div class="container">
         <div class="section-heading">
           <div>
-            <div class="eyebrow">Report outline</div>
-            <h2>Recommended structure</h2>
-            <p>Align with the suggested report flow.</p>
+            <div class="eyebrow">Quick reference</div>
+            <h2>Method comparison summary</h2>
+            <p>High-level comparison of representative models.</p>
           </div>
         </div>
-        <ol class="info-list">
-          <li>Problem statement and exploratory data analysis</li>
-          <li>Dataset, DataLoader, and augmentation pipeline</li>
-          <li>Model design, training setup, and evaluation</li>
-          <li>Results, comparisons, discussion, and visualizations</li>
-          <li>Extensions, limitations, or ablation studies</li>
-        </ol>
+        <div class="card">
+          <table class="mini-table">
+            <thead>
+              <tr>
+                <th>Model</th><th>Type</th><th>Test Acc</th><th>Macro F1</th><th>Params (M)</th><th>ECE</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>ResNet-Scratch</td><td>Scratch</td><td>0.7033</td><td>0.6978</td><td>11.19</td><td>0.110</td></tr>
+              <tr><td>ResNet-50-PT</td><td>Pretrained</td><td>0.9913</td><td>0.9913</td><td>23.55</td><td>0.115</td></tr>
+              <tr><td>ViT-L/16-PT</td><td>Pretrained</td><td>1.0000</td><td>1.0000</td><td>303.32</td><td>0.124</td></tr>
+            </tbody>
+          </table>
+          <p class="table-caption">Ensembles: top combo 0.9993 acc (2–4 models), slightly below ViT-L/16-PT.</p>
+        </div>
       </div>
     </section>
   </main>
@@ -152,16 +235,16 @@
         <h3>Navigation</h3>
         <ul class="footer-links">
           <li><a href="../assignment1.html">Back to Assignment 1</a></li>
-          <li><a href="./problem-eda/index.html">Problem & EDA</a></li>
-          <li><a href="./dataset-pipeline/index.html">Dataset & Pipeline</a></li>
-          <li><a href="./model-design/index.html">Model & Training</a></li>
+          <li><a href="./problem-eda/index.html">Dataset &amp; EDA</a></li>
+          <li><a href="./dataset-pipeline/index.html">Preprocessing</a></li>
+          <li><a href="./model-design/index.html">Backbone</a></li>
         </ul>
       </div>
       <div>
         <h3>More</h3>
         <ul class="footer-links">
           <li><a href="./results/index.html">Results</a></li>
-          <li><a href="./extensions/index.html">Extensions</a></li>
+          <li><a href="./extensions/index.html">Extension</a></li>
           <li><a href="../multimodal/index.html">Multimodal branch</a></li>
           <li><a href="../text/index.html">Text branch</a></li>
         </ul>

@@ -189,7 +189,7 @@
           <span>/</span>
           <span>Multimodal Classification</span>
         </div>
-        <div class="badge">Multimodal branch Â· Assignment 1</div>
+        <div class="badge">Multimodal branch · Assignment 1</div>
         <h1>Multimodal Image-Text Classification</h1>
         <p class="lead">
           Zero-shot CLIP baseline versus few-shot Prompt Adaptation and CoOp on the 24-class NYT (N24News) dataset. Prompt Adaptation leads overall F1 and calibration.
@@ -459,6 +459,105 @@
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <div class="card table-wrap" style="margin-top:14px;">
+          <h3 style="margin:0 0 10px 0;">Overall results summary</h3>
+          <p class="muted" style="margin:0 0 10px 0;">Main metrics on the test set (10 shots/class for few-shot methods).</p>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>Shots / data</th>
+                  <th>Val Acc</th>
+                  <th>Val Macro F1</th>
+                  <th>Test Acc</th>
+                  <th>Test Macro F1</th>
+                  <th>Train time (h)</th>
+                  <th>Infer (ms/img)</th>
+                  <th>Samples / s</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Zero-shot CLIP</strong></td>
+                  <td>0 (prompt only)</td>
+                  <td>0.4185</td>
+                  <td>0.3848</td>
+                  <td>0.4205</td>
+                  <td>0.3888</td>
+                  <td>0.00</td>
+                  <td>7.35</td>
+                  <td>136.06</td>
+                </tr>
+                <tr>
+                  <td>Few-shot CE Probe</td>
+                  <td>10 / class</td>
+                  <td>0.4348</td>
+                  <td>0.4135</td>
+                  <td>0.4294</td>
+                  <td>0.4094</td>
+                  <td>0.38</td>
+                  <td>7.72</td>
+                  <td>129.56</td>
+                </tr>
+                <tr>
+                  <td>Few-shot MLP Probe</td>
+                  <td>10 / class</td>
+                  <td>0.4371</td>
+                  <td>0.4257</td>
+                  <td>0.4268</td>
+                  <td>0.4135</td>
+                  <td>0.16</td>
+                  <td>8.46</td>
+                  <td>118.18</td>
+                </tr>
+                <tr>
+                  <td><strong>Few-shot Prompt Adaptation</strong></td>
+                  <td>10 / class</td>
+                  <td><strong>0.4722</strong></td>
+                  <td><strong>0.4494</strong></td>
+                  <td><strong>0.4726</strong></td>
+                  <td><strong>0.4496</strong></td>
+                  <td>0.30</td>
+                  <td>7.49</td>
+                  <td>133.47</td>
+                </tr>
+                <tr>
+                  <td>Few-shot CoOp</td>
+                  <td>10 / class</td>
+                  <td>0.4389</td>
+                  <td>0.4275</td>
+                  <td>0.4443</td>
+                  <td>0.4272</td>
+                  <td>0.35</td>
+                  <td>8.24</td>
+                  <td>121.40</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="grid two" style="margin-top:12px;">
+            <article class="card" style="margin:0;">
+              <h4>Best performers</h4>
+              <ul class="checklist">
+                <li>1st: Few-shot Prompt Adaptation — 0.4726 test acc</li>
+                <li>2nd: Few-shot CoOp — 0.4443</li>
+                <li>3rd: Few-shot CE Probe — 0.4294</li>
+                <li>Gap vs zero-shot: +5.2 acc pts, +6.1 macro-F1 pts</li>
+              </ul>
+            </article>
+            <article class="card" style="margin:0;">
+              <h4>Efficiency analysis</h4>
+              <ul class="checklist">
+                <li>Fastest training: Zero-shot (none); fastest trained: MLP probe (~0.16 h)</li>
+                <li>Fastest inference: Zero-shot 7.35 ms/img (Prompt Adaptation 7.49 ms/img)</li>
+                <li>Highest throughput: Zero-shot 136 img/s</li>
+                <li>Best accuracy/efficiency: Prompt Adaptation (top accuracy, near-best latency)</li>
+              </ul>
+            </article>
+          </div>
         </div>
       </div>
     </section>

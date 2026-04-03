@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Extensions & Limitations | Image Branch</title>
-  <meta name="description" content="Extensions, limitations, and ablation studies for the image branch." />
-  <link rel="stylesheet" href="../../multimodal/multimodal.css" />
+  <title>Extensions & Limitations | Image Classification</title>
+  <meta name="description" content="Extensions, limitations, ablations, and interpretability visuals for the image branch." />
+  <link rel="stylesheet" href="../image.css" />
   <link rel="stylesheet" href="../../../assets/styles.css" />
 </head>
 <body>
@@ -14,11 +14,12 @@
       <a href="../../../index.html" class="brand">DL<span>CourseHub</span></a>
       <nav class="nav-links">
         <a href="../index.html">Overview</a>
-        <a href="../problem-eda/index.html">Problem & EDA</a>
-        <a href="../dataset-pipeline/index.html">Dataset & Pipeline</a>
-        <a href="../model-design/index.html">Model & Training</a>
+        <a href="../problem-eda/index.html">Dataset</a>
+        <a href="../dataset-pipeline/index.html">Preprocessing</a>
+        <a href="../model-design/index.html">Backbone</a>
         <a href="../results/index.html">Results</a>
-        <a href="./index.html">Extensions</a>
+        <a href="../error-analysis/index.html">Errors</a>
+        <a href="./index.html">Extension</a>
         <a href="../../assignment1.html" class="btn btn-secondary">Assignment 1</a>
       </nav>
     </div>
@@ -34,20 +35,21 @@
           <span>/</span>
           <a href="../index.html">Image</a>
           <span>/</span>
-          <span>Extensions & limitations</span>
+          <span>Extension</span>
         </div>
-        <div class="badge">Image branch</div>
+        <div class="badge">Extension</div>
         <h1>Extensions, limitations, and ablations</h1>
         <p class="lead">
-          Capture follow-up ideas, known limitations, and ablation findings to guide future improvements.
+          Follow-up ideas, known constraints, ablation findings, and interpretability/efficiency visuals for the image models.
         </p>
         <div class="callout">
-          <strong>Figures directory:</strong> use <code>../figures/extensions/</code> for ablation plots and extra visuals.
+          <strong>Sources:</strong> Sections 11–13 of the image notebook; figures from <code>assets/image</code>.
         </div>
         <nav class="section-nav" aria-label="On-page navigation">
           <a href="#extensions">Extensions</a>
           <a href="#limitations">Limitations</a>
           <a href="#ablations">Ablations</a>
+          <a href="#visuals">Visuals</a>
         </nav>
       </div>
     </section>
@@ -62,9 +64,9 @@
           </div>
         </div>
         <ul class="info-list">
-          <li>[Better architecture or pretraining]</li>
-          <li>[Additional data or synthetic augmentation]</li>
-          <li>[Semi-supervised or self-supervised options]</li>
+          <li>Swap in lighter ViTs (e.g., DeiT-S) or distilled backbones to reduce latency while keeping accuracy.</li>
+          <li>Augment rare textures with class-preserving synthetic data (GAN/diffusion) to aid scratch models.</li>
+          <li>Pretrain scratch models with self-supervision (MAE/DINOv2) before supervised finetuning.</li>
         </ul>
       </div>
     </section>
@@ -79,9 +81,9 @@
           </div>
         </div>
         <ul class="info-list">
-          <li>[Data imbalance / domain shift]</li>
-          <li>[Model capacity vs latency]</li>
-          <li>[Generalization to new classes]</li>
+          <li>Scratch models underfit fine-grained classes; capacity is the main bottleneck.</li>
+          <li>Pretrained ViT-L is accurate but slow (53s per test set) and large (303M params).</li>
+          <li>No open-set rejection: unseen breeds may be predicted with high confidence.</li>
         </ul>
       </div>
     </section>
@@ -92,17 +94,120 @@
           <div>
             <div class="eyebrow">Ablations</div>
             <h2>Key ablation studies</h2>
-            <p>Show impact of design choices.</p>
+            <p>Impact of label smoothing and MixUp/CutMix regularizers.</p>
           </div>
         </div>
-        <div class="figure-grid">
-          <div class="figure-card">
-            <div class="figure-placeholder">[Ablation table]</div>
-            <div class="caption">Effect of augmentation choices.</div>
+
+        <div class="figure-grid one-col">
+          <div class="figure-box">
+            <img src="../../../assets/image/ablation_label_smoothing.png" alt="Ablation of label smoothing on CNN-Scratch" loading="lazy" />
+            <div class="figure-caption">
+              <h4>Label smoothing (CNN-Scratch)</h4>
+              <p>Val accuracy vs epoch for ε ∈ {0, 0.1, 0.2}; ε=0.1 recommended.</p>
+            </div>
           </div>
-          <div class="figure-card">
-            <div class="figure-placeholder">[Learning curve]</div>
-            <div class="caption">Impact of hyperparameters.</div>
+        </div>
+
+        <div class="figure-grid one-col">
+          <div class="figure-box">
+            <img src="../../../assets/image/augmentation_study.png" alt="Augmentation study on scratch models" loading="lazy" />
+            <div class="figure-caption">
+              <h4>Augmentation study</h4>
+              <p>Validation accuracy over 5 epochs under three augmentation settings for all scratch models.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="figure-grid one-col">
+          <div class="figure-box">
+            <img src="../../../assets/image/ablation_mixup_cutmix.png" alt="Ablation of MixUp and CutMix on ResNet-Scratch" loading="lazy" />
+            <div class="figure-caption">
+              <h4>MixUp vs CutMix (ResNet-Scratch)</h4>
+              <p>Val accuracy over 5 epochs under None, MixUp, CutMix, Both; regularizers slowed early convergence on this small dataset.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="captioned-table">
+          <table>
+            <thead>
+              <tr><th>Experiment</th><th>Conditions</th><th>Key finding</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Label smoothing (CNN-Scratch, 10 ep)</td><td>ε = 0, 0.1, 0.2</td><td>Differences small at 10 epochs; ε=0.1 recommended.</td></tr>
+              <tr><td>MixUp vs CutMix (ResNet-Scratch, 5 ep)</td><td>None (0.416) > MixUp (0.331) > CutMix (0.332) > Both (0.314)</td><td>Regularizers hurt early convergence on small datasets.</td></tr>
+              <tr><td>ViT patch size</td><td>8, 16, 32 (commented)</td><td>Not run — patch=8 would quadruple tokens.</td></tr>
+              <tr><td>Ensemble diversity</td><td>Scratch-only (0.672), Pretrained-only (0.999), Mixed all-7 (0.996)</td><td>Adding weak scratch models to strong ensembles degrades performance.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="visuals">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Visuals</div>
+            <h2>Comparisons & interpretability</h2>
+            <p>Capacity–performance trade-offs and attention/Grad-CAM snapshots.</p>
+          </div>
+        </div>
+
+        <div class="figure-grid one-col">
+          <div class="figure-box">
+            <img src="../../../assets/image/efficiency_plot.png" alt="Params vs accuracy and training time vs accuracy scatter" loading="lazy" />
+            <div class="figure-caption">
+              <h4>Efficiency vs accuracy</h4>
+              <p>Parameter and time trade-offs across all seven models.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="figure-grid one-col">
+          <div class="figure-box">
+            <img src="../../../assets/image/scratch_vs_pretrained.png" alt="Bar chart comparing scratch vs pretrained models" loading="lazy" />
+            <div class="figure-caption">
+              <h4>Scratch vs pretrained</h4>
+              <p>Accuracy, macro-F1, and parameter comparisons.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="figure-grid one-col">
+          <div class="figure-box">
+            <img src="../../../assets/image/gradcam_resnet-50-pt.png" alt="Grad-CAM visualization for ResNet-50 pretrained" loading="lazy" />
+            <div class="figure-caption">
+              <h4>Grad-CAM (ResNet-50 PT)</h4>
+              <p>Saliency highlighting discriminative regions.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="figure-grid">
+          <div class="figure-box">
+            <img src="../../../assets/image/gradcam_resnet-scratch.png" alt="Grad-CAM visualization for ResNet-Scratch" loading="lazy" />
+            <div class="figure-caption">
+              <h4>Grad-CAM (ResNet-Scratch)</h4>
+              <p>Broader, less focused activation consistent with lower accuracy.</p>
+            </div>
+          </div>
+          <div class="figure-box">
+            <img src="../../../assets/image/gradcam_cnn-scratch.png" alt="Grad-CAM visualization for CNN-Scratch" loading="lazy" />
+            <div class="figure-caption">
+              <h4>Grad-CAM (CNN-Scratch)</h4>
+              <p>Saliency often misses key object regions, mirroring misclassifications.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="figure-grid one-col">
+          <div class="figure-box">
+            <img src="../../../assets/image/attention_vit-scratch.png" alt="Attention rollout visualization for ViT scratch" loading="lazy" />
+            <div class="figure-caption">
+              <h4>Attention rollout (ViT scratch)</h4>
+              <p>Head-wise attention aggregation showing focus areas.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -122,7 +227,7 @@
         <h3>Next</h3>
         <ul class="footer-links">
           <li><a href="../results/index.html">Results</a></li>
-          <li><a href="../problem-eda/index.html">Problem & EDA</a></li>
+          <li><a href="../error-analysis/index.html">Errors</a></li>
         </ul>
       </div>
     </div>

@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Backbone & Head Architecture | Image Branch</title>
-  <meta name="description" content="Backbone and head architecture, training setup, and evaluation for the image branch." />
-  <link rel="stylesheet" href="../../multimodal/multimodal.css" />
+  <title>Backbone & Head | Image Classification</title>
+  <meta name="description" content="Scratch vs pretrained backbones, heads, and training setup for the 20-class ImageNet subset (image branch)." />
+  <link rel="stylesheet" href="../image.css" />
   <link rel="stylesheet" href="../../../assets/styles.css" />
 </head>
 <body>
@@ -14,11 +14,11 @@
       <a href="../../../index.html" class="brand">DL<span>CourseHub</span></a>
       <nav class="nav-links">
         <a href="../index.html">Overview</a>
-        <a href="../problem-eda/index.html">Dataset & EDA</a>
-        <a href="../dataset-pipeline/index.html">Preprocessing & Dataloader</a>
-        <a href="./index.html">Backbone & Head</a>
-        <a href="../results/index.html">Results & Analysis</a>
-        <a href="../error-analysis/index.html">Error Analysis</a>
+        <a href="../problem-eda/index.html">Dataset</a>
+        <a href="../dataset-pipeline/index.html">Preprocessing</a>
+        <a href="./index.html">Backbone</a>
+        <a href="../results/index.html">Results</a>
+        <a href="../error-analysis/index.html">Errors</a>
         <a href="../extensions/index.html">Extension</a>
         <a href="../../assignment1.html" class="btn btn-secondary">Assignment 1</a>
       </nav>
@@ -35,102 +35,135 @@
           <span>/</span>
           <a href="../index.html">Image</a>
           <span>/</span>
-          <span>Model & Training</span>
+          <span>Backbone</span>
         </div>
-        <div class="badge">Image branch</div>
+        <div class="badge">Backbone</div>
         <h1>Backbone & head architecture</h1>
         <p class="lead">
-          Describe architectures, loss functions, optimization, and evaluation protocol used for the image classifiers.
+          Three scratch models (CNN, ResNet-18, ViT-Small) and four pretrained backbones (ResNet-50/101, ViT-B/L) with lightweight 20-way heads.
         </p>
         <div class="callout">
-          <strong>Figures directory:</strong> store diagrams and training curves in <code>../figures/model-design/</code>.
+          <strong>Sources:</strong> Sections 5–7 of the image notebook; figures from <code>assets/image</code>.
         </div>
         <nav class="section-nav" aria-label="On-page navigation">
-          <a href="#architecture">Architecture</a>
-          <a href="#training">Training</a>
-          <a href="#evaluation">Evaluation</a>
+          <a href="#scratch">Scratch</a>
+          <a href="#pretrained">Pretrained</a>
+          <a href="#heads">Training</a>
         </nav>
       </div>
     </section>
 
-    <section id="architecture" class="alt">
+    <section id="scratch" class="alt">
       <div class="container">
         <div class="section-heading">
           <div>
-            <div class="eyebrow">Models</div>
-            <h2>Architectures</h2>
-            <p>List and justify chosen models.</p>
+            <div class="eyebrow">Scratch</div>
+            <h2>Scratch architectures</h2>
+            <p>Custom CNN, ResNet-18, and ViT-Small equivalents trained from scratch.</p>
           </div>
         </div>
-        <div class="grid two">
-          <article class="card">
-            <h3>Baseline</h3>
-            <ul class="checklist">
-              <li>Architecture: [e.g., ResNet18]</li>
-              <li>Parameters: [M]</li>
-              <li>Pretrained: [yes/no]</li>
-              <li>Head: [linear / custom]</li>
-            </ul>
-          </article>
-          <article class="card">
-            <h3>Advanced</h3>
-            <ul class="checklist">
-              <li>Architecture: [e.g., ViT-B/16]</li>
-              <li>Fine-tuning: [full / partial]</li>
-              <li>Regularization: [dropout, label smoothing]</li>
-              <li>Why chosen: [reason]</li>
-            </ul>
-          </article>
+        <div class="captioned-table">
+          <table>
+            <thead>
+              <tr><th>Model</th><th>Family</th><th>Architecture summary</th><th>Params</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>CNN-Scratch (DeepCNN)</td><td>CNN</td><td>7×7 stem → 6 ConvBlocks (3×3 conv, BN, ReLU, skip) → GAP → FC(512) → Dropout(0.4) → FC(20); channels 64→128→256→256→512→512→512.</td><td>15.73M</td></tr>
+              <tr><td>ResNet-Scratch</td><td>ResNet</td><td>ResNet-18 (BasicBlock) with [2,2,2,2] layers, 7×7 stem.</td><td>11.19M</td></tr>
+              <tr><td>ViT-Scratch</td><td>ViT</td><td>ViT-Small: patch=16 (196 tokens), dim=384, depth=8, heads=6, learnable pos embed, attention rollout.</td><td>14.57M</td></tr>
+            </tbody>
+          </table>
         </div>
-        <div class="figure-grid">
-          <div class="figure-card">
-            <div class="figure-placeholder">[Model diagram]</div>
-            <div class="caption">High-level architecture.</div>
-          </div>
-          <div class="figure-card">
-            <div class="figure-placeholder">[Feature map example]</div>
-            <div class="caption">Example activation or attention map.</div>
-          </div>
+
+        <div class="captioned-table" style="margin-top:16px;">
+          <table>
+            <thead>
+              <tr><th>Parameter</th><th>CNN</th><th>ResNet</th><th>ViT</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Base channels / layers</td><td>64</td><td>[2,2,2,2]</td><td>—</td></tr>
+              <tr><td>Dropout</td><td>0.4</td><td>—</td><td>—</td></tr>
+              <tr><td>Patch size</td><td>—</td><td>—</td><td>16</td></tr>
+              <tr><td>Embedding dim</td><td>—</td><td>—</td><td>384</td></tr>
+              <tr><td>Depth</td><td>—</td><td>—</td><td>8 blocks</td></tr>
+              <tr><td>Attention heads</td><td>—</td><td>—</td><td>6</td></tr>
+            </tbody>
+          </table>
+          <div class="table-caption">Scratch hyperparameters.</div>
         </div>
       </div>
     </section>
 
-    <section id="training">
+    <section id="pretrained">
       <div class="container">
         <div class="section-heading">
           <div>
-            <div class="eyebrow">Optimization</div>
-            <h2>Training setup</h2>
-            <p>Hyperparameters and schedule.</p>
+            <div class="eyebrow">Pretrained</div>
+            <h2>Pretrained backbones & heads</h2>
+            <p>ResNet-50/101 and ViT-B/L with swapped linear heads, finetuned in two phases.</p>
           </div>
         </div>
-        <ul class="info-list">
-          <li>Loss: [Cross-entropy / focal / other]</li>
-          <li>Optimizer: [AdamW / SGD], LR: [value], Scheduler: [type]</li>
-          <li>Batch size / epochs / warmup</li>
-          <li>Regularization: [weight decay, dropout, augment]</li>
-          <li>Mixed precision: [yes/no]</li>
-        </ul>
+        <div class="captioned-table">
+          <table>
+            <thead>
+              <tr><th>Model</th><th>Weights</th><th>Head replaced</th><th>Head size</th><th>Params</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>ResNet-50-PT</td><td>IMAGENET1K_V2</td><td>fc</td><td>Linear(2048→20)</td><td>23.55M</td></tr>
+              <tr><td>ResNet-101-PT</td><td>IMAGENET1K_V2</td><td>fc</td><td>Linear(2048→20)</td><td>42.54M</td></tr>
+              <tr><td>ViT-B/16-PT</td><td>IMAGENET1K_V1</td><td>heads.head</td><td>Linear(768→20)</td><td>85.81M</td></tr>
+              <tr><td>ViT-L/16-PT</td><td>IMAGENET1K_V1</td><td>heads.head</td><td>Linear(1024→20)</td><td>303.32M</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="captioned-table" style="margin-top:16px;">
+          <table>
+            <thead>
+              <tr><th>Phase</th><th>Epochs</th><th>Backbone</th><th>LR</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Head only</td><td>~1–2</td><td>Frozen</td><td>1e-4</td></tr>
+              <tr><td>Full finetune</td><td>~3–4</td><td>Unfrozen</td><td>5e-5</td></tr>
+            </tbody>
+          </table>
+          <div class="table-caption">Two-phase finetuning schedule.</div>
+        </div>
       </div>
     </section>
 
-    <section id="evaluation" class="alt">
+    <section id="heads" class="alt">
       <div class="container">
         <div class="section-heading">
           <div>
-            <div class="eyebrow">Protocol</div>
-            <h2>Evaluation</h2>
-            <p>How models are validated and tested.</p>
+            <div class="eyebrow">Training</div>
+            <h2>Optimization & schedules</h2>
+            <p>Shared training setup for scratch and finetune runs.</p>
           </div>
         </div>
-        <ul class="info-list">
-          <li>Validation strategy: [hold-out / k-fold]</li>
-          <li>Metrics: [accuracy, macro-F1, top-k]</li>
-          <li>Reporting: [mean ± std over seeds]</li>
-          <li>Early stopping / checkpointing criteria</li>
-        </ul>
+
+        <div class="captioned-table">
+          <table>
+            <thead>
+              <tr><th>Parameter</th><th>Value</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Optimizer</td><td>AdamW</td></tr>
+              <tr><td>LR (scratch)</td><td>1e-3</td></tr>
+              <tr><td>LR (finetune)</td><td>1e-4</td></tr>
+              <tr><td>Weight decay</td><td>1e-4</td></tr>
+              <tr><td>Scheduler</td><td>Cosine annealing</td></tr>
+              <tr><td>Warmup epochs</td><td>3</td></tr>
+              <tr><td>Label smoothing</td><td>0.1</td></tr>
+              <tr><td>Gradient clip</td><td>max_norm = 1.0</td></tr>
+              <tr><td>Epochs (scratch)</td><td>30</td></tr>
+              <tr><td>Epochs (finetune)</td><td>5</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
+
   </main>
 
   <footer class="site-footer">

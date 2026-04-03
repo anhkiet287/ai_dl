@@ -3,10 +3,123 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Problem & EDA | Image Branch</title>
-  <meta name="description" content="Problem statement and exploratory data analysis for the image classification branch." />
-  <link rel="stylesheet" href="../../multimodal/multimodal.css" />
+  <title>Dataset & EDA | Image Classification</title>
+  <meta name="description" content="Dataset overview and exploratory data analysis for the image classification branch (20-class ImageNet subset)." />
+  <link rel="stylesheet" href="../image.css" />
   <link rel="stylesheet" href="../../../assets/styles.css" />
+
+  <style>
+    .breadcrumb {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      color: var(--muted);
+    }
+    .breadcrumb a { color: var(--primary); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--primary-2); }
+    .breadcrumb span { opacity: 0.55; }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .stat-box {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 18px;
+      text-align: center;
+    }
+    .stat-box .number {
+      display: block;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+    .stat-box .label {
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .table-compact {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .table-compact th,
+    .table-compact td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .table-compact tr:last-child td { border-bottom: none; }
+    .table-compact th { background: rgba(255,255,255,0.04); color: var(--text); }
+
+    .figure-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin: 24px 0;
+    }
+    .figure-grid.one-col { grid-template-columns: 1fr; }
+    .figure-box {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .figure-box img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+    .figure-box .figure-caption {
+      padding: 14px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .figure-box .figure-caption h4 {
+      margin: 0 0 6px 0;
+      color: var(--text);
+      font-size: 0.98rem;
+    }
+    .figure-box .figure-caption p {
+      margin: 0;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .observations-list {
+      background: rgba(126,240,194,0.08);
+      border-left: 3px solid rgba(126,240,194,0.3);
+      padding: 18px;
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+    .observations-list h4 {
+      margin: 0 0 12px 0;
+      color: var(--primary-2);
+    }
+    .observations-list ul { margin: 0; padding-left: 18px; }
+    .observations-list li { margin-bottom: 8px; font-size: 0.96rem; }
+
+    @media (max-width: 1024px) {
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+      .figure-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .stat-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
   <header class="nav">
@@ -14,17 +127,19 @@
       <a href="../../../index.html" class="brand">DL<span>CourseHub</span></a>
       <nav class="nav-links">
         <a href="../index.html">Overview</a>
-        <a href="./index.html">Problem & EDA</a>
-        <a href="../dataset-pipeline/index.html">Dataset & Pipeline</a>
-        <a href="../model-design/index.html">Model & Training</a>
+        <a href="./index.html">Dataset</a>
+        <a href="../dataset-pipeline/index.html">Preprocessing</a>
+        <a href="../model-design/index.html">Backbone</a>
         <a href="../results/index.html">Results</a>
-        <a href="../extensions/index.html">Extensions</a>
+        <a href="../error-analysis/index.html">Errors</a>
+        <a href="../extensions/index.html">Extension</a>
         <a href="../../assignment1.html" class="btn btn-secondary">Assignment 1</a>
       </nav>
     </div>
   </header>
 
   <main>
+    <!-- Hero -->
     <section class="hero">
       <div class="container">
         <div class="breadcrumb">
@@ -34,124 +149,185 @@
           <span>/</span>
           <a href="../index.html">Image</a>
           <span>/</span>
-          <span>Problem & EDA</span>
+          <span>Dataset &amp; EDA</span>
         </div>
-        <div class="badge">Image branch</div>
-        <h1>Problem statement & EDA</h1>
+        <div class="badge">Dataset &amp; EDA</div>
+        <h1>Image dataset overview &amp; exploratory analysis</h1>
         <p class="lead">
-          Define the image classification task, objectives, evaluation metrics, and summarize key findings from exploratory data analysis.
+          20-class ImageNet subset (10,000 images) with balanced sampling. This page summarizes splits
+          and visual EDA figures provided in the image asset bundle.
         </p>
-        <div class="callout">
-          <strong>Figures directory:</strong> use <code>../figures/problem-eda/</code> for charts, samples, and tables.
-        </div>
-        <nav class="section-nav" aria-label="On-page navigation">
-          <a href="#problem">Problem</a>
-          <a href="#dataset">Dataset</a>
-          <a href="#eda">EDA</a>
-          <a href="#metrics">Metrics</a>
-        </nav>
       </div>
     </section>
 
-    <section id="problem" class="alt">
+    <!-- Dataset snapshot -->
+    <section id="snapshot" class="alt">
       <div class="container">
         <div class="section-heading">
           <div>
-            <div class="eyebrow">Task</div>
-            <h2>Problem definition</h2>
-            <p>Describe the classification objective and constraints.</p>
+            <div class="eyebrow">Dataset</div>
+            <h2>Snapshot &amp; splits</h2>
+            <p>Counts and balance based on the provided ImageNet subset.</p>
           </div>
         </div>
-        <ul class="info-list">
-          <li><strong>Goal:</strong> [e.g., classify images into K classes]</li>
-          <li><strong>Context:</strong> [application or domain]</li>
-          <li><strong>Evaluation:</strong> [primary metrics]</li>
-          <li><strong>Challenges:</strong> [class imbalance, noise, resolution]</li>
-        </ul>
-      </div>
-    </section>
 
-    <section id="dataset">
-      <div class="container">
-        <div class="section-heading">
-          <div>
-            <div class="eyebrow">Data</div>
-            <h2>Dataset overview</h2>
-            <p>Summarize source, splits, and licensing.</p>
+        <div class="stat-grid">
+          <div class="stat-box">
+            <span class="number">10,000</span>
+            <span class="label">Total images</span>
+          </div>
+          <div class="stat-box">
+            <span class="number">20</span>
+            <span class="label">Classes (500 each)</span>
+          </div>
+          <div class="stat-box">
+            <span class="number">0.0</span>
+            <span class="label">Class count std (balanced)</span>
+          </div>
+          <div class="stat-box">
+            <span class="number">70 / 15 / 15</span>
+            <span class="label">Train / Val / Test (%)</span>
           </div>
         </div>
-        <div class="grid two">
-          <article class="card">
-            <h3>Composition</h3>
-            <ul class="checklist">
-              <li>Total samples: [N]</li>
-              <li>Classes: [C]</li>
-              <li>Image size: [H x W]</li>
-              <li>Color mode: [RGB/Gray]</li>
-            </ul>
-          </article>
-          <article class="card">
-            <h3>Splits</h3>
-            <ul class="checklist">
-              <li>Train: [count / %]</li>
-              <li>Val: [count / %]</li>
-              <li>Test: [count / %]</li>
-              <li>Stratification: [yes/no]</li>
-            </ul>
-          </article>
+
+        <div class="captioned-table">
+          <table class="table-compact">
+            <thead>
+              <tr><th>Split</th><th>Images</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Train</td><td>7,000</td><td>70% of 10,000 total</td></tr>
+              <tr><td>Validation</td><td>1,500</td><td>15%</td></tr>
+              <tr><td>Test</td><td>1,500</td><td>15%</td></tr>
+              <tr><td><strong>Total</strong></td><td><strong>10,000</strong></td><td>20 classes x 500 samples/class</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
 
-    <section id="eda" class="alt">
+    <!-- Distribution & samples -->
+    <section id="distribution">
       <div class="container">
         <div class="section-heading">
           <div>
-            <div class="eyebrow">Exploration</div>
-            <h2>Exploratory analysis</h2>
-            <p>Key plots and findings.</p>
+            <div class="eyebrow">Composition</div>
+            <h2>Class balance & samples</h2>
+            <p>Balance confirmation and representative raw images.</p>
           </div>
         </div>
+
+        <div class="figure-grid one-col">
+          <div class="figure-box">
+            <img src="../../../assets/image/eda_class_distribution.png" alt="Bar chart of image count per class across 20 ImageNet classes" loading="lazy" />
+            <div class="figure-caption">
+              <h4>Class distribution (std = 0.0)</h4>
+              <p>Balanced sampling across all 20 classes; horizontal bars emphasize equal counts.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="figure-grid one-col">
+          <div class="figure-box">
+            <img src="../../../assets/image/eda_samples.png" alt="Grid of raw RGB sample images, one row per class" loading="lazy" />
+            <div class="figure-caption">
+              <h4>Sample grid</h4>
+              <p>10-row x 5-column grid of raw samples; one row per class (first 10 classes).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pixel statistics -->
+    <section id="pixels" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Pixel statistics</div>
+            <h2>Mean, variance, and histograms</h2>
+            <p>Channel-wise and spatial summaries over the dataset.</p>
+          </div>
+        </div>
+
+        <div class="figure-grid one-col">
+          <div class="figure-box">
+            <img src="../../../assets/image/eda_mean_images.png" alt="Grid of per-class mean images" loading="lazy" />
+            <div class="figure-caption">
+              <h4>Per-class mean images</h4>
+              <p>2-row x 5-column grid of class means (averaged over 100 images/class, min-max normalized); strong contrast indicates spatial consistency.</p>
+            </div>
+          </div>
+        </div>
+
         <div class="figure-grid">
-          <div class="figure-card">
-            <div class="figure-placeholder">[Class distribution plot]</div>
-            <div class="caption">Class counts and imbalance notes.</div>
-          </div>
-          <div class="figure-card">
-            <div class="figure-placeholder">[Sample grid]</div>
-            <div class="caption">Representative samples per class.</div>
-          </div>
-          <div class="figure-card">
-            <div class="figure-placeholder">[Resolution histogram]</div>
-            <div class="caption">Image dimension distribution.</div>
+          <div class="figure-box">
+            <img src="../../../assets/image/eda_pixel_histograms.png" alt="RGB pixel intensity histograms for first 10 classes" loading="lazy" />
+            <div class="figure-caption">
+              <h4>Pixel intensity histograms</h4>
+              <p>2-row x 5-column RGB histograms; overlayed channels highlight brightness and color spread per class.</p>
+            </div>
           </div>
         </div>
+
+        <div class="figure-grid">
+          <div class="figure-box">
+            <img src="../../../assets/image/eda_variance_maps.png" alt="Per-class pixel variance maps using hot colormap" loading="lazy" />
+            <div class="figure-caption">
+              <h4>Variance maps</h4>
+              <p>2-row x 5-column variance maps; bright regions mark high intra-class variance or cluttered backgrounds.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Similarity -->
+    <section id="similarity">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Similarity</div>
+            <h2>Class similarity heatmap</h2>
+            <p>Cosine similarity between per-class mean pixel vectors.</p>
+          </div>
+        </div>
+
+        <div class="figure-grid one-col">
+          <div class="figure-box">
+            <img src="../../../assets/image/eda_class_similarity.png" alt="20x20 cosine similarity heatmap between class mean pixel vectors" loading="lazy" />
+            <div class="figure-caption">
+              <h4>Cosine similarity across classes</h4>
+              <p>Diagonal is 1.0; warm off-diagonal cells flag visually confusable class pairs.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key findings -->
+    <section id="findings">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Insights</div>
+            <h2>EDA takeaways</h2>
+            <p>Highlights derived directly from the provided figures and table.</p>
+          </div>
+        </div>
+
         <div class="observations-list">
-          <h4>EDA observations</h4>
+          <h4>What the figures show</h4>
           <ul>
-            <li>[Observation 1]</li>
-            <li>[Observation 2]</li>
-            <li>[Observation 3]</li>
+            <li>Class counts are perfectly balanced (std = 0.0) across 20 ImageNet classes.</li>
+            <li>Sample grid covers all classes, giving a quick visual sense of inter-class diversity.</li>
+            <li>Mean images reveal strong spatial consistency for several classes; backgrounds drive contrast.</li>
+            <li>Pixel histograms surface brightness and color spread differences between classes.</li>
+            <li>Cosine similarity heatmap highlights visually confusable class pairs via warm off-diagonal cells.</li>
+            <li>Variance maps point out where intra-class variability or clutter is concentrated.</li>
+            <li>Augmentation preview documents the 12 transforms used during training.</li>
           </ul>
         </div>
-      </div>
-    </section>
-
-    <section id="metrics">
-      <div class="container">
-        <div class="section-heading">
-          <div>
-            <div class="eyebrow">Evaluation</div>
-            <h2>Planned metrics</h2>
-            <p>Clarify how performance will be measured.</p>
-          </div>
-        </div>
-        <ul class="info-list">
-          <li>Primary: [Accuracy / Macro-F1 / Top-k]</li>
-          <li>Secondary: [Precision/Recall per class]</li>
-          <li>Fairness/robustness: [if applicable]</li>
-          <li>Confidence: [e.g., calibration]</li>
-        </ul>
       </div>
     </section>
   </main>
@@ -168,9 +344,9 @@
       <div>
         <h3>Next</h3>
         <ul class="footer-links">
-          <li><a href="../dataset-pipeline/index.html">Dataset & Pipeline</a></li>
-          <li><a href="../model-design/index.html">Model & Training</a></li>
-          <li><a href="../results/index.html">Results</a></li>
+          <li><a href="../dataset-pipeline/index.html">Preprocessing &amp; Dataloader</a></li>
+          <li><a href="../model-design/index.html">Backbone &amp; Head</a></li>
+          <li><a href="../results/index.html">Results &amp; Analysis</a></li>
         </ul>
       </div>
     </div>
