@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="700" viewBox="0 0 1400 700" role="img" aria-label="Zero-shot CLIP Classification Pipeline">
+  <defs>
+    <style>
+      :root {
+        --bg: #0e1726;
+        --card: #111d30;
+        --card-border: #274269;
+        --muted: #a4b3c8;
+        --text: #e8eefb;
+        --primary: #7eb4ff;
+        --mint: #7ce0c3;
+        --accent: #9c8bff;
+      }
+      text { font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif; fill: var(--text); }
+      .title { font-size: 28px; font-weight: 700; }
+      .label { font-size: 16px; font-weight: 700; }
+      .sub { font-size: 13px; fill: var(--muted); }
+      .small { font-size: 12px; fill: var(--muted); }
+      .card {
+        fill: var(--card);
+        stroke: var(--card-border);
+        stroke-width: 1.5;
+        rx: 16;
+        ry: 16;
+      }
+      .highlight {
+        fill: linearGradient(sim);
+      }
+      .note {
+        fill: none;
+        stroke: var(--card-border);
+        stroke-dasharray: 4 6;
+        stroke-width: 1.2;
+        rx: 12;
+        ry: 12;
+      }
+      .arrow { stroke: var(--primary); stroke-width: 2.4; fill: none; marker-end: url(#arrow); }
+      .arrow-mint { stroke: var(--mint); stroke-width: 2.4; fill: none; marker-end: url(#arrow-mint); }
+      .vec { fill: none; stroke: var(--mint); stroke-width: 2; }
+      .vec-stack rect { fill: none; stroke: var(--primary); stroke-width: 1.6; rx: 4; ry: 4; }
+    </style>
+    <linearGradient id="sim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6ea8fe" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#7ce0c3" stop-opacity="0.32"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7eb4ff" />
+    </marker>
+    <marker id="arrow-mint" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7ce0c3" />
+    </marker>
+  </defs>
+
+  <rect width="1400" height="700" fill="transparent"/>
+  <text x="700" y="60" text-anchor="middle" class="title">Zero-shot CLIP Classification Pipeline</text>
+
+  <!-- Image branch -->
+  <rect class="card" x="70" y="150" width="200" height="120"/>
+  <text x="170" y="185" text-anchor="middle" class="label">Input image</text>
+  <text x="170" y="205" text-anchor="middle" class="sub">test sample</text>
+  <rect x="120" y="210" width="100" height="40" fill="none" stroke="#7eb4ff" stroke-width="2" rx="6" ry="6"/>
+  <circle cx="135" cy="230" r="6" fill="#7eb4ff" opacity="0.8"/>
+  <rect x="155" y="220" width="50" height="20" fill="#7ce0c3" opacity="0.7" rx="4" ry="4"/>
+
+  <line class="arrow" x1="270" y1="210" x2="330" y2="210"/>
+
+  <rect class="card" x="330" y="150" width="220" height="120"/>
+  <text x="440" y="185" text-anchor="middle" class="label">CLIP image encoder</text>
+  <text x="440" y="205" text-anchor="middle" class="sub">pretrained, frozen</text>
+  <rect x="370" y="210" width="140" height="40" fill="none" stroke="#7ce0c3" stroke-width="2" rx="8" ry="8"/>
+
+  <line class="arrow" x1="550" y1="210" x2="620" y2="210"/>
+
+  <rect class="card" x="620" y="165" width="170" height="90"/>
+  <text x="705" y="195" text-anchor="middle" class="label">image embedding</text>
+  <g class="vec" transform="translate(650,210)">
+    <line x1="0" y1="0" x2="20" y2="0"/>
+    <line x1="30" y1="0" x2="50" y2="0"/>
+    <line x1="60" y1="0" x2="90" y2="0"/>
+  </g>
+
+  <line class="arrow" x1="790" y1="210" x2="860" y2="210"/>
+
+  <rect x="860" y="130" width="190" height="160" rx="18" ry="18" stroke="url(#sim)" stroke-width="2" fill="url(#sim)"/>
+  <text x="955" y="195" text-anchor="middle" class="label">cosine similarity</text>
+  <text x="955" y="220" text-anchor="middle" class="sub">image vs text embeddings</text>
+
+  <line class="arrow" x1="1050" y1="210" x2="1140" y2="210"/>
+
+  <rect class="card" x="1140" y="140" width="210" height="180"/>
+  <text x="1245" y="180" text-anchor="middle" class="label">Predicted class</text>
+  <text x="1245" y="200" text-anchor="middle" class="sub">top-1 prediction</text>
+  <text x="1180" y="230" class="small">1. sports</text>
+  <text x="1320" y="230" class="small" text-anchor="end">0.62</text>
+  <text x="1180" y="250" class="small">2. world</text>
+  <text x="1320" y="250" class="small" text-anchor="end">0.18</text>
+  <text x="1180" y="270" class="small">3. business</text>
+  <text x="1320" y="270" class="small" text-anchor="end">0.11</text>
+
+  <!-- Text / prompt branch -->
+  <rect class="card" x="170" y="400" width="260" height="170"/>
+  <text x="300" y="435" text-anchor="middle" class="label">Class prompts</text>
+  <text x="300" y="455" text-anchor="middle" class="sub">normalized label text</text>
+  <text x="190" y="475" class="small">• a photo of sports</text>
+  <text x="190" y="495" class="small">• a photo of business</text>
+  <text x="190" y="515" class="small">• a photo of science</text>
+  <text x="190" y="535" class="small">• a photo of world</text>
+  <text x="190" y="555" class="small">• a photo of technology</text>
+
+  <line class="arrow-mint" x1="430" y1="485" x2="500" y2="485"/>
+
+  <rect class="card" x="500" y="400" width="220" height="170"/>
+  <text x="610" y="435" text-anchor="middle" class="label">CLIP text encoder</text>
+  <text x="610" y="455" text-anchor="middle" class="sub">same pretrained model</text>
+
+  <line class="arrow-mint" x1="720" y1="485" x2="800" y2="485"/>
+
+  <rect class="card" x="800" y="415" width="170" height="130"/>
+  <text x="885" y="450" text-anchor="middle" class="label">text embeddings</text>
+  <g class="vec-stack" transform="translate(820,470)">
+    <rect x="0" y="0" width="130" height="18"/>
+    <rect x="8" y="18" width="130" height="18" opacity="0.8"/>
+    <rect x="16" y="36" width="130" height="18" opacity="0.65"/>
+  </g>
+
+  <line class="arrow-mint" x1="885" y1="415" x2="955" y2="290"/>
+
+  <!-- Bottom note -->
+  <rect class="note" x="340" y="610" width="720" height="60"/>
+  <text x="700" y="645" text-anchor="middle" class="sub">No task-specific training. Prediction is based on similarity between image features and class text prompts.</text>
+</svg>

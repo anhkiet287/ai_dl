@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -189,12 +189,10 @@
           <span>/</span>
           <span>Multimodal Classification</span>
         </div>
-        <div class="badge">Multimodal branch - zero-shot and few-shot classification</div>
+        <div class="badge">Multimodal branch Â· Assignment 1</div>
         <h1>Multimodal Image-Text Classification</h1>
         <p class="lead">
-          This section explores zero-shot and few-shot learning approaches for classifying image-text pairs.
-          We evaluate how pretrained vision and language models can be leveraged to solve multimodal classification
-          without extensive fine-tuning, and compare this with adapter-based few-shot methods.
+          Zero-shot CLIP baseline versus few-shot Prompt Adaptation and CoOp on the 24-class NYT (N24News) dataset. Prompt Adaptation leads overall F1 and calibration.
         </p>
 
         <div class="quick-links">
@@ -202,6 +200,8 @@
           <a class="quick-link-btn" href="./zero-shot/index.html">Zero-shot</a>
           <a class="quick-link-btn" href="./few-shot/index.html">Few-shot</a>
           <a class="quick-link-btn" href="./results/index.html">Results</a>
+          <a class="quick-link-btn" href="./error-analysis/index.html">Errors</a>
+          <a class="quick-link-btn" href="./extension/index.html">Extension</a>
         </div>
         <nav class="section-nav" aria-label="On-page navigation">
           <a href="#overview">Resources</a>
@@ -229,20 +229,18 @@
           <article class="card">
             <h3>Links & Code</h3>
             <ul class="info-list">
-              <li><strong>Notebook:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add Jupyter notebook link]</a></li>
-              <li><strong>Dataset:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add dataset repository link]</a></li>
-              <li><strong>Code repository:</strong> <a class="text-link" href="https://github.com/" target="_blank" rel="noreferrer">[Add GitHub repo link]</a></li>
-              <li><strong>Full report:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add PDF or Drive link]</a></li>
+              <li><strong>Dataset:</strong> <a class="text-link" href="https://github.com/billywzh717/N24News" target="_blank" rel="noreferrer">N24News (NYT 24-class)</a></li>
+              <li><strong>Dataset paper:</strong> <a class="text-link" href="https://aclanthology.org/2022.lrec-1.729/" target="_blank" rel="noreferrer">LREC 2022</a></li>
+              <li><strong>Repo:</strong> <a class="text-link" href="https://github.com/ADMIN/ai_dl" target="_blank" rel="noreferrer">This project</a></li>
+              <li><strong>Results summary:</strong> <a class="text-link" href="./results/index.html">Results page</a></li>
             </ul>
           </article>
 
           <article class="card">
             <h3>Presentation media</h3>
             <ul class="info-list">
-              <li><strong>Presentation video:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add video link]</a></li>
-              <li><strong>Demo video:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add demo link]</a></li>
-              <li><strong>Slides:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add slides link]</a></li>
-              <li><strong>Supplementary materials:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add link]</a></li>
+              <li>Slides / video: to be added</li>
+              <li>Demo: to be added</li>
             </ul>
           </article>
         </div>
@@ -312,7 +310,7 @@
             <div class="nav-card-icon">FS</div>
             <h3>Few-shot learning</h3>
             <p>
-              Fine-tune on a small number of labeled examples. Compare multiple strategies: linear probes, adapters, task-specific heads, etc.
+              Few-shot prompt adaptation and CoOp on small labeled sets; compare stability, calibration, and class-wise gains.
             </p>
           </a>
         </div>
@@ -332,32 +330,19 @@
 
         <div class="findings-grid">
           <div class="finding-box">
-            <strong>Zero-shot performance</strong>
-            <p>
-              Zero-shot models achieve reasonable performance on balanced datasets but struggle with imbalanced classes.
-              Text prompt engineering is critical.
-            </p>
+            <strong>Best method: Prompt Adaptation</strong>
+            <p>Leads overall F1 and calibration (lowest ECE/NLL/Brier); major gains on weak classes like Global Business and Television.</p>
           </div>
 
           <div class="finding-box">
-            <strong>Few-shot scaling</strong>
-            <p>
-              Significant performance gains with just 16 examples per class. Diminishing returns after 64 examples.
-              Fine-tuning head outperforms linear probe.
-            </p>
+            <strong>Persistent hard classes</strong>
+            <p>Style, Media, Your Money, Well, Economy remain difficult due to semantic overlap and cross-topic cues.</p>
           </div>
 
           <div class="finding-box">
-            <strong>Modality importance</strong>
-            <p>
-              Vision component provides 70% of signal; text adds 15-20% improvement. Joint optimization needed for best results.
-            </p>
+            <strong>Confusion families</strong>
+            <p>Entertainment (Movies↔Television), lifestyle (Style↔Fashion), and finance/platform (Media/Technology/Opinion/Your Money) dominate remaining errors.</p>
           </div>
-        </div>
-
-        <div class="notice" style="margin-top: 32px;">
-          <strong>Note:</strong> Replace placeholder findings above with your actual experimental results.
-          See <a class="text-link" href="./results/index.html">Results</a> page for detailed metrics and comparisons.
         </div>
       </div>
     </section>
@@ -449,44 +434,31 @@
             </thead>
             <tbody>
               <tr>
-                <td><strong>Zero-shot</strong></td>
+                <td><strong>Zero-shot CLIP</strong></td>
                 <td>None (pretrained only)</td>
                 <td>No</td>
                 <td>Fast</td>
-                <td>No labeled data needed</td>
-                <td>Lower accuracy on new domains</td>
+                <td>No labels required; interpretable saliency</td>
+                <td>Lower F1; overconfident on Travel→Real Estate & Music→Theater</td>
               </tr>
               <tr>
-                <td><strong>Few-shot (linear probe)</strong></td>
-                <td>16-64 labeled examples</td>
-                <td>Only head layer</td>
+                <td><strong>Few-shot Prompt Adaptation</strong></td>
+                <td>Small labeled set (few shots)</td>
+                <td>Prompts + logit scale</td>
                 <td>Fast</td>
-                <td>Quick adaptation</td>
-                <td>Limited capacity</td>
+                <td>Best F1 and calibration; biggest gains on weak classes</td>
+                <td>Still confuses semantic neighbors (Movies/Television, Style/Fashion)</td>
               </tr>
               <tr>
-                <td><strong>Few-shot (adapter)</strong></td>
-                <td>16-64 labeled examples</td>
-                <td>Adapter modules only</td>
+                <td><strong>Few-shot CoOp</strong></td>
+                <td>Small labeled set (context tokens)</td>
+                <td>Context prompts</td>
                 <td>Medium</td>
-                <td>Flexible, parameter efficient</td>
-                <td>Slower than linear probe</td>
-              </tr>
-              <tr>
-                <td><strong>Few-shot (full tuning)</strong></td>
-                <td>32-128 labeled examples</td>
-                <td>Full model</td>
-                <td>Slow</td>
-                <td>Best accuracy</td>
-                <td>Risk of overfitting</td>
+                <td>Good gains on some classes (Global Business, Books)</td>
+                <td>Brittle on Well; higher over-confidence than Prompt Adaptation</td>
               </tr>
             </tbody>
           </table>
-        </div>
-
-        <div class="notice" style="margin-top: 24px;">
-          <strong>Update this table:</strong> Replace placeholder rows with your actual methods and results.
-          Add or remove rows based on the approaches you implemented.
         </div>
       </div>
     </section>
@@ -510,3 +482,9 @@
   </footer>
 </body>
 </html>
+
+
+
+
+
+
