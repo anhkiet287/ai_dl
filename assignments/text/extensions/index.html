@@ -7,6 +7,31 @@
   <meta name="description" content="Extensions, limitations, and ablation studies for the text branch." />
   <link rel="stylesheet" href="../../multimodal/multimodal.css" />
   <link rel="stylesheet" href="../../../assets/styles.css" />
+  <style>
+    .figure-grid { grid-template-columns: 1fr; }
+    .figure-card { border: 1px solid var(--card-border); }
+    .figure-card img { width: 100%; height: auto; display: block; border-radius: 12px; }
+    .metric-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 16px 0 8px;
+    }
+    .metric-card {
+      padding: 16px 18px;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .metric-card .label { font-size: 0.9rem; color: var(--muted); margin-bottom: 6px; display: block; }
+    .metric-card .metric-number { font-size: 1.6rem; font-weight: 700; line-height: 1.1; }
+    .info-panel {
+      padding: 20px 22px;
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+  </style>
 </head>
 <body>
   <header class="nav">
@@ -14,13 +39,14 @@
       <a href="../../../index.html" class="brand">DL<span>CourseHub</span></a>
       <nav class="nav-links">
         <a href="../index.html">Overview</a>
-        <a href="../problem-eda/index.html">Problem & EDA</a>
-        <a href="../dataset-pipeline/index.html">Dataset & Pipeline</a>
-        <a href="../model-design/index.html">Model & Training</a>
+        <a href="../problem-eda/index.html">Dataset</a>
+        <a href="../dataset-pipeline/index.html">Preprocessing</a>
+        <a href="../model-design/index.html">Backbone</a>
         <a href="../results/index.html">Results</a>
-        <a href="./index.html">Extensions</a>
-        <a href="../../assignment1.html" class="btn btn-secondary">Assignment 1</a>
+        <a href="../error-analysis/index.html">Errors</a>
+        <a href="./index.html" class="nav-home">Extension</a>
       </nav>
+      <a href="../../assignment1.html" class="btn btn-secondary">Assignment 1</a>
     </div>
   </header>
 
@@ -39,11 +65,8 @@
         <div class="badge">Text branch</div>
         <h1>Extensions, limitations, and ablations</h1>
         <p class="lead">
-          Capture follow-up ideas, known limitations, and ablation findings to guide future improvements.
+          Follow-up ideas, known limitations, and ablations to guide next steps.
         </p>
-        <div class="callout">
-          <strong>Figures directory:</strong> use <code>../figures/extensions/</code> for ablation plots and extra visuals.
-        </div>
         <nav class="section-nav" aria-label="On-page navigation">
           <a href="#extensions">Extensions</a>
           <a href="#limitations">Limitations</a>
@@ -58,14 +81,40 @@
           <div>
             <div class="eyebrow">Future work</div>
             <h2>Extensions</h2>
-            <p>Ideas to improve or expand the system.</p>
+            <p>Concrete upgrades to improve minority performance and robustness.</p>
           </div>
         </div>
-        <ul class="info-list">
-          <li>[Larger or domain-specific language models]</li>
-          <li>[Data augmentation / pseudo-labeling]</li>
-          <li>[Multi-task or continual learning]</li>
-        </ul>
+        <div class="metric-cards">
+          <div class="metric-card">
+            <span class="label">Model upgrade</span>
+            <div class="metric-number">RoBERTa / DeBERTa</div>
+            <div class="muted">Stronger encoder</div>
+          </div>
+          <div class="metric-card">
+            <span class="label">Loss tweak</span>
+            <div class="metric-number">Focal / CB</div>
+            <div class="muted">Handle imbalance</div>
+          </div>
+          <div class="metric-card">
+            <span class="label">Augmentation</span>
+            <div class="metric-number">BT + Synonyms</div>
+            <div class="muted">Lifestyle/health labels</div>
+          </div>
+          <div class="metric-card">
+            <span class="label">Calibration</span>
+            <div class="metric-number">Temp scaling</div>
+            <div class="muted">Better confidence</div>
+          </div>
+        </div>
+        <div class="info-panel">
+          <ul class="info-list">
+            <li>Fine-tune a stronger encoder (RoBERTa-base / DeBERTa-v3-base) with longer max_length (256–320).</li>
+            <li>Apply class-balanced or focal loss to shore up tail categories.</li>
+            <li>Targeted augmentation (back-translation, paraphrase) for overlapping lifestyle/health labels.</li>
+            <li>Temperature scaling or per-class thresholds for calibrated deployment.</li>
+            <li>Light retrieval augmentation for named entities and fresh news contexts.</li>
+          </ul>
+        </div>
       </div>
     </section>
 
@@ -75,14 +124,17 @@
           <div>
             <div class="eyebrow">Constraints</div>
             <h2>Limitations</h2>
-            <p>Known weaknesses and risks.</p>
+            <p>Current bottlenecks observed in experiments.</p>
           </div>
         </div>
-        <ul class="info-list">
-          <li>[Class imbalance or domain shift]</li>
-          <li>[Long-sequence handling]</li>
-          <li>[OOV or rare-word robustness]</li>
-        </ul>
+        <div class="info-panel">
+          <ul class="info-list">
+            <li>Class imbalance remains; minority classes (e.g., QUEER VOICES) under-represented.</li>
+            <li>Transformer limited to 128 tokens; long descriptions may truncate useful context.</li>
+            <li>DistilBERT uses a shared train/val loader in notebook runs, risking mild leakage.</li>
+            <li>Minimal augmentation; robustness to sarcasm and emerging entities is untested.</li>
+          </ul>
+        </div>
       </div>
     </section>
 
@@ -92,18 +144,17 @@
           <div>
             <div class="eyebrow">Ablations</div>
             <h2>Key ablation studies</h2>
-            <p>Show impact of design choices.</p>
+            <p>Planned checks to quantify design trade-offs.</p>
           </div>
         </div>
-        <div class="figure-grid">
-          <div class="figure-card">
-            <div class="figure-placeholder">[Ablation table]</div>
-            <div class="caption">Effect of tokenization or max length.</div>
-          </div>
-          <div class="figure-card">
-            <div class="figure-placeholder">[Learning curve]</div>
-            <div class="caption">Impact of learning rate / warmup.</div>
-          </div>
+        <div class="info-panel">
+          <ul class="info-list">
+            <li>Max length sweep (128 → 256 → 320) for DistilBERT/DeBERTa.</li>
+            <li>Loss: cross-entropy vs class-balanced vs focal.</li>
+            <li>Augmentation on vs off (back-translation/paraphrase) for tail labels.</li>
+            <li>Class-weighted sampling vs uniform in RNN loaders.</li>
+            <li>Learning rate and warmup schedule sensitivity for transformers.</li>
+          </ul>
         </div>
       </div>
     </section>
@@ -115,6 +166,8 @@
         <h3>Navigation</h3>
         <ul class="footer-links">
           <li><a href="../index.html">Back to text overview</a></li>
+          <li><a href="../problem-eda/index.html">Dataset</a></li>
+          <li><a href="../dataset-pipeline/index.html">Preprocessing</a></li>
           <li><a href="../../assignment1.html">Assignment 1</a></li>
         </ul>
       </div>
@@ -122,7 +175,7 @@
         <h3>Next</h3>
         <ul class="footer-links">
           <li><a href="../results/index.html">Results</a></li>
-          <li><a href="../problem-eda/index.html">Problem & EDA</a></li>
+          <li><a href="../error-analysis/index.html">Errors</a></li>
         </ul>
       </div>
     </div>

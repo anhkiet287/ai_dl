@@ -7,21 +7,47 @@
   <meta name="description" content="Text classification branch: problem, data pipeline, model design, results, and extensions." />
   <link rel="stylesheet" href="../multimodal/multimodal.css" />
   <link rel="stylesheet" href="../../assets/styles.css" />
+  <style>
+    .quick-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-top: 14px; }
+    .quick-link-btn { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 12px; border-radius: 12px; background: rgba(126,240,194,0.1); border: 1px solid rgba(126,240,194,0.2); color: var(--primary-2); text-decoration: none; font-weight: 600; transition: transform 0.15s ease, border-color 0.15s ease; }
+    .quick-link-btn:hover { transform: translateY(-1px); border-color: rgba(126,240,194,0.4); }
+    .findings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 12px; }
+    .finding-box { background: linear-gradient(135deg, rgba(126,240,194,.12), rgba(110,168,254,.08)); border: 1px solid rgba(126,240,194,.22); border-radius: 16px; padding: 14px; }
+    .finding-box strong { display:block; color: var(--primary-2); margin-bottom:6px; }
+    .mini-table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; overflow: hidden; }
+    .mini-table th, .mini-table td { padding: 10px 12px; border-bottom: 1px solid var(--card-border); text-align: left; font-size: 0.95rem; }
+    .mini-table th { background: rgba(255,255,255,0.04); color: var(--text); }
+    .mini-table tr:last-child td { border-bottom: none; }
+    .section-cards.big {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+    }
+    .nav-card.big {
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-card.big .nav-card-icon { font-size: 1.4rem; font-weight: 800; color: var(--muted); }
+    .nav-card.big h3 { margin: 6px 0 4px; }
+    .nav-card.big p strong { display: block; margin-bottom: 4px; }
+  </style>
 </head>
 <body>
   <header class="nav">
     <div class="container nav-inner">
       <a href="../../index.html" class="brand">DL<span>CourseHub</span></a>
       <nav class="nav-links">
-        <a href="./index.html">Overview</a>
-        <a href="./problem-eda/index.html">Dataset & EDA</a>
-        <a href="./dataset-pipeline/index.html">Preprocessing & Dataloader</a>
-        <a href="./model-design/index.html">Backbone & Head</a>
-        <a href="./results/index.html">Results & Analysis</a>
-        <a href="./error-analysis/index.html">Error Analysis</a>
+        <a href="./index.html" class="nav-home">Overview</a>
+        <a href="./problem-eda/index.html">Dataset</a>
+        <a href="./dataset-pipeline/index.html">Preprocessing</a>
+        <a href="./model-design/index.html">Backbone</a>
+        <a href="./results/index.html">Results</a>
+        <a href="./error-analysis/index.html">Errors</a>
         <a href="./extensions/index.html">Extension</a>
-        <a href="../assignment1.html" class="btn btn-secondary">Assignment 1</a>
       </nav>
+      <a href="../assignment1.html" class="btn btn-secondary">Assignment 1</a>
     </div>
   </header>
 
@@ -38,46 +64,81 @@
         <div class="badge">Text classification branch</div>
         <h1>Text Classification</h1>
         <p class="lead">
-          Full text classification workflow: define the task, explore data, build models, report results, and discuss extensions or limitations.
+          News Category Dataset (209k headlines, 42 classes). RNNs and DistilBERT trained on 60/128-token inputs; best model LSTM: Acc 0.9003, Macro-F1 0.8996.
         </p>
-        <div class="callout">
-          <strong>Figures directory:</strong> store plots for this branch in <code>./figures/</code> (subfolders per page).
+        <div class="quick-links">
+          <a class="quick-link-btn" href="./problem-eda/index.html">Dataset</a>
+          <a class="quick-link-btn" href="./dataset-pipeline/index.html">Preprocessing</a>
+          <a class="quick-link-btn" href="./model-design/index.html">Backbone</a>
+          <a class="quick-link-btn" href="./results/index.html">Results</a>
+          <a class="quick-link-btn" href="./error-analysis/index.html">Errors</a>
+          <a class="quick-link-btn" href="./extensions/index.html">Extension</a>
         </div>
         <nav class="section-nav" aria-label="On-page navigation">
-          <a href="#links">Quick links</a>
           <a href="#pages">Pages</a>
-          <a href="#outline">Report outline</a>
+          <a href="#outline">Outline</a>
         </nav>
       </div>
     </section>
 
-    <section id="links" class="alt">
+    <section id="requirements" class="alt">
       <div class="container">
         <div class="section-heading">
           <div>
-            <div class="eyebrow">Resources</div>
-            <h2>Essential links</h2>
-            <p>Add your real links for the text branch.</p>
+            <div class="eyebrow">Task definition</div>
+            <h2>Assignment requirements</h2>
+            <p>Classify news headline + short description into one of 42 categories; report accuracy and macro-F1.</p>
           </div>
         </div>
         <div class="grid two">
           <article class="card">
-            <h3>Project assets</h3>
-            <ul class="info-list">
-              <li><strong>Notebook:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add text notebook]</a></li>
-              <li><strong>Dataset:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add dataset link]</a></li>
-              <li><strong>Code repo:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add repo link]</a></li>
-              <li><strong>Report PDF:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add report link]</a></li>
+            <h3>What we must show</h3>
+            <ul class="checklist">
+              <li>End-to-end text pipeline with EDA, preprocessing, model design, and results.</li>
+              <li>Metrics: Accuracy and Macro-F1 on stratified 70/15/15 splits.</li>
+              <li>Handle class imbalance and overlapping labels (e.g., Wellness vs Healthy Living).</li>
+              <li>Provide figures: category distribution, text length, stopwords, TF-IDF/heatmaps.</li>
             </ul>
           </article>
           <article class="card">
-            <h3>Media</h3>
-            <ul class="info-list">
-              <li><strong>Presentation:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add slides or video]</a></li>
-              <li><strong>Demo:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add demo]</a></li>
-              <li><strong>Additional:</strong> <a class="text-link" href="#" target="_blank" rel="noreferrer">[Add extra link]</a></li>
+            <h3>Dataset snapshot</h3>
+            <ul class="checklist">
+              <li>Samples: 209,527; Classes: 42.</li>
+              <li>Language: English headlines + short descriptions; avg length 33.5 tokens.</li>
+              <li>Splits: 70% train / 15% val / 15% test; stratified.</li>
+              <li>Max sequence length: 60 (RNNs) / 128 (DistilBERT).</li>
             </ul>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="summary">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Summary</div>
+            <h2>Key findings</h2>
+            <p>Highlights from experiments and EDA.</p>
+          </div>
+        </div>
+        <div class="findings-grid">
+          <div class="finding-box">
+            <strong>LSTM leads</strong>
+            Best metrics: Acc 0.9003, Macro-F1 0.8996; BiLSTM close behind.
+          </div>
+          <div class="finding-box">
+            <strong>Transformer underperforms</strong>
+            DistilBERT trails (Acc 0.8778, F1 0.8732) likely due to short max length and limited steps.
+          </div>
+          <div class="finding-box">
+            <strong>Imbalance + overlap</strong>
+            Long-tail categories and similar labels drive most confusion (Wellness/Healthy Living/Parenting).
+          </div>
+          <div class="finding-box">
+            <strong>Compact text</strong>
+            Mean length 33.5 tokens; heavy stopword ratio (~35%), impacting TF-IDF baselines.
+          </div>
         </div>
       </div>
     </section>
@@ -86,42 +147,70 @@
       <div class="container">
         <div class="section-heading">
           <div>
-            <div class="eyebrow">Navigation</div>
-            <h2>Text branch pages</h2>
-            <p>Jump to any section of the report.</p>
+            <div class="eyebrow">Explore</div>
+            <h2>Detailed task and analysis</h2>
+            <p>Dive into each part of the text branch.</p>
           </div>
         </div>
-        <div class="section-cards">
-          <a href="./problem-eda/index.html" class="nav-card">
-            <div class="nav-card-icon">1</div>
-            <h3>Dataset & EDA</h3>
-            <p>Problem statement, goals, dataset overview, and exploratory analysis.</p>
+        <div class="section-cards big">
+          <a href="./problem-eda/index.html" class="nav-card big">
+            <div class="nav-card-icon">EDA</div>
+            <h3>Dataset</h3>
+            <p><strong>Balanced counts, text stats, stopwords, TF-IDF terms, similarity heatmaps.</strong></p>
           </a>
-          <a href="./dataset-pipeline/index.html" class="nav-card">
-            <div class="nav-card-icon">2</div>
-            <h3>Preprocessing & Dataloader</h3>
-            <p>Text preprocessing, tokenization, dataloader, and augmentation.</p>
+          <a href="./dataset-pipeline/index.html" class="nav-card big">
+            <div class="nav-card-icon">PRE</div>
+            <h3>Preprocessing</h3>
+            <p><strong>Filtering, tokenization, splits, loaders, and augmentation status.</strong></p>
           </a>
-          <a href="./model-design/index.html" class="nav-card">
-            <div class="nav-card-icon">3</div>
-            <h3>Backbone & Head</h3>
-            <p>Architectures (RNN/Transformer), loss, optimization, evaluation.</p>
+          <a href="./model-design/index.html" class="nav-card big">
+            <div class="nav-card-icon">BB</div>
+            <h3>Backbone</h3>
+            <p><strong>Architectures for RNNs and Transformer; configuration details.</strong></p>
           </a>
-          <a href="./results/index.html" class="nav-card">
-            <div class="nav-card-icon">4</div>
-            <h3>Results & Analysis</h3>
-            <p>Metrics, comparisons, plots, and qualitative findings.</p>
+          <a href="./results/index.html" class="nav-card big">
+            <div class="nav-card-icon">R</div>
+            <h3>Results</h3>
+            <p><strong>Metrics, curves, confusion matrices, and discussion.</strong></p>
           </a>
-          <a href="./error-analysis/index.html" class="nav-card">
-            <div class="nav-card-icon">5</div>
-            <h3>Error Analysis</h3>
-            <p>Failure cases, confusion patterns, and lessons learned.</p>
+          <a href="./error-analysis/index.html" class="nav-card big">
+            <div class="nav-card-icon">EA</div>
+            <h3>Errors</h3>
+            <p><strong>Failure cases, confusion patterns, and lessons learned.</strong></p>
           </a>
-          <a href="./extensions/index.html" class="nav-card">
-            <div class="nav-card-icon">6</div>
+          <a href="./extensions/index.html" class="nav-card big">
+            <div class="nav-card-icon">EXT</div>
             <h3>Extension</h3>
-            <p>Limitations, ablations, and future extensions.</p>
+            <p><strong>Limitations, ablations, and future extensions.</strong></p>
           </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="quick-reference" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Quick reference</div>
+            <h2>Method comparison summary</h2>
+            <p>High-level comparison of representative models.</p>
+          </div>
+        </div>
+        <div class="card">
+          <table class="mini-table">
+            <thead>
+              <tr>
+                <th>Model</th><th>Type</th><th>Test Acc</th><th>Macro F1</th><th>Params (M)</th><th>Inf/sample (ms)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>LSTM</td><td>RNN</td><td>0.9003</td><td>0.8996</td><td>N/A</td><td>N/A</td></tr>
+              <tr><td>BiLSTM</td><td>RNN</td><td>0.8985</td><td>0.8979</td><td>N/A</td><td>N/A</td></tr>
+              <tr><td>DistilBERT</td><td>Transformer</td><td>0.8778</td><td>0.8732</td><td>N/A</td><td>N/A</td></tr>
+              <tr><td>SimpleRNN</td><td>RNN</td><td>0.4849</td><td>0.3229</td><td>N/A</td><td>N/A</td></tr>
+            </tbody>
+          </table>
+          <p class="table-caption">Inference timings and parameter counts were not logged in the notebook; best single model LSTM at 0.9003 Acc / 0.8996 Macro-F1.</p>
         </div>
       </div>
     </section>
@@ -136,11 +225,11 @@
           </div>
         </div>
         <ol class="info-list">
-          <li>Problem statement and exploratory data analysis</li>
-          <li>Dataset, DataLoader, and augmentation pipeline</li>
-          <li>Model design, training setup, and evaluation</li>
-          <li>Results, comparisons, discussion, and visualizations</li>
-          <li>Extensions, limitations, or ablation studies</li>
+          <li>Dataset description and exploratory analysis</li>
+          <li>Preprocessing, loaders, and augmentation pipeline</li>
+          <li>Backbone architectures</li>
+          <li>Results, plots, and discussion</li>
+          <li>Errors and extensions</li>
         </ol>
       </div>
     </section>
@@ -152,16 +241,17 @@
         <h3>Navigation</h3>
         <ul class="footer-links">
           <li><a href="../assignment1.html">Back to Assignment 1</a></li>
-          <li><a href="./problem-eda/index.html">Problem & EDA</a></li>
-          <li><a href="./dataset-pipeline/index.html">Dataset & Pipeline</a></li>
-          <li><a href="./model-design/index.html">Model & Training</a></li>
+          <li><a href="./problem-eda/index.html">Dataset</a></li>
+          <li><a href="./dataset-pipeline/index.html">Preprocessing</a></li>
+          <li><a href="./model-design/index.html">Backbone</a></li>
         </ul>
       </div>
       <div>
         <h3>More</h3>
         <ul class="footer-links">
           <li><a href="./results/index.html">Results</a></li>
-          <li><a href="./extensions/index.html">Extensions</a></li>
+          <li><a href="./error-analysis/index.html">Errors</a></li>
+          <li><a href="./extensions/index.html">Extension</a></li>
           <li><a href="../multimodal/index.html">Multimodal branch</a></li>
           <li><a href="../image/index.html">Image branch</a></li>
         </ul>

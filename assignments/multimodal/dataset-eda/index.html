@@ -210,6 +210,26 @@
       color: var(--muted);
     }
 
+    details.citation {
+      margin-top: 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+    details.citation summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--primary);
+      list-style: none;
+    }
+    details.citation summary::-webkit-details-marker { display: none; }
+    details.citation pre {
+      margin-top: 10px;
+      white-space: pre-wrap;
+      font-family: "Fira Code", "SFMono-Regular", Consolas, monospace;
+    }
+
     .sample-pairs {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -410,9 +430,9 @@
             <a class="btn btn-primary" href="https://github.com/billywzh717/N24News" target="_blank" rel="noopener">Dataset repo</a>
             <a class="btn" href="https://aclanthology.org/2022.lrec-1.729/" target="_blank" rel="noopener">Paper (LREC 2022)</a>
           </div>
-          <details style="margin-top:10px;">
-            <summary style="cursor:pointer; color:var(--primary);">Citation</summary>
-            <pre style="margin:8px 0 0 0; white-space:pre-wrap; font-family:var(--mono, monospace); background:rgba(255,255,255,0.04); padding:8px; border-radius:8px;">
+          <details class="citation">
+            <summary>Citation</summary>
+            <pre>
 @InProceedings{wang-EtAl:2022:LREC3,
   author    = {Wang, Zhen and Shan, Xu and Zhang, Xiangxie and Yang, Jie},
   title     = {N24News: A New Dataset for Multimodal News Classification},
@@ -447,7 +467,7 @@
       <div class="container">
         <div class="section-heading">
           <div>
-            <div class="eyebrow">Scale & composition</div>
+            <div class="eyebrow">Scale &amp; composition</div>
             <h2>Dataset statistics</h2>
             <p>Overall dataset size and class breakdown.</p>
           </div>

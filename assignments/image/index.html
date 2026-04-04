@@ -18,6 +18,20 @@
     .mini-table th, .mini-table td { padding: 10px 12px; border-bottom: 1px solid var(--card-border); text-align: left; font-size: 0.95rem; }
     .mini-table th { background: rgba(255,255,255,0.04); color: var(--text); }
     .mini-table tr:last-child td { border-bottom: none; }
+    .section-cards.big {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+    }
+    .nav-card.big {
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-card.big .nav-card-icon { font-size: 1.4rem; font-weight: 800; color: var(--muted); }
+    .nav-card.big h3 { margin: 6px 0 4px; }
+    .nav-card.big p strong { display: block; margin-bottom: 4px; }
   </style>
 </head>
 <body>
@@ -50,7 +64,7 @@
         <div class="badge">Image classification branch</div>
         <h1>Image Classification</h1>
         <p class="lead">
-          Balanced 20-class ImageNet subset (10k images: 7k/1.5k/1.5k). Seven models (3 scratch, 4 pretrained) with best test accuracy 1.000 (ViT-L/16-PT); ensembles explored for small gains.
+          Balanced 20-class ImageNet subset (10k images: 7k/1.5k/1.5k). Seven models (3 scratch, 4 pretrained); best single model ViT-L/16-PT: Acc 1.000, Macro-F1 1.000; ViT-B/16-PT close behind at 0.998 Acc.
         </p>
         <div class="quick-links">
           <a class="quick-link-btn" href="./problem-eda/index.html">Dataset &amp; EDA</a>
@@ -76,7 +90,7 @@
           <div>
             <div class="eyebrow">Task definition</div>
             <h2>Assignment Requirements</h2>
-            <p>Image classification pipeline on a balanced 20-class ImageNet subset.</p>
+            <p>Image classification pipeline on a balanced 20-class ImageNet subset (10k images).</p>
           </div>
         </div>
         <div class="grid two">
@@ -84,7 +98,7 @@
             <h3>What we must demonstrate</h3>
             <ul class="checklist">
               <li>Build an end-to-end image classification pipeline.</li>
-              <li>Use a valid dataset with ≥5 classes (here: 20 classes, 10k images, balanced).</li>
+              <li>Use a valid dataset with ≥5 classes (here: 20 classes, perfectly balanced).</li>
               <li>Report accuracy and macro-F1; include calibration (ECE) and robustness checks.</li>
               <li>Show EDA, preprocessing/DataLoader, model design, training, evaluation, and comparisons with figures/tables.</li>
             </ul>
@@ -143,15 +157,15 @@
         <div class="findings-grid">
           <div class="finding-box">
             <strong>Pretrained ViTs dominate</strong>
-            ViT-L/16-PT hits 1.000 test acc; ViT-B/16-PT reaches 0.9980 with far fewer params.
+            ViT-L/16-PT hits 1.000 test Acc / F1; ViT-B/16-PT reaches 0.998 Acc / 0.9979 F1 with far fewer params.
           </div>
           <div class="finding-box">
             <strong>Scratch lag</strong>
-            Best scratch (ResNet-Scratch) 0.7033 acc; CNN-Scratch 0.4580; ViT-Scratch 0.1467.
+            Best scratch (ResNet-Scratch) 0.7033 Acc; CNN-Scratch 0.4580; ViT-Scratch 0.1467 (data hungry).
           </div>
           <div class="finding-box">
             <strong>Ensembles flat</strong>
-            Top ensemble 0.9993 acc; small uplift vs other pretrained but below ViT-L.
+            Top ensemble 0.9993 Acc; small uplift vs other pretrained but still below ViT-L.
           </div>
         </div>
       </div>
@@ -166,36 +180,36 @@
             <p>Dive into each part of the image branch.</p>
           </div>
         </div>
-        <div class="section-cards" style="grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));">
-          <a href="./problem-eda/index.html" class="nav-card">
+        <div class="section-cards big">
+          <a href="./problem-eda/index.html" class="nav-card big">
             <div class="nav-card-icon">EDA</div>
-            <h3>Dataset &amp; EDA</h3>
-            <p>Balanced splits, class stats, pixel stats, similarity heatmaps, sample grids.</p>
+            <h3>Dataset</h3>
+            <p><strong>Balanced splits, class stats, pixel stats, similarity heatmaps, sample grids.</strong></p>
           </a>
-          <a href="./dataset-pipeline/index.html" class="nav-card">
+          <a href="./dataset-pipeline/index.html" class="nav-card big">
             <div class="nav-card-icon">PRE</div>
-            <h3>Preprocessing &amp; Dataloader</h3>
-            <p>Transforms, MixUp/CutMix, batch size 16, per-model augmentation rules.</p>
+            <h3>Preprocessing</h3>
+            <p><strong>Transforms, MixUp/CutMix, batch size 16, per-model augmentation rules.</strong></p>
           </a>
-          <a href="./model-design/index.html" class="nav-card">
+          <a href="./model-design/index.html" class="nav-card big">
             <div class="nav-card-icon">BB</div>
-            <h3>Backbone &amp; Head</h3>
-            <p>Scratch CNN/ResNet/ViT and pretrained heads; optimizer/scheduler.</p>
+            <h3>Backbone</h3>
+            <p><strong>Scratch CNN/ResNet/ViT and pretrained heads; optimizer/scheduler.</strong></p>
           </a>
-          <a href="./results/index.html" class="nav-card">
+          <a href="./results/index.html" class="nav-card big">
             <div class="nav-card-icon">R</div>
-            <h3>Results &amp; Analysis</h3>
-            <p>Metrics, curves, per-class heatmaps, ROC, robustness, ensembles, dashboard.</p>
+            <h3>Results</h3>
+            <p><strong>Metrics, curves, per-class heatmaps, ROC, robustness, ensembles, dashboard.</strong></p>
           </a>
-          <a href="./error-analysis/index.html" class="nav-card">
+          <a href="./error-analysis/index.html" class="nav-card big">
             <div class="nav-card-icon">EA</div>
-            <h3>Error Analysis</h3>
-            <p>Confidence distributions, reliability diagrams, top confused pairs.</p>
+            <h3>Errors</h3>
+            <p><strong>Confidence distributions, reliability diagrams, top confused pairs.</strong></p>
           </a>
-          <a href="./extensions/index.html" class="nav-card">
+          <a href="./extensions/index.html" class="nav-card big">
             <div class="nav-card-icon">EXT</div>
             <h3>Extension</h3>
-            <p>Ablations (label smoothing, MixUp/CutMix, augmentation study), limitations, interpretability.</p>
+            <p><strong>Ablations (label smoothing, MixUp/CutMix, augmentation study), limitations, interpretability.</strong></p>
           </a>
         </div>
       </div>
@@ -214,16 +228,20 @@
           <table class="mini-table">
             <thead>
               <tr>
-                <th>Model</th><th>Type</th><th>Test Acc</th><th>Macro F1</th><th>Params (M)</th><th>ECE</th>
+                <th>Model</th><th>Type</th><th>Test Acc</th><th>Macro F1</th><th>Params (M)</th><th>Inf/sample (ms)</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td>ResNet-Scratch</td><td>Scratch</td><td>0.7033</td><td>0.6978</td><td>11.19</td><td>0.110</td></tr>
-              <tr><td>ResNet-50-PT</td><td>Pretrained</td><td>0.9913</td><td>0.9913</td><td>23.55</td><td>0.115</td></tr>
-              <tr><td>ViT-L/16-PT</td><td>Pretrained</td><td>1.0000</td><td>1.0000</td><td>303.32</td><td>0.124</td></tr>
+              <tr><td>ViT-L/16-PT</td><td>Pretrained</td><td>1.0000</td><td>1.0000</td><td>303.32</td><td>35.53</td></tr>
+              <tr><td>ViT-B/16-PT</td><td>Pretrained</td><td>0.9980</td><td>0.9979</td><td>85.81</td><td>13.18</td></tr>
+              <tr><td>ResNet-101-PT</td><td>Pretrained</td><td>0.9933</td><td>0.9935</td><td>42.54</td><td>5.52</td></tr>
+              <tr><td>ResNet-50-PT</td><td>Pretrained</td><td>0.9913</td><td>0.9913</td><td>23.55</td><td>3.52</td></tr>
+              <tr><td>ResNet-Scratch</td><td>Scratch</td><td>0.7033</td><td>0.6978</td><td>11.19</td><td>2.97</td></tr>
+              <tr><td>CNN-Scratch</td><td>Scratch</td><td>0.4580</td><td>0.4338</td><td>15.73</td><td>3.16</td></tr>
+              <tr><td>ViT-Scratch</td><td>Scratch</td><td>0.1467</td><td>0.1161</td><td>14.57</td><td>3.55</td></tr>
             </tbody>
           </table>
-          <p class="table-caption">Ensembles: top combo 0.9993 acc (2–4 models), slightly below ViT-L/16-PT.</p>
+          <p class="table-caption">Inference timings are per-sample estimates from notebook logs; ensembles peak at 0.9993 Acc (2–4 model combos), slightly below ViT-L/16-PT.</p>
         </div>
       </div>
     </section>
@@ -235,7 +253,7 @@
         <h3>Navigation</h3>
         <ul class="footer-links">
           <li><a href="../assignment1.html">Back to Assignment 1</a></li>
-          <li><a href="./problem-eda/index.html">Dataset &amp; EDA</a></li>
+          <li><a href="./problem-eda/index.html">Dataset</a></li>
           <li><a href="./dataset-pipeline/index.html">Preprocessing</a></li>
           <li><a href="./model-design/index.html">Backbone</a></li>
         </ul>
@@ -244,6 +262,7 @@
         <h3>More</h3>
         <ul class="footer-links">
           <li><a href="./results/index.html">Results</a></li>
+          <li><a href="./error-analysis/index.html">Errors</a></li>
           <li><a href="./extensions/index.html">Extension</a></li>
           <li><a href="../multimodal/index.html">Multimodal branch</a></li>
           <li><a href="../text/index.html">Text branch</a></li>
