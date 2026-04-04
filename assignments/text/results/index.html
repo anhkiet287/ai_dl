@@ -7,6 +7,37 @@
   <meta name="description" content="Results, comparisons, discussion, and visualizations for the text branch." />
   <link rel="stylesheet" href="../../multimodal/multimodal.css" />
   <link rel="stylesheet" href="../../../assets/styles.css" />
+  <style>
+    .figure-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    @media (max-width: 1024px) {
+      .figure-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 640px) {
+      .figure-grid { grid-template-columns: 1fr; }
+    }
+    .figure-card { border: 1px solid var(--card-border); }
+    .figure-card img { width: 100%; height: auto; display: block; border-radius: 12px; }
+    .metric-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 16px 0 8px;
+    }
+    .metric-card {
+      padding: 16px 18px;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .metric-card .label { font-size: 0.9rem; color: var(--muted); margin-bottom: 6px; display: block; }
+    .metric-card .metric-number { font-size: 1.8rem; font-weight: 700; line-height: 1.1; }
+    .info-panel {
+      padding: 20px 22px;
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+  </style>
 </head>
 <body>
   <header class="nav">
@@ -14,14 +45,14 @@
       <a href="../../../index.html" class="brand">DL<span>CourseHub</span></a>
       <nav class="nav-links">
         <a href="../index.html">Overview</a>
-        <a href="../problem-eda/index.html">Dataset & EDA</a>
-        <a href="../dataset-pipeline/index.html">Preprocessing & Dataloader</a>
-        <a href="../model-design/index.html">Backbone & Head</a>
-        <a href="./index.html">Results & Analysis</a>
-        <a href="../error-analysis/index.html">Error Analysis</a>
+        <a href="../problem-eda/index.html">Dataset</a>
+        <a href="../dataset-pipeline/index.html">Preprocessing</a>
+        <a href="../model-design/index.html">Backbone</a>
+        <a href="./index.html" class="nav-home">Results</a>
+        <a href="../error-analysis/index.html">Errors</a>
         <a href="../extensions/index.html">Extension</a>
-        <a href="../../assignment1.html" class="btn btn-secondary">Assignment 1</a>
       </nav>
+      <a href="../../assignment1.html" class="btn btn-secondary">Assignment 1</a>
     </div>
   </header>
 
@@ -40,16 +71,131 @@
         <div class="badge">Text branch</div>
         <h1>Results, comparisons, and visualizations</h1>
         <p class="lead">
-          Summarize performance across models, include key tables, plots, and qualitative findings.
+          Performance summary for SimpleRNN, LSTM, BiLSTM, and DistilBERT on the News Category dataset.
         </p>
-        <div class="callout">
-          <strong>Figures directory:</strong> place tables and plots in <code>../figures/results/</code>.
-        </div>
         <nav class="section-nav" aria-label="On-page navigation">
+          <a href="#training">Training</a>
+          <a href="#evaluation">Evaluation</a>
           <a href="#table">Main table</a>
+          <a href="#loss-comparison">Loss comparison</a>
           <a href="#plots">Plots</a>
           <a href="#discussion">Discussion</a>
         </nav>
+      </div>
+    </section>
+
+    <section id="training" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Optimization</div>
+            <h2>Training setup</h2>
+            <p>Shared preprocessing with model-specific batch sizes and sequence lengths.</p>
+          </div>
+        </div>
+        <div class="metric-cards">
+          <div class="metric-card">
+            <span class="label">Epochs</span>
+            <div class="metric-number">5</div>
+            <div class="muted">Stratified 70/15/15 split</div>
+          </div>
+          <div class="metric-card">
+            <span class="label">Batch sizes</span>
+            <div class="metric-number">32 / 16</div>
+            <div class="muted">RNNs / DistilBERT</div>
+          </div>
+          <div class="metric-card">
+            <span class="label">Seq length</span>
+            <div class="metric-number">60 / 128</div>
+            <div class="muted">RNNs / DistilBERT</div>
+          </div>
+          <div class="metric-card">
+            <span class="label">Optimizers</span>
+            <div class="metric-number">Adam / AdamW</div>
+            <div class="muted">RNNs / DistilBERT</div>
+          </div>
+        </div>
+        <div class="info-panel">
+          <ul class="info-list">
+            <li>Loss: Cross-entropy; metrics tracked as Accuracy and Macro-F1.</li>
+            <li>Dropout on RNN heads; optional mixed precision.</li>
+            <li>Loader note: DistilBERT notebook reuses one loader for train and validation (no separate val loader).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="loss-comparison" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Ablation</div>
+            <h2>Loss function comparison</h2>
+            <p>Cross-entropy vs focal loss across models.</p>
+          </div>
+        </div>
+        <div class="card">
+          <table class="mini-table">
+            <thead>
+              <tr>
+                <th>Model</th><th>Loss</th><th>Accuracy</th><th>Macro-F1</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>SimpleRNN</td><td>CrossEntropy</td><td>0.4864</td><td>0.3239</td></tr>
+              <tr><td>SimpleRNN</td><td>Focal</td><td>0.4844</td><td>0.3218</td></tr>
+              <tr><td>LSTM</td><td>CrossEntropy</td><td>0.8959</td><td>0.8955</td></tr>
+              <tr><td>LSTM</td><td>Focal</td><td>0.8911</td><td>0.8904</td></tr>
+              <tr><td>BiLSTM</td><td>CrossEntropy</td><td>0.8955</td><td>0.8956</td></tr>
+              <tr><td>BiLSTM</td><td>Focal</td><td>0.8876</td><td>0.8878</td></tr>
+              <tr><td>DistilBERT</td><td>CrossEntropy</td><td>0.8612</td><td>0.8530</td></tr>
+              <tr><td>DistilBERT</td><td>Focal</td><td>0.8760</td><td>0.8721</td></tr>
+            </tbody>
+          </table>
+          <p class="table-caption">Focal loss did not outperform cross-entropy in these runs; LSTM with cross-entropy remains best overall.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="evaluation">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Protocol</div>
+            <h2>Evaluation</h2>
+            <p>Validation mirrors the class imbalance; metrics reported on a held-out 15% test split.</p>
+          </div>
+        </div>
+        <div class="metric-cards">
+          <div class="metric-card">
+            <span class="label">Validation</span>
+            <div class="metric-number">15%</div>
+            <div class="muted">Stratified hold-out</div>
+          </div>
+          <div class="metric-card">
+            <span class="label">Test</span>
+            <div class="metric-number">15%</div>
+            <div class="muted">Held-out split</div>
+          </div>
+          <div class="metric-card">
+            <span class="label">Metrics</span>
+            <div class="metric-number">Acc & Macro-F1</div>
+            <div class="muted">Reported on val/test</div>
+          </div>
+          <div class="metric-card">
+            <span class="label">Reporting</span>
+            <div class="metric-number">Single seed</div>
+            <div class="muted">DistilBERT shares train/val loader</div>
+          </div>
+        </div>
+        <div class="info-panel">
+          <ul class="info-list">
+            <li>Validation strategy: stratified hold-out (15% validation, 15% test).</li>
+            <li>Metrics: Accuracy and Macro-F1; same metrics shown for the test set.</li>
+            <li>Reporting: single-seed runs per model; DistilBERT uses the shared train/val loader in the notebook.</li>
+            <li>Checkpointing: monitor validation loss; best checkpoint retained when early stopping is enabled.</li>
+          </ul>
+        </div>
       </div>
     </section>
 
@@ -75,22 +221,36 @@
             </thead>
             <tbody>
               <tr>
-                <td>[Model A]</td>
-                <td>[xx.xx]</td>
-                <td>[xx.xx]</td>
-                <td>[p]</td>
-                <td>[t]</td>
+                <td>LSTM</td>
+                <td>0.9003</td>
+                <td>0.8996</td>
+                <td>N/A</td>
+                <td>N/A</td>
               </tr>
               <tr>
-                <td>[Model B]</td>
-                <td>[xx.xx]</td>
-                <td>[xx.xx]</td>
-                <td>[p]</td>
-                <td>[t]</td>
+                <td>BiLSTM</td>
+                <td>0.8985</td>
+                <td>0.8979</td>
+                <td>N/A</td>
+                <td>N/A</td>
+              </tr>
+              <tr>
+                <td>DistilBERT</td>
+                <td>0.8778</td>
+                <td>0.8732</td>
+                <td>N/A</td>
+                <td>N/A</td>
+              </tr>
+              <tr>
+                <td>SimpleRNN</td>
+                <td>0.4849</td>
+                <td>0.3229</td>
+                <td>N/A</td>
+                <td>N/A</td>
               </tr>
             </tbody>
           </table>
-          <div class="table-caption">Replace with your results.</div>
+          <div class="table-caption">Metrics from the held-out test split; N/A indicates values not recorded in the notebook.</div>
         </div>
       </div>
     </section>
@@ -101,21 +261,33 @@
           <div>
             <div class="eyebrow">Visuals</div>
             <h2>Plots & qualitative results</h2>
-            <p>Include learning curves, confusion matrix, and sample predictions.</p>
+            <p>Learning curves and confusion matrices for the trained models (one figure per row).</p>
           </div>
         </div>
         <div class="figure-grid">
           <div class="figure-card">
-            <div class="figure-placeholder">[Learning curve]</div>
-            <div class="caption">Accuracy/F1 over epochs.</div>
+            <img src="../../../assets/text/simpleRNN-loss.png" alt="SimpleRNN training vs validation loss" loading="lazy" />
+            <div class="caption"><strong>SimpleRNN loss:</strong> baseline convergence across 5 epochs.</div>
           </div>
           <div class="figure-card">
-            <div class="figure-placeholder">[Confusion matrix]</div>
-            <div class="caption">Per-class confusion.</div>
+            <img src="../../../assets/text/LSTM-loss.png" alt="LSTM training vs validation loss" loading="lazy" />
+            <div class="caption"><strong>LSTM loss:</strong> fastest, smoothest convergence.</div>
           </div>
           <div class="figure-card">
-            <div class="figure-placeholder">[Qualitative samples]</div>
-            <div class="caption">Correct and incorrect predictions.</div>
+            <img src="../../../assets/text/BiLSTM-loss.png" alt="BiLSTM training vs validation loss" loading="lazy" />
+            <div class="caption"><strong>BiLSTM loss:</strong> similar trajectory; slight overfit late epochs.</div>
+          </div>
+          <div class="figure-card">
+            <img src="../../../assets/text/RNN_confusionmatrix.png" alt="Confusion matrix for SimpleRNN" loading="lazy" />
+            <div class="caption"><strong>SimpleRNN confusion matrix:</strong> strong bias toward head classes.</div>
+          </div>
+          <div class="figure-card">
+            <img src="../../../assets/text/LSTM_confusionmatrix.png" alt="Confusion matrix for LSTM" loading="lazy" />
+            <div class="caption"><strong>LSTM confusion matrix:</strong> improved balance across categories.</div>
+          </div>
+          <div class="figure-card">
+            <img src="../../../assets/text/BiLSTM_confusionmatrix.png" alt="Confusion matrix for BiLSTM" loading="lazy" />
+            <div class="caption"><strong>BiLSTM confusion matrix:</strong> similar to LSTM with slight gains in minority classes.</div>
           </div>
         </div>
       </div>
@@ -131,10 +303,11 @@
           </div>
         </div>
         <ul class="info-list">
-          <li>Best-performing model and why</li>
-          <li>Speed vs accuracy trade-off</li>
-          <li>Failure patterns observed</li>
-          <li>Recommendations for deployment</li>
+          <li>LSTM slightly outperforms BiLSTM; both beat DistilBERT on this dataset.</li>
+          <li>DistilBERT lags likely due to limited fine-tuning steps and small sequence length cap (128).</li>
+          <li>SimpleRNN struggles with long-range context, confirming baseline limitations.</li>
+          <li>Imbalance and similar categories drive confusion among lifestyle/health labels.</li>
+          <li>Recommendation: deploy LSTM/BiLSTM; revisit DistilBERT with longer training and class weighting.</li>
         </ul>
       </div>
     </section>
@@ -146,14 +319,16 @@
         <h3>Navigation</h3>
         <ul class="footer-links">
           <li><a href="../index.html">Back to text overview</a></li>
+          <li><a href="../problem-eda/index.html">Dataset</a></li>
+          <li><a href="../dataset-pipeline/index.html">Preprocessing</a></li>
           <li><a href="../../assignment1.html">Assignment 1</a></li>
         </ul>
       </div>
       <div>
         <h3>Next</h3>
         <ul class="footer-links">
-          <li><a href="../extensions/index.html">Extensions</a></li>
-          <li><a href="../problem-eda/index.html">Problem & EDA</a></li>
+          <li><a href="../error-analysis/index.html">Errors</a></li>
+          <li><a href="../extensions/index.html">Extension</a></li>
         </ul>
       </div>
     </div>
