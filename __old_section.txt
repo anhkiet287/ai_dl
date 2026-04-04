@@ -1,0 +1,68 @@
+﻿<div class="section-heading">
+          <div>
+            <div class="eyebrow">Models</div>
+            <h2>Architectures</h2>
+            <p>Models chosen to balance simplicity, recurrent memory, and pretrained context.</p>
+          </div>
+        </div>
+                <div class="model-row">
+          <div class="figure-card">
+            <img src="../../../assets/text/RNN_architecture.png" alt="SimpleRNN architecture diagram" loading="lazy" />
+            <div class="caption"><strong>SimpleRNN:</strong> embeddings → 1-layer RNN → dropout → linear classifier.</div>
+          </div>
+          <article class="model-card">
+            <h3><span class="model-tag">RNN</span> SimpleRNN</h3>
+            <ul class="checklist">
+              <li>1-layer vanilla RNN, hidden size tuned for speed.</li>
+              <li>Max seq length 60, vocab 33,464, trainable embeddings.</li>
+              <li>Baseline to show long-range limitations.</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="model-row">
+          <div class="figure-card">
+            <img src="../../../assets/text/LSTM_architecture.png" alt="LSTM architecture diagram" loading="lazy" />
+            <div class="caption"><strong>LSTM:</strong> single LSTM layer with dropout before the classifier head.</div>
+          </div>
+          <article class="model-card">
+            <h3><span class="model-tag">LSTM</span> LSTM</h3>
+            <ul class="checklist">
+              <li>Single-layer LSTM for longer dependencies.</li>
+              <li>Dropout before classifier head.</li>
+              <li>Best overall metrics among trained models.</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="model-row">
+          <div class="figure-card">
+            <img src="../../../assets/text/BiLSTM_architecture.png" alt="BiLSTM architecture diagram" loading="lazy" />
+            <div class="caption"><strong>BiLSTM:</strong> forward/backward states concatenated for classification.</div>
+          </div>
+          <article class="model-card">
+            <h3><span class="model-tag">Bi</span> BiLSTM</h3>
+            <ul class="checklist">
+              <li>Bidirectional LSTM; concat forward/backward states.</li>
+              <li>Same 60-token inputs as LSTM.</li>
+              <li>Marginal gains in context, similar metrics to LSTM.</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="model-row">
+          <div class="figure-card">
+            <img src="../../../assets/text/DistilBERT_architecture.png" alt="DistilBERT architecture diagram" loading="lazy" />
+            <div class="caption"><strong>DistilBERT:</strong> transformer encoder with pooled [CLS] for the 42-way classifier.</div>
+          </div>
+          <article class="model-card">
+            <h3><span class="model-tag">BERT</span> DistilBERT</h3>
+            <ul class="checklist">
+              <li>Pretrained transformer (distilbert-base-uncased).</li>
+              <li>Sequence length 128; [CLS] pooled for classification.</li>
+              <li>Notebook uses one loader for train+val (no separate val loader).</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>

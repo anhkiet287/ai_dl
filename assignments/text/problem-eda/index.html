@@ -43,6 +43,7 @@
       border-radius: 12px;
       background: var(--card);
     }
+    .figure-grid.three-col { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .observations-list {
       background: rgba(126,240,194,.08);
       border-left: 3px solid rgba(126,240,194,.3);
@@ -257,6 +258,68 @@
           <div class="figure-card">
             <img src="../../../assets/text/category_similarity.png" alt="Category similarity heatmap" loading="lazy" />
             <div class="caption"><strong>Category similarity:</strong> Wellness / Healthy Living / Parenting / Parents clusters are hardest to separate.</div>
+          </div>
+        </div>
+
+        <div class="section-heading" style="margin-top:20px;">
+          <div>
+            <div class="eyebrow">Lexical features</div>
+            <h2>TF-IDF tops &amp; N-grams</h2>
+            <p>Most informative terms and frequent n-grams for representative categories.</p>
+          </div>
+        </div>
+
+        <div class="figure-grid three-col">
+          <div class="figure-card">
+            <img src="../../../assets/text/TF-IDF-POLITICS.png" alt="Top TF-IDF terms for Politics" loading="lazy" />
+            <div class="caption"><strong>TF-IDF: Politics</strong></div>
+          </div>
+          <div class="figure-card">
+            <img src="../../../assets/text/TF-IDF-WELLNESS.png" alt="Top TF-IDF terms for Wellness" loading="lazy" />
+            <div class="caption"><strong>TF-IDF: Wellness</strong></div>
+          </div>
+          <div class="figure-card">
+            <img src="../../../assets/text/TF-IDF-ENTERTAINMENT.png" alt="Top TF-IDF terms for Entertainment" loading="lazy" />
+            <div class="caption"><strong>TF-IDF: Entertainment</strong></div>
+          </div>
+          <div class="figure-card">
+            <img src="../../../assets/text/TF-IDF-TRAVEL.png" alt="Top TF-IDF terms for Travel" loading="lazy" />
+            <div class="caption"><strong>TF-IDF: Travel</strong></div>
+          </div>
+          <div class="figure-card">
+            <img src="../../../assets/text/TF-IDF-STYLE&BEAUTYpng.png" alt="Top TF-IDF terms for Style &amp; Beauty" loading="lazy" />
+            <div class="caption"><strong>TF-IDF: Style &amp; Beauty</strong></div>
+          </div>
+          <div class="figure-card">
+            <img src="../../../assets/text/TF-IDF-PARENTING.png" alt="Top TF-IDF terms for Parenting" loading="lazy" />
+            <div class="caption"><strong>TF-IDF: Parenting</strong></div>
+          </div>
+        </div>
+
+        <div class="figure-grid three-col">
+          <div class="figure-card">
+            <img src="../../../assets/text/N-GRAMS-POLITICS.png" alt="Frequent n-grams in Politics" loading="lazy" />
+            <div class="caption"><strong>N-grams: Politics</strong></div>
+          </div>
+          <div class="figure-card">
+            <img src="../../../assets/text/N-GRAMS-WELLNESS.png" alt="Frequent n-grams in Wellness" loading="lazy" />
+            <div class="caption"><strong>N-grams: Wellness</strong></div>
+          </div>
+          <div class="figure-card">
+            <img src="../../../assets/text/N-GRAMS-ENTERTAINMENT.png" alt="Frequent n-grams in Entertainment" loading="lazy" />
+            <div class="caption"><strong>N-grams: Entertainment</strong></div>
+          </div>
+          <div class="figure-card">
+            <img src="../../../assets/text/N-GRAMS-TRAVEL.png" alt="Frequent n-grams in Travel" loading="lazy" />
+            <div class="caption"><strong>N-grams: Travel</strong></div>
+          </div>
+          <div class="figure-card">
+            <img src="../../../assets/text/N-GRAMS-STYLE&BEAUTY.png" alt="Frequent n-grams in Style &amp; Beauty" loading="lazy" />
+            <div class="caption"><strong>N-grams: Style &amp; Beauty</strong></div>
+          </div>
+          <div class="figure-card">
+            <img src="../../../assets/text/N-GRAMS-WELLNESS.png" alt="Frequent n-grams in Wellness" loading="lazy" />
+            <div class="caption"><strong>N-grams: Wellness</strong></div>
           </div>
         </div>
 
