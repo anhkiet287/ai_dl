@@ -62,34 +62,129 @@
             <p>Custom CNN, ResNet-18, and ViT-Small equivalents trained from scratch.</p>
           </div>
         </div>
-        <div class="captioned-table">
-          <table>
-            <thead>
-              <tr><th>Model</th><th>Family</th><th>Architecture summary</th><th>Params</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>CNN-Scratch (DeepCNN)</td><td>CNN</td><td>7×7 stem → 6 ConvBlocks (3×3 conv, BN, ReLU, skip) → GAP → FC(512) → Dropout(0.4) → FC(20); channels 64→128→256→256→512→512→512.</td><td>15.73M</td></tr>
-              <tr><td>ResNet-Scratch</td><td>ResNet</td><td>ResNet-18 (BasicBlock) with [2,2,2,2] layers, 7×7 stem.</td><td>11.19M</td></tr>
-              <tr><td>ViT-Scratch</td><td>ViT</td><td>ViT-Small: patch=16 (196 tokens), dim=384, depth=8, heads=6, learnable pos embed, attention rollout.</td><td>14.57M</td></tr>
-            </tbody>
-          </table>
-        </div>
 
-        <div class="captioned-table" style="margin-top:16px;">
-          <table>
-            <thead>
-              <tr><th>Parameter</th><th>CNN</th><th>ResNet</th><th>ViT</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Base channels / layers</td><td>64</td><td>[2,2,2,2]</td><td>—</td></tr>
-              <tr><td>Dropout</td><td>0.4</td><td>—</td><td>—</td></tr>
-              <tr><td>Patch size</td><td>—</td><td>—</td><td>16</td></tr>
-              <tr><td>Embedding dim</td><td>—</td><td>—</td><td>384</td></tr>
-              <tr><td>Depth</td><td>—</td><td>—</td><td>8 blocks</td></tr>
-              <tr><td>Attention heads</td><td>—</td><td>—</td><td>6</td></tr>
-            </tbody>
-          </table>
-          <div class="table-caption">Scratch hyperparameters.</div>
+        <div style="margin-top: 24px;">
+          <h3 style="margin-bottom: 16px;">CNN-Scratch</h3>
+          
+          <div class="figure-grid one-col">
+            <div class="figure-box">
+              <img src="../../../assets/image/modelCNN.png" alt="CNN-Scratch architecture diagram" loading="lazy" />
+              <div class="figure-caption">
+                <p>Deep CNN with 6 ConvBlocks and skip connections.</p>
+              </div>
+            </div>
+          </div>
+          
+          <details style="margin-top: 12px; margin-bottom: 24px; padding: 12px; border: 1px solid #ddd; border-radius: 4px; background: rgba(255,255,255,0.04);">
+            <summary style="cursor: pointer; font-weight: 600; padding: 8px; margin: -8px -8px 0 -8px;">🔍 Full Architecture</summary>
+            <pre style="margin-top: 12px; overflow-x: auto; font-size: 12px; background: rgba(255,255,255,0.04); padding: 12px; border-radius: 4px; line-height: 1.4;">Total params: 15,726,676
+Trainable params: 15,726,676
+Forward/backward pass size: 49.78 MB
+Parameter size: 62.91 MB
+Estimated Total Size: 113.29 MB
+
+ScratchCNN [1, 20]
+├─Sequential stem [1, 64, 56, 56]
+│  └─Conv2d [1, 64, 112, 112]          9,408 params
+│  └─BatchNorm2d [1, 64, 112, 112]     128 params
+│  └─ReLU [1, 64, 112, 112]
+│  └─MaxPool2d [1, 64, 56, 56]
+├─Sequential: 6 ConvBlocks [1, 512, 3, 3]
+│  ├─ConvBlock: 128 channels [1, 128, 28, 28]     230,144 params
+│  ├─ConvBlock: 256 channels [1, 256, 14, 14]     919,040 params
+│  ├─ConvBlock: 256 channels (residual) [1, 256, 14, 14]     1,180,672 params
+│  ├─ConvBlock: 512 channels [1, 512, 7, 7]      3,673,088 params
+│  ├─ConvBlock: 512 channels (residual) [1, 512, 7, 7]      4,720,640 params
+│  └─ConvBlock: 512 channels (3×3) [1, 512, 3, 3]      4,720,640 params
+├─AdaptiveAvgPool2d [1, 512, 1, 1]
+└─Sequential head: FC layers [1, 20]
+   └─Flatten [1, 512]
+   └─Linear(512, 512) + ReLU + Dropout(0.4)     262,656 params
+   └─Linear(512, 20)     10,260 params
+
+Computational complexity: 2.97 GFLOP</pre>
+          </details>
+
+          <h3 style="margin-top: 32px; margin-bottom: 16px;">ResNet-Scratch</h3>
+          
+          <div class="figure-grid one-col">
+            <div class="figure-box">
+              <img src="../../../assets/image/modelResNet.png" alt="ResNet-Scratch architecture diagram" loading="lazy" />
+              <div class="figure-caption">
+                <p>ResNet-18 with [2,2,2,2] BasicBlocks.</p>
+              </div>
+            </div>
+          </div>
+          
+          <details style="margin-top: 12px; margin-bottom: 24px; padding: 12px; border: 1px solid #ddd; border-radius: 4px; background: rgba(255,255,255,0.04);">
+            <summary style="cursor: pointer; font-weight: 600; padding: 8px; margin: -8px -8px 0 -8px;">🔍 Full Architecture</summary>
+            <pre style="margin-top: 12px; overflow-x: auto; font-size: 12px; background: rgba(255,255,255,0.04); padding: 12px; border-radius: 4px; line-height: 1.4;">Total params: 11,186,772
+Trainable params: 11,186,772
+Forward/backward pass size: 39.74 MB
+Parameter size: 44.75 MB
+Estimated Total Size: 85.09 MB
+
+ScratchResNet [1, 20]
+├─Sequential stem [1, 64, 56, 56]
+│  └─Conv2d [1, 64, 112, 112]          9,408 params
+│  └─BatchNorm2d [1, 64, 112, 112]     128 params
+│  └─ReLU [1, 64, 112, 112]
+│  └─MaxPool2d [1, 64, 56, 56]
+├─Layer 1 (64 channels, [2,2]) [1, 64, 56, 56]
+│  ├─BasicBlock: 2×Conv2d(3×3) + BN     73,728 params
+│  └─BasicBlock: 2×Conv2d(3×3) + BN     73,728 params
+├─Layer 2 (128 channels, [2,2]) [1, 128, 28, 28]
+│  ├─BasicBlock: stride 2 + projection     156,032 params
+│  └─BasicBlock: 2×Conv2d(3×3) + BN     294,912 params
+├─Layer 3 (256 channels, [2,2]) [1, 256, 14, 14]
+│  ├─BasicBlock: stride 2 + projection     624,160 params
+│  └─BasicBlock: 2×Conv2d(3×3) + BN     1,179,648 params
+├─Layer 4 (512 channels, [2,2]) [1, 512, 7, 7]
+│  ├─BasicBlock: stride 2 + projection     2,359,296 params
+│  └─BasicBlock: 2×Conv2d(3×3) + BN     2,359,296 params
+├─AdaptiveAvgPool2d [1, 512, 1, 1]
+└─Linear(512, 20)     10,260 params
+
+Computational complexity: 1.81 GFLOP</pre>
+          </details>
+
+          <h3 style="margin-top: 32px; margin-bottom: 16px;">ViT-Scratch</h3>
+          
+          <div class="figure-grid one-col">
+            <div class="figure-box">
+              <img src="../../../assets/image/modelViT.png" alt="ViT-Scratch architecture diagram" loading="lazy" />
+              <div class="figure-caption">
+                <p>Vision Transformer with 8 TransformerBlocks.</p>
+              </div>
+            </div>
+          </div>
+          
+          <details style="margin-top: 12px; margin-bottom: 24px; padding: 12px; border: 1px solid #ddd; border-radius: 4px; background: rgba(255,255,255,0.04);">
+            <summary style="cursor: pointer; font-weight: 600; padding: 8px; margin: -8px -8px 0 -8px;">🔍 Full Architecture</summary>
+            <pre style="margin-top: 12px; overflow-x: auto; font-size: 12px; background: rgba(255,255,255,0.04); padding: 12px; border-radius: 4px; line-height: 1.4;">Total params: 14,568,596
+Trainable params: 14,568,596
+Forward/backward pass size: 56.27 MB
+Parameter size: 57.97 MB
+Estimated Total Size: 114.84 MB
+
+ScratchViT [1, 20]     76,032 learnable params
+├─Sequential: Patch Embedding [1, 196, 384]
+│  └─Rearrange (16×16 patches) [1, 196, 768]
+│  └─LayerNorm [1, 196, 768]     1,536 params
+│  └─Linear(768→384, projection) [1, 196, 384]     295,296 params
+│  └─LayerNorm [1, 196, 384]     768 params
+├─Dropout [1, 197, 384]  (includes CLS token)
+├─ModuleList: 8 TransformerBlocks [1, 197, 384]
+│  ├─Block 1: MultiHeadAttn(6 heads, 384 dim)     590,208 params
+│  │           + FeedForward (1536 MLP)     1,181,568 params
+│  ├─Block 2: MultiHeadAttn(6 heads, 384 dim)     590,208 params
+│  │           + FeedForward (1536 MLP)     1,181,568 params
+│  ├─Block 3–8: [repeated 6 times]     7,029,312 params
+├─LayerNorm [1, 197, 384]     768 params
+└─Linear(384→20, classification head)     7,700 params
+
+Computational complexity: 14.49 MFLOP (efficient due to smaller model size)</pre>
+          </details>
         </div>
       </div>
     </section>
@@ -115,19 +210,6 @@
               <tr><td>ViT-L/16-PT</td><td>IMAGENET1K_V1</td><td>heads.head</td><td>Linear(1024→20)</td><td>303.32M</td></tr>
             </tbody>
           </table>
-        </div>
-
-        <div class="captioned-table" style="margin-top:16px;">
-          <table>
-            <thead>
-              <tr><th>Phase</th><th>Epochs</th><th>Backbone</th><th>LR</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Head only</td><td>~1–2</td><td>Frozen</td><td>1e-4</td></tr>
-              <tr><td>Full finetune</td><td>~3–4</td><td>Unfrozen</td><td>5e-5</td></tr>
-            </tbody>
-          </table>
-          <div class="table-caption">Two-phase finetuning schedule.</div>
         </div>
       </div>
     </section>
