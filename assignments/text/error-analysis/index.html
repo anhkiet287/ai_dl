@@ -86,10 +86,10 @@
         </div>
         <div class="info-panel">
           <ul class="info-list">
-            <li>Overlap between lifestyle/health labels (Wellness, Healthy Living, Parenting, Parents).</li>
-            <li>Short headlines lacking context (≤10 tokens) often misrouted to Politics or Entertainment.</li>
-            <li>Named entities unseen in train split (celebrities, local places) reduce confidence.</li>
-            <li>Mixed-sentiment headlines (sarcasm/irony) confused between Politics and Comedy.</li>
+            <li>Style &amp; Beauty vs Travel vs Food &amp; Drink share lifestyle vocabulary and are the main confusion cluster.</li>
+            <li>Queer Voices and Sports are minority classes; many false negatives fall into the head class (Politics).</li>
+            <li>Short headlines (<=10 tokens) without the description field lose context and misroute to Politics.</li>
+            <li>Unseen named entities (cities, public figures) lower confidence across models.</li>
           </ul>
         </div>
       </div>
@@ -118,21 +118,21 @@
             <div class="caption"><strong>BiLSTM:</strong> similar to LSTM with small gains for minority classes.</div>
           </div>
         </div>
-        <div class="metric-cards">
+                <div class="metric-cards">
           <div class="metric-card">
             <span class="label">Top confused</span>
-            <div class="metric-number">Wellness ↔ Healthy Living</div>
-            <div class="muted">Lexical overlap</div>
+            <div class="metric-number">Style &amp; Beauty <-> Travel</div>
+            <div class="muted">Lifestyle overlap</div>
           </div>
           <div class="metric-card">
             <span class="label">Second pair</span>
-            <div class="metric-number">Parenting ↔ Parents</div>
-            <div class="muted">Near-identical scope</div>
+            <div class="metric-number">Food &amp; Drink <-> Travel</div>
+            <div class="muted">Shared leisure terms</div>
           </div>
           <div class="metric-card">
             <span class="label">Sports drift</span>
-            <div class="metric-number">Sports → Entertainment</div>
-            <div class="muted">Celebrity-driven titles</div>
+            <div class="metric-number">Sports -> Politics</div>
+            <div class="muted">Team/city names pull to head class</div>
           </div>
         </div>
       </div>
@@ -180,3 +180,6 @@
   </footer>
 </body>
 </html>
+
+
+

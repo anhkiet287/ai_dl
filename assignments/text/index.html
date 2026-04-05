@@ -64,14 +64,9 @@
         <div class="badge">Text classification branch</div>
         <h1>Text Classification</h1>
         <p class="lead">
-          News Category Dataset (209k headlines, 42 classes). RNNs and DistilBERT trained on 60/128-token inputs; best model LSTM: Acc 0.9003, Macro-F1 0.8996.
+          News Category Dataset (209k headlines, 42 classes) filtered to 6 target categories (Food &amp; Drink, Politics, Queer Voices, Sports, Style &amp; Beauty, Travel). RNNs (max_len=60) and DistilBERT (max_len=128) fine-tuned; best LSTM reaches 0.9003 Accuracy / 0.8996 Macro-F1 on the 6-class subset.
         </p>
-        <div class="callout">
-          <strong>Course:</strong> Deep Learning and Its Application (CO3133) &nbsp;|&nbsp;
-          <strong>Group:</strong> HKP / Group 2 &nbsp;|&nbsp;
-          <strong>Instructor:</strong> Dr. Le Thanh Sach<br />
-          <strong>Members:</strong> Thai Quang Phat (2252606), Nguyen Anh Kiet (2252403), Tran Gia Huy (2252264)
-        </div>
+
         <div class="quick-links">
           <a class="quick-link-btn" href="./problem-eda/index.html">Dataset</a>
           <a class="quick-link-btn" href="./dataset-pipeline/index.html">Preprocessing</a>
@@ -93,26 +88,26 @@
           <div>
             <div class="eyebrow">Task definition</div>
             <h2>Assignment requirements</h2>
-            <p>Classify news headline + short description into one of 42 categories; report accuracy and macro-F1.</p>
+            <p>Classify headline + short description into one of 6 target categories; report Accuracy and Macro-F1.</p>
           </div>
         </div>
         <div class="grid two">
           <article class="card">
             <h3>What we must show</h3>
             <ul class="checklist">
-              <li>End-to-end text pipeline with EDA, preprocessing, model design, and results.</li>
+              <li>End-to-end text pipeline with EDA, preprocessing, model design, and results on the 6-class subset.</li>
               <li>Metrics: Accuracy and Macro-F1 on stratified 70/15/15 splits.</li>
-              <li>Handle class imbalance and overlapping labels (e.g., Wellness vs Healthy Living).</li>
-              <li>Provide figures: category distribution, text length, stopwords, TF-IDF/heatmaps.</li>
+              <li>Handle imbalance and overlap among lifestyle categories (Style &amp; Beauty / Travel / Food &amp; Drink).</li>
+              <li>Provide figures: category distribution, text length, stopwords, TF-IDF / similarity heatmaps.</li>
             </ul>
           </article>
           <article class="card">
             <h3>Dataset snapshot</h3>
             <ul class="checklist">
-              <li>Samples: 209,527; Classes: 42.</li>
-              <li>Language: English headlines + short descriptions; avg length 33.5 tokens.</li>
-              <li>Splits: 70% train / 15% val / 15% test; stratified.</li>
-              <li>Max sequence length: 60 (RNNs) / 128 (DistilBERT).</li>
+              <li>Original corpus: 209,527 samples, 42 categories (headline + short description).</li>
+              <li>Working subset: 6 categories {Food &amp; Drink, Politics, Queer Voices, Sports, Style &amp; Beauty, Travel}; final vocab 33,464.</li>
+              <li>Text length: mean 33.5 tokens; truncation at 60 keeps nearly all signal (128 for DistilBERT).</li>
+              <li>Splits: 70% train / 15% val / 15% test on the filtered subset; stratified.</li>
             </ul>
           </article>
         </div>
@@ -131,7 +126,7 @@
         <div class="findings-grid">
           <div class="finding-box">
             <strong>LSTM leads</strong>
-            Best metrics: Acc 0.9003, Macro-F1 0.8996; BiLSTM close behind.
+            Best metrics: Acc 0.9003, Macro-F1 0.8996; BiLSTM close at 0.8985 / 0.8979.
           </div>
           <div class="finding-box">
             <strong>Transformer underperforms</strong>
@@ -139,7 +134,7 @@
           </div>
           <div class="finding-box">
             <strong>Imbalance + overlap</strong>
-            Long-tail categories and similar labels drive most confusion (Wellness/Healthy Living/Parenting).
+            Lifestyle categories (Style &amp; Beauty / Travel / Food &amp; Drink) overlap; Queer Voices and Sports are minority.
           </div>
           <div class="finding-box">
             <strong>Compact text</strong>
@@ -177,7 +172,7 @@
           <a href="./results/index.html" class="nav-card big">
             <div class="nav-card-icon">R</div>
             <h3>Results</h3>
-            <p><strong>Metrics, curves, confusion matrices, and discussion.</strong></p>
+          <p><strong>Metrics, curves, confusion matrices, and discussion for the 6-class subset.</strong></p>
           </a>
           <a href="./error-analysis/index.html" class="nav-card big">
             <div class="nav-card-icon">EA</div>
@@ -210,35 +205,17 @@
               </tr>
             </thead>
             <tbody>
-              <tr><td>LSTM</td><td>RNN</td><td>0.9003</td><td>0.8996</td><td>N/A</td><td>N/A</td></tr>
-              <tr><td>BiLSTM</td><td>RNN</td><td>0.8985</td><td>0.8979</td><td>N/A</td><td>N/A</td></tr>
-              <tr><td>DistilBERT</td><td>Transformer</td><td>0.8778</td><td>0.8732</td><td>N/A</td><td>N/A</td></tr>
-              <tr><td>SimpleRNN</td><td>RNN</td><td>0.4849</td><td>0.3229</td><td>N/A</td><td>N/A</td></tr>
+              <tr><td>LSTM</td><td>RNN</td><td>0.9003</td><td>0.8996</td><td>4.42</td><td>0.0174</td></tr>
+              <tr><td>BiLSTM</td><td>RNN</td><td>0.8985</td><td>0.8979</td><td>4.55</td><td>0.0286</td></tr>
+              <tr><td>DistilBERT</td><td>Transformer</td><td>0.8778</td><td>0.8732</td><td>66.0</td><td>4.1707</td></tr>
+              <tr><td>SimpleRNN</td><td>RNN</td><td>0.4849</td><td>0.3229</td><td>4.32</td><td>0.0118</td></tr>
             </tbody>
           </table>
-          <p class="table-caption">Inference timings and parameter counts were not logged in the notebook; best single model LSTM at 0.9003 Acc / 0.8996 Macro-F1.</p>
+          <p class="table-caption">Metrics and timings from the notebook on the 6-class subset; DistilBERT params approximate the distilbert-base-uncased footprint (~66M).</p>
         </div>
       </div>
     </section>
 
-    <section id="outline" class="alt">
-      <div class="container">
-        <div class="section-heading">
-          <div>
-            <div class="eyebrow">Report outline</div>
-            <h2>Recommended structure</h2>
-            <p>Align with the suggested report flow.</p>
-          </div>
-        </div>
-        <ol class="info-list">
-          <li>Dataset description and exploratory analysis</li>
-          <li>Preprocessing, loaders, and augmentation pipeline</li>
-          <li>Backbone architectures</li>
-          <li>Results, plots, and discussion</li>
-          <li>Errors and extensions</li>
-        </ol>
-      </div>
-    </section>
   </main>
 
   <footer class="site-footer">

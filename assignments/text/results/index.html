@@ -71,7 +71,7 @@
         <div class="badge">Text branch</div>
         <h1>Results, comparisons, and visualizations</h1>
         <p class="lead">
-          Performance summary for SimpleRNN, LSTM, BiLSTM, and DistilBERT on the News Category dataset.
+          Performance summary for SimpleRNN, LSTM, BiLSTM, and DistilBERT on the 6-class subset of the News Category dataset.
         </p>
         <nav class="section-nav" aria-label="On-page navigation">
           <a href="#training">Training</a>
@@ -96,8 +96,8 @@
         <div class="metric-cards">
           <div class="metric-card">
             <span class="label">Epochs</span>
-            <div class="metric-number">5</div>
-            <div class="muted">Stratified 70/15/15 split</div>
+            <div class="metric-number">5 / 3</div>
+            <div class="muted">RNNs / DistilBERT (70/15/15 split)</div>
           </div>
           <div class="metric-card">
             <span class="label">Batch sizes</span>
@@ -142,14 +142,14 @@
               </tr>
             </thead>
             <tbody>
-              <tr><td>SimpleRNN</td><td>CrossEntropy</td><td>0.4864</td><td>0.3239</td></tr>
-              <tr><td>SimpleRNN</td><td>Focal</td><td>0.4844</td><td>0.3218</td></tr>
-              <tr><td>LSTM</td><td>CrossEntropy</td><td>0.8959</td><td>0.8955</td></tr>
-              <tr><td>LSTM</td><td>Focal</td><td>0.8911</td><td>0.8904</td></tr>
-              <tr><td>BiLSTM</td><td>CrossEntropy</td><td>0.8955</td><td>0.8956</td></tr>
-              <tr><td>BiLSTM</td><td>Focal</td><td>0.8876</td><td>0.8878</td></tr>
-              <tr><td>DistilBERT</td><td>CrossEntropy</td><td>0.8612</td><td>0.8530</td></tr>
-              <tr><td>DistilBERT</td><td>Focal</td><td>0.8760</td><td>0.8721</td></tr>
+              <tr><td>SimpleRNN</td><td>CrossEntropy</td><td>0.4843</td><td>0.3213</td></tr>
+              <tr><td>SimpleRNN</td><td>Focal</td><td style="color:#e74c3c;font-weight:700;">0.4850</td><td style="color:#e74c3c;font-weight:700;">0.3210</td></tr>
+              <tr><td>LSTM</td><td>CrossEntropy</td><td>0.8917</td><td>0.8928</td></tr>
+              <tr><td>LSTM</td><td>Focal</td><td>0.8911</td><td>0.8913</td></tr>
+              <tr><td>BiLSTM</td><td>CrossEntropy</td><td style="color:#2ecc71;font-weight:700;">0.9022</td><td style="color:#2ecc71;font-weight:700;">0.9021</td></tr>
+              <tr><td>BiLSTM</td><td>Focal</td><td>0.8935</td><td>0.8922</td></tr>
+              <tr><td>DistilBERT</td><td>CrossEntropy</td><td>0.8606</td><td>0.8522</td></tr>
+              <tr><td>DistilBERT</td><td>Focal</td><td>0.8758</td><td>0.8721</td></tr>
             </tbody>
           </table>
           <p class="table-caption">Focal loss did not outperform cross-entropy in these runs; LSTM with cross-entropy remains best overall.</p>
@@ -222,35 +222,35 @@
             <tbody>
               <tr>
                 <td>LSTM</td>
-                <td>0.9003</td>
-                <td>0.8996</td>
-                <td>N/A</td>
-                <td>N/A</td>
+                <td style="color:#2ecc71;font-weight:700;">0.9003</td>
+                <td style="color:#2ecc71;font-weight:700;">0.8996</td>
+                <td>4.42</td>
+                <td>0.0174</td>
               </tr>
               <tr>
                 <td>BiLSTM</td>
                 <td>0.8985</td>
                 <td>0.8979</td>
-                <td>N/A</td>
-                <td>N/A</td>
+                <td>4.55</td>
+                <td>0.0286</td>
               </tr>
               <tr>
                 <td>DistilBERT</td>
                 <td>0.8778</td>
                 <td>0.8732</td>
-                <td>N/A</td>
-                <td>N/A</td>
+                <td>66.0</td>
+                <td>4.1707</td>
               </tr>
               <tr>
                 <td>SimpleRNN</td>
-                <td>0.4849</td>
-                <td>0.3229</td>
-                <td>N/A</td>
-                <td>N/A</td>
+                <td style="color:#e74c3c;font-weight:700;">0.4849</td>
+                <td style="color:#e74c3c;font-weight:700;">0.3229</td>
+                <td>4.32</td>
+                <td>0.0118</td>
               </tr>
             </tbody>
           </table>
-          <div class="table-caption">Metrics from the held-out test split; N/A indicates values not recorded in the notebook.</div>
+          <div class="table-caption">Metrics from the held-out test split on the 6-class subset; parameters and per-sample latency pulled from notebook logs (DistilBERT params ~66M).</div>
         </div>
       </div>
     </section>
@@ -335,3 +335,4 @@
   </footer>
 </body>
 </html>
+

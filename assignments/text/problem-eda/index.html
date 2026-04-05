@@ -121,7 +121,7 @@
         <div class="badge">Text branch</div>
         <h1>Dataset & EDA</h1>
         <p class="lead">
-          Classify news headlines and short descriptions into 42 categories using the News Category Dataset; summarize data characteristics, imbalance, and lexical patterns that influence model choices.
+          Classify news headlines and short descriptions from the News Category Dataset; report corpus-wide stats (42 classes) and the 6-category subset (Food &amp; Drink, Politics, Queer Voices, Sports, Style &amp; Beauty, Travel) used for training and evaluation.
         </p>
         <div class="callout">
           <strong>Dataset:</strong> <a class="text-link" href="https://www.kaggle.com/datasets/rmisra/news-category-dataset" target="_blank" rel="noreferrer">News Category Dataset (Kaggle)</a>. Figures live in <code>../../../assets/text/</code>.
@@ -149,6 +149,7 @@
           <ul class="checklist">
             <li>209,527 news headlines + short descriptions across 42 sections; 42-class text classification benchmark.</li>
             <li>Each sample: category label, headline, short description, authors, link, publish date.</li>
+            <li>Working subset for experiments: 6 categories {Food &amp; Drink, Politics, Queer Voices, Sports, Style &amp; Beauty, Travel}; final vocab 33,464; max_len 60.</li>
             <li>Primary modality: text (headline + short description); class labels used for prompts.</li>
             <li>Source: HuffPost news articles (2012–2018); released on Kaggle by Rishabh Misra.</li>
             <li>Splits: 70% / 15% / 15% (train/val/test), stratified by category; max length 60 tokens for RNNs.</li>
@@ -208,6 +209,7 @@
           </div>
         </div>
         <p class="callout">High vocabulary (120k+) with a 35% stopword ratio; 7M total tokens across 209k samples. Short documents (median 32 tokens) make 60-token padding sufficient while keeping batches compact.</p>
+        <p class="callout">Subset used for training: six categories with a reduced vocabulary of 33,464 tokens; the same 60-token cap is retained.</p>
       </div>
     </section>
 
@@ -317,10 +319,6 @@
             <img src="../../../assets/text/N-GRAMS-STYLE&BEAUTY.png" alt="Frequent n-grams in Style &amp; Beauty" loading="lazy" />
             <div class="caption"><strong>N-grams: Style &amp; Beauty</strong></div>
           </div>
-          <div class="figure-card">
-            <img src="../../../assets/text/N-GRAMS-WELLNESS.png" alt="Frequent n-grams in Wellness" loading="lazy" />
-            <div class="caption"><strong>N-grams: Wellness</strong></div>
-          </div>
         </div>
 
         <div class="observations-list">
@@ -330,6 +328,7 @@
             <li>Texts are short, so truncation at 60 tokens retains almost all content.</li>
             <li>High stopword ratio suggests using subword tokenizers and IDF weighting for lexical features.</li>
             <li>Overlap between lifestyle/parenting/health labels hints at confusable classes; careful validation and similarity-aware evaluation needed.</li>
+            <li>Assignment runs operate on a 6-class subset to reduce overlap while keeping enough data per class.</li>
           </ul>
         </div>
       </div>

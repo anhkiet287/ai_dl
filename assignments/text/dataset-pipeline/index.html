@@ -46,15 +46,14 @@
         <div class="badge">Text branch</div>
         <h1>Dataset filtering, preprocessing, and dataloader</h1>
         <p class="lead">
-          Filter long-tail categories, normalize text, tokenize to max length 60, and build stratified splits with batch size 32 for downstream models.
+          Filter to a 6-class slice of the News Category Dataset, normalize text, tokenize to max length 60 (RNNs) / 128 (DistilBERT), and build stratified splits with batch size 32 for downstream models.
         </p>
         <div class="callout">
-          <strong>Dataset:</strong> News Category Dataset (209,527 samples, 42 classes). Figures stored in <code>../../../assets/text/</code>.
+          <strong>Dataset:</strong> News Category Dataset &rarr; filtered to 6 categories (Food &amp; Drink, Politics, Queer Voices, Sports, Style &amp; Beauty, Travel); vocab 33,464; figures stored in <code>../../../assets/text/</code>.
         </div>
         <nav class="section-nav" aria-label="On-page navigation">
           <a href="#splits">Splits</a>
           <a href="#preprocess">Preprocess</a>
-          <a href="#augment">Augmentation</a>
           <a href="#loader">DataLoader</a>
         </nav>
       </div>
@@ -71,14 +70,14 @@
         </div>
         <div class="captioned-table">
           <table>
-            <thead><tr><th>Split</th><th>Ratio</th><th>Approx. samples</th></tr></thead>
+            <thead><tr><th>Split</th><th>Ratio</th></tr></thead>
             <tbody>
-              <tr><td>Train</td><td>70%</td><td>≈146.7k</td></tr>
-              <tr><td>Validation</td><td>15%</td><td>≈31.4k</td></tr>
-              <tr><td>Test</td><td>15%</td><td>≈31.4k</td></tr>
+              <tr><td>Train</td><td>70%</td></tr>
+              <tr><td>Validation</td><td>15%</td></tr>
+              <tr><td>Test</td><td>15%</td></tr>
             </tbody>
           </table>
-          <p class="table-caption">Stratified by category; seed fixed for reproducibility.</p>
+          <p class="table-caption">Stratified by category on the 6-class subset; seed fixed for reproducibility.</p>
         </div>
       </div>
     </section>
@@ -96,7 +95,7 @@
           <article class="card">
             <h3>Filtering & setup</h3>
             <ul class="checklist">
-              <li>Removed low-similarity / tiny categories (kept 42 classes).</li>
+              <li>Filtered to 6 target categories (Food &amp; Drink, Politics, Queer Voices, Sports, Style &amp; Beauty, Travel) to reduce overlap.</li>
               <li>Final vocabulary: <strong>33,464</strong> tokens.</li>
               <li>Stopwords retained for model-aware tokenizers; ratio ~35%.</li>
               <li>Max sequence length: <strong>60</strong> tokens (covers >99%).</li>
@@ -135,7 +134,7 @@
         <div class="figure-grid">
           <div class="figure-card wide">
             <img src="../../../assets/text/subset.png" alt="Filtered subset overview" loading="lazy" />
-            <div class="caption"><strong>Subset strategy:</strong> filtered low-similarity categories while preserving major sections.</div>
+            <div class="caption"><strong>Subset strategy:</strong> kept six well-separated categories for the assignment runs.</div>
           </div>
         </div>
       </div>
@@ -194,7 +193,7 @@
         <ul class="footer-links">
           <li><a href="../index.html">Back to text overview</a></li>
           <li><a href="../../assignment1.html">Assignment 1</a></li>
-          <li><a href="http://127.0.0.1:5500/assignments/text/problem-eda/index.html">Dataset</a></li>
+          <li><a href="../problem-eda/index.html">Dataset</a></li>
         </ul>
       </div>
       <div>

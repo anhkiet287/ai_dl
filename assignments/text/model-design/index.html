@@ -86,6 +86,7 @@
                 <li>1-layer vanilla RNN, hidden size tuned for speed.</li>
                 <li>Max seq length 60, vocab 33,464, trainable embeddings.</li>
                 <li>Baseline to show long-range limitations.</li>
+                <li>Params: 4.32M · Inference: 0.0118 ms/sample.</li>
               </ul>
             </div>
           </article>
@@ -98,6 +99,7 @@
                 <li>Single-layer LSTM for longer dependencies.</li>
                 <li>Dropout before classifier head.</li>
                 <li>Best overall metrics among trained models.</li>
+                <li>Params: 4.42M · Inference: 0.0174 ms/sample.</li>
               </ul>
             </div>
           </article>
@@ -110,6 +112,7 @@
                 <li>Bidirectional LSTM; concat forward/backward states.</li>
                 <li>Same 60-token inputs as LSTM.</li>
                 <li>Marginal gains in context, similar metrics to LSTM.</li>
+                <li>Params: 4.55M · Inference: 0.0286 ms/sample.</li>
               </ul>
             </div>
           </article>
@@ -122,6 +125,7 @@
                 <li>Pretrained transformer (distilbert-base-uncased).</li>
                 <li>Sequence length 128; [CLS] pooled for classification.</li>
                 <li>Notebook uses one loader for train+val (no separate val loader).</li>
+                <li>Params: ~66M · Inference: 4.1707 ms/sample.</li>
               </ul>
             </div>
           </article>
