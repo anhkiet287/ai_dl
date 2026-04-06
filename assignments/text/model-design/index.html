@@ -62,18 +62,19 @@
           Four text classifiers: SimpleRNN, LSTM, BiLSTM, and DistilBERT, configured for 60-token (RNNs) and 128-token (Transformer) inputs.
         </p>
         <nav class="section-nav" aria-label="On-page navigation">
+          <a href="#pipeline">Pipeline</a>
           <a href="#architecture">Architecture</a>
         </nav>
       </div>
     </section>
 
-    <section id="architecture" class="alt">
+    <section id="pipeline" class="alt">
       <div class="container">
                 <div class="section-heading">
           <div>
-            <div class="eyebrow">Models</div>
-            <h2>Architectures</h2>
-            <p>Models chosen to balance simplicity, recurrent memory, and pretrained context.</p>
+            <div class="eyebrow">Pipelines</div>
+            <h2>End-to-end flows</h2>
+            <p>High-level pipelines showing embeddings, recurrent blocks, and classifier heads.</p>
           </div>
         </div>
 
@@ -127,6 +128,44 @@
                 <li>Notebook uses one loader for train+val (no separate val loader).</li>
                 <li>Params: ~66M · Inference: 4.1707 ms/sample.</li>
               </ul>
+            </div>
+          </article>
+        </div>
+
+        <div class="section-heading" style="margin-top:20px;">
+          <div>
+            <div class="eyebrow">Architecture</div>
+            <h2>Structure diagrams</h2>
+            <p>Layer-level block diagrams for each backbone.</p>
+          </div>
+        </div>
+        <div class="model-grid">
+          <article class="model-card">
+            <img src="../../../assets/text/simple_RNN_structure.png" alt="SimpleRNN structure" loading="lazy" />
+            <div class="body">
+              <h3><span class="model-tag">RNN</span> SimpleRNN</h3>
+              <p class="muted">Single recurrent layer feeding a classifier head.</p>
+            </div>
+          </article>
+          <article class="model-card">
+            <img src="../../../assets/text/LSTM_structure.png" alt="LSTM structure" loading="lazy" />
+            <div class="body">
+              <h3><span class="model-tag">LSTM</span> LSTM</h3>
+              <p class="muted">Forget/input/output gates with pooled hidden state to classifier.</p>
+            </div>
+          </article>
+          <article class="model-card">
+            <img src="../../../assets/text/BiLSTM_structure.png" alt="BiLSTM structure" loading="lazy" />
+            <div class="body">
+              <h3><span class="model-tag">Bi</span> BiLSTM</h3>
+              <p class="muted">Forward/backward LSTM paths concatenated before the dense head.</p>
+            </div>
+          </article>
+          <article class="model-card">
+            <img src="../../../assets/text/DistilBERT_structure.png" alt="DistilBERT structure" loading="lazy" />
+            <div class="body">
+              <h3><span class="model-tag">BERT</span> DistilBERT</h3>
+              <p class="muted">6-layer transformer encoder; [CLS] pooled output into classifier.</p>
             </div>
           </article>
         </div>

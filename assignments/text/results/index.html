@@ -84,6 +84,28 @@
       </div>
     </section>
 
+    <section id="gradients" class="alt">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Stability</div>
+            <h2>Gradient flow checks</h2>
+            <p>Gradient norms across timesteps to illustrate vanishing vs. preserved signals.</p>
+          </div>
+        </div>
+        <div class="figure-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+          <div class="figure-card">
+            <img src="../../../assets/text/gradient_vanish.png" alt="Vanishing gradients" loading="lazy" />
+            <div class="caption"><strong>Vanishing gradients:</strong> simple RNN shows rapid decay across steps.</div>
+          </div>
+          <div class="figure-card">
+            <img src="../../../assets/text/gradient_survive.png" alt="Surviving gradients" loading="lazy" />
+            <div class="caption"><strong>Surviving gradients:</strong> LSTM/BiLSTM retain stronger gradients over time.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="training" class="alt">
       <div class="container">
         <div class="section-heading">
